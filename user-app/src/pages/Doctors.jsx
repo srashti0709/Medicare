@@ -176,35 +176,40 @@ const Doctors = () => {
                 >
 
                   {/* Card Top */}
-                  <div className="relative bg-[#003435] px-6 pt-7 pb-8 overflow-hidden">
+                  <div className="relative h-[280px] bg-[#003435] overflow-hidden">
 
-                    <div className="absolute -right-8 -top-12 h-36 w-36 rounded-full border-[22px] border-white/5" />
-
-                    <div className="relative flex items-center justify-between">
-
-                      {/* Doctor Icon */}
-                      <div className="w-20 h-20 bg-[#ADEFE7] rounded-2xl flex items-center justify-center shadow-lg shadow-black/10 group-hover:scale-105 transition-transform duration-300">
+                    {doctor.profileImage ? (
+                      <img
+                        src={doctor.profileImage}
+                        alt={doctor.user?.name || "Doctor"}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-[#E7F4F1]">
                         <Stethoscope
-                          size={38}
-                          strokeWidth={1.6}
-                          className="text-[#003435]"
+                          size={75}
+                          strokeWidth={1.4}
+                          className="text-[#256862]"
                         />
                       </div>
+                    )}
 
-                      {/* Verified Label */}
-                      <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-3 py-2">
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#003435] via-[#003435]/85 to-transparent px-6 pt-16 pb-6">
+
+                      <div className="flex items-center gap-2 mb-3">
                         <ShieldCheck
                           size={17}
                           className="text-[#ADEFE7]"
                         />
 
-                        <span className="text-base font-medium text-white">
+                        <span className="text-sm font-medium text-white bg-white/10 border border-white/15 rounded-full px-3 py-1">
                           Specialist
                         </span>
                       </div>
-                    </div>
 
-                    <div className="relative mt-5">
                       <h3 className="text-xl font-bold text-white leading-snug">
                         {doctor.user?.name}
                       </h3>

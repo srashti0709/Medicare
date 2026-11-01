@@ -40,7 +40,7 @@ const getDashboardStats = async (req, res) => {
 const getRecentAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate("patient", "name email")
+      .populate("patient", "name email profileImage")
       .populate({
         path: "doctor",
         populate: {

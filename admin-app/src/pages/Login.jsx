@@ -89,14 +89,14 @@ const Login = () => {
                   <p className="font-['Bricolage_Grotesque'] text-2xl font-bold tracking-tight">
                     Medicare
                   </p>
-                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B9D8D1]">
+                  <p className="mt-0.5 text-base font-semibold uppercase tracking-[0.2em] text-[#B9D8D1]">
                     Hospital management
                   </p>
                 </div>
               </div>
 
               <div className="max-w-sm">
-                <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ADEFE7]/25 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ADEFE7]">
+                <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ADEFE7]/25 bg-white/5 px-3 py-1.5 text-base font-bold uppercase tracking-[0.16em] text-[#ADEFE7]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#ADEFE7]" />
                   Care, connected
                 </span>
@@ -104,7 +104,7 @@ const Login = () => {
                   Better care starts with{" "}
                   <span className="text-[#ADEFE7]">better coordination.</span>
                 </h1>
-                <p className="mt-5 text-[14px] leading-7 text-[#C2D8D2]">
+                <p className="mt-5 text-base leading-7 text-[#C2D8D2]">
                   A connected workspace for healthcare teams to manage
                   hospital operations and deliver organized patient care.
                 </p>
@@ -113,7 +113,7 @@ const Login = () => {
 
             <div className="relative z-10 mt-14">
               <div className="mb-5 h-px w-full bg-white/15" />
-              <div className="flex items-center justify-between text-[11px] text-[#B9D8D1]">
+              <div className="flex items-center justify-between text-base text-[#B9D8D1]">
                 <span>Secure healthcare workspace</span>
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#ADEFE7]" />
@@ -132,7 +132,7 @@ const Login = () => {
               <h1 className="font-['Bricolage_Grotesque'] text-3xl font-bold tracking-tight text-[#003435]">
                 Medicare
               </h1>
-              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#71817C]">
+              <p className="mt-1 text-base font-semibold uppercase tracking-[0.16em] text-[#71817C]">
                 Hospital Management System
               </p>
             </div>
@@ -154,13 +154,13 @@ const Login = () => {
                     <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.08-.02a1.7 1.7 0 0 0-1.78.54l-.05.07h-3.4l-.02-.08a1.7 1.7 0 0 0-1.32-1.32l-.08-.02-1.7-2.94.06-.06A1.7 1.7 0 0 0 10.06 14l-.08-.02v-3.4l.08-.02a1.7 1.7 0 0 0 1.32-1.32l.02-.08h3.4l.05.07a1.7 1.7 0 0 0 1.78.54l.08-.02 1.7 2.94-.06.06A1.7 1.7 0 0 0 19.4 15Z" />
                   </svg>
                 </div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#56847A]">
+                <p className="mb-2 text-base font-bold uppercase tracking-[0.18em] text-[#56847A]">
                   Welcome back
                 </p>
                 <h2 className="font-['Bricolage_Grotesque'] text-[30px] font-bold tracking-tight text-[#003435] sm:text-[34px]">
                   Sign in to Medicare
                 </h2>
-                <p className="mt-2 text-[13px] leading-6 text-[#71817C]">
+                <p className="mt-2 text-base leading-6 text-[#71817C]">
                   Enter your account details to access your workspace.
                 </p>
               </div>
@@ -168,9 +168,9 @@ const Login = () => {
               {error && (
                 <div
                   role="alert"
-                  className="mb-5 flex items-start gap-3 rounded-xl border border-[#F0C7C2] bg-[#FFF3F1] px-4 py-3 text-[13px] leading-5 text-[#9B3932]"
+                  className="mb-5 flex items-start gap-3 rounded-xl border border-[#F0C7C2] bg-[#FFF3F1] px-4 py-3 text-base leading-5 text-[#9B3932]"
                 >
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F8DCD8] text-[11px] font-bold">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F8DCD8] text-base font-bold">
                     !
                   </span>
                   <span>{error}</span>
@@ -181,7 +181,7 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-[12px] font-semibold tracking-wide text-[#404848]"
+                    className="mb-2 block text-base font-semibold tracking-wide text-[#404848]"
                   >
                     Email address
                   </label>
@@ -210,7 +210,7 @@ const Login = () => {
                       placeholder="admin@medicare.com"
                       required
                       autoComplete="username"
-                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-4 text-[14px] text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
+                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-4 text-base text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
                     />
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-[12px] font-semibold tracking-wide text-[#404848]"
+                    className="mb-2 block text-base font-semibold tracking-wide text-[#404848]"
                   >
                     Password
                   </label>
@@ -247,7 +247,7 @@ const Login = () => {
                       placeholder="Enter your password"
                       required
                       autoComplete="current-password"
-                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-4 text-[14px] text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
+                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-4 text-base text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
                     />
                   </div>
                 </div>
@@ -255,7 +255,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-2 inline-flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#003435] px-5 py-3 text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(0,52,53,0.16)] transition hover:-translate-y-0.5 hover:bg-[#164B4D] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                  className="mt-2 inline-flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#003435] px-5 py-3 text-base font-bold text-white shadow-[0_6px_16px_rgba(0,52,53,0.16)] transition hover:-translate-y-0.5 hover:bg-[#164B4D] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
                 >
                   {loading ? (
                     <>
@@ -284,13 +284,13 @@ const Login = () => {
 
               <div className="mt-7 flex items-center gap-3">
                 <div className="h-px flex-1 bg-[#E5ECE8]" />
-                <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-[#9AA9A3]">
+                <span className="text-base font-medium uppercase tracking-[0.12em] text-[#9AA9A3]">
                   Authorized access only
                 </span>
                 <div className="h-px flex-1 bg-[#E5ECE8]" />
               </div>
 
-              <p className="mt-7 text-center text-[11px] leading-5 text-[#91A09A]">
+              <p className="mt-7 text-center text-base leading-5 text-[#91A09A]">
                 © 2026 Medicare. All rights reserved.
               </p>
             </div>

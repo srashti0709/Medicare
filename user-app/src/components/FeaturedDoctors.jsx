@@ -92,13 +92,28 @@ const FeaturedDoctors = () => {
               <div className="absolute top-0 right-0 w-36 h-36 bg-[#E7F4F1] rounded-bl-[100px] opacity-70 transition-all duration-300 group-hover:scale-110" />
 
               <div className="relative z-10">
-                {/* Doctor Icon */}
-                <div className="flex items-start justify-between mb-7">
-                  <div className="w-16 h-16 bg-[#E7F4F1] border border-[#D4E4DE] rounded-2xl flex items-center justify-center text-[#164B4D] group-hover:bg-[#DDF3ED] transition-colors duration-300">
-                    <Stethoscope size={30} strokeWidth={1.8} />
-                  </div>
+                {/* Doctor Profile Image */}
+                <div className="relative -mx-7 -mt-7 mb-7 h-[260px] bg-[#E7F4F1] overflow-hidden">
+                  {doctor.profileImage ? (
+                    <img
+                      src={doctor.profileImage}
+                      alt={doctor.user?.name || "Doctor"}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Stethoscope
+                        size={75}
+                        strokeWidth={1.4}
+                        className="text-[#256862]"
+                      />
+                    </div>
+                  )}
 
-                  <div className="w-10 h-10 rounded-full bg-[#F5F8F6] border border-[#D4E4DE] flex items-center justify-center text-[#164B4D] group-hover:bg-[#003F40] group-hover:text-white group-hover:border-[#003F40] transition-all duration-300">
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 border border-[#D4E4DE] flex items-center justify-center text-[#164B4D] group-hover:bg-[#003F40] group-hover:text-white group-hover:border-[#003F40] transition-all duration-300">
                     <ArrowUpRight size={19} />
                   </div>
                 </div>

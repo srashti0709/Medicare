@@ -1,13 +1,15 @@
+
 import { useEffect, useState } from "react";
 import api from "../api";
 
-const AddService = ({ onServiceAdded }) => {
+const AddService = ({ onServiceAdded, onBack }) => {
   const [departments, setDepartments] = useState([]);
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     department: "",
+    image: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,7 @@ const AddService = ({ onServiceAdded }) => {
         name: "",
         description: "",
         department: "",
+        image: "",
       });
 
       if (onServiceAdded) {
@@ -75,46 +78,57 @@ const AddService = ({ onServiceAdded }) => {
   };
 
   return (
-    <div className="min-h-full">
-      <div className="p-6 xl:p-8">
-        <div className="max-w-[1450px] mx-auto space-y-6">
+    <div className="min-h-full w-full min-w-0">
+      <div className="w-full min-w-0 p-3 sm:p-5 lg:p-6 xl:p-8">
+        <div className="mx-auto w-full max-w-[1450px] space-y-5 sm:space-y-6">
+
           {/* PAGE HEADER */}
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#2E9C8F] animate-pulse" />
+            <button
+              type="button"
+              onClick={onBack}
+              className="mb-4 inline-flex items-center gap-2 rounded-xl border border-[#CBDAD6] bg-white px-4 py-2 text-base font-semibold text-[#164B4D] shadow-sm transition hover:border-[#9BCBC3] hover:bg-[#E7F4F1] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
+            >
+              <span className="text-xl leading-none">←</span>
+              Back to Services
+            </button>
 
-              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#256862]">
+            <div className="mb-1 flex items-center gap-2">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#2E9C8F]" />
+
+              <span className="text-base font-bold uppercase tracking-[0.16em] text-[#256862]">
                 Service Management
               </span>
             </div>
 
-            <h2 className="font-['Bricolage_Grotesque'] text-[25px] leading-8 font-semibold text-[#164B4D]">
+            <h2 className="font-['Bricolage_Grotesque'] text-[23px] font-semibold leading-8 text-[#164B4D] sm:text-[25px]">
               Add Service
             </h2>
 
-            <p className="text-xs text-[#526563] mt-1">
+            <p className="mt-1 text-base text-[#526563]">
               Add a new hospital service to the Medicare system.
             </p>
           </div>
 
           {/* FORM CARD */}
-          <div className="bg-white rounded-2xl border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] overflow-hidden">
-            <div className="p-6 xl:p-7">
+          <div className="overflow-hidden rounded-2xl border border-[#DCEAE7] bg-white shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)]">
+            <div className="p-4 sm:p-6 xl:p-7">
+
               {/* CARD HEADER */}
               <div className="mb-6">
                 <h3 className="font-['Bricolage_Grotesque'] text-[19px] font-semibold text-[#164B4D]">
                   Service Information
                 </h3>
 
-                <p className="text-xs text-[#667876] mt-1">
+                <p className="mt-1 text-base text-[#667876]">
                   Enter the service details and assign it to a department.
                 </p>
               </div>
 
               {/* SUCCESS */}
               {success && (
-                <div className="mb-6 flex items-center gap-3 bg-[#EAF7F3] border border-[#BFDCD5] border-l-4 border-l-[#2E9C8F] text-[#256862] px-4 py-3 rounded-xl text-sm font-medium">
-                  <span className="w-6 h-6 rounded-full bg-[#ADEFE7] flex items-center justify-center text-[#00504A] font-bold">
+                <div className="mb-6 flex items-center gap-3 rounded-xl border border-[#BFDCD5] border-l-4 border-l-[#2E9C8F] bg-[#EAF7F3] px-4 py-3 text-base font-medium text-[#256862]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ADEFE7] font-bold text-[#00504A]">
                     ✓
                   </span>
 
@@ -124,8 +138,8 @@ const AddService = ({ onServiceAdded }) => {
 
               {/* ERROR */}
               {error && (
-                <div className="mb-6 flex items-start gap-3 bg-[#FFF1EE] border border-[#F3C9BF] border-l-4 border-l-[#F28B5B] text-[#A34A32] px-4 py-3 rounded-xl text-sm">
-                  <span className="w-6 h-6 shrink-0 rounded-full bg-[#FDE0D7] flex items-center justify-center font-bold">
+                <div className="mb-6 flex items-start gap-3 rounded-xl border border-[#F3C9BF] border-l-4 border-l-[#F28B5B] bg-[#FFF1EE] px-4 py-3 text-base text-[#A34A32]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FDE0D7] font-bold">
                     !
                   </span>
 
@@ -134,10 +148,13 @@ const AddService = ({ onServiceAdded }) => {
               )}
 
               <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                {/* BASIC INFORMATION */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+
                   {/* SERVICE NAME */}
-                  <div>
-                    <label className="block text-[13px] font-semibold text-[#164B4D] mb-1.5">
+                  <div className="min-w-0">
+                    <label className="mb-1.5 block text-base font-semibold text-[#164B4D]">
                       Service Name
                     </label>
 
@@ -148,13 +165,13 @@ const AddService = ({ onServiceAdded }) => {
                       onChange={handleChange}
                       placeholder="e.g. ECG"
                       required
-                      className="w-full bg-white border border-[#CBDAD6] rounded-xl px-3.5 py-2.5 text-sm text-[#0F3437] placeholder:text-[#8FA6A2] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
+                      className="w-full rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition placeholder:text-[#8FA6A2] focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
                     />
                   </div>
 
                   {/* DEPARTMENT */}
-                  <div>
-                    <label className="block text-[13px] font-semibold text-[#164B4D] mb-1.5">
+                  <div className="min-w-0">
+                    <label className="mb-1.5 block text-base font-semibold text-[#164B4D]">
                       Department
                     </label>
 
@@ -164,7 +181,7 @@ const AddService = ({ onServiceAdded }) => {
                       onChange={handleChange}
                       required
                       disabled={loadingDepartments}
-                      className="w-full bg-white border border-[#CBDAD6] rounded-xl px-3.5 py-2.5 text-sm text-[#0F3437] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60 disabled:bg-[#F5F8F6] disabled:text-[#8FA6A2]"
+                      className="w-full rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60 disabled:bg-[#F5F8F6] disabled:text-[#8FA6A2]"
                     >
                       <option value="">
                         {loadingDepartments
@@ -182,11 +199,12 @@ const AddService = ({ onServiceAdded }) => {
                       ))}
                     </select>
                   </div>
+
                 </div>
 
                 {/* DESCRIPTION */}
                 <div className="mt-5">
-                  <label className="block text-[13px] font-semibold text-[#164B4D] mb-1.5">
+                  <label className="mb-1.5 block text-base font-semibold text-[#164B4D]">
                     Description
                   </label>
 
@@ -197,23 +215,64 @@ const AddService = ({ onServiceAdded }) => {
                     placeholder="Enter service description"
                     rows="5"
                     required
-                    className="w-full bg-white border border-[#CBDAD6] rounded-xl px-3.5 py-2.5 text-sm text-[#0F3437] placeholder:text-[#8FA6A2] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60 resize-none"
+                    className="w-full resize-none rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition placeholder:text-[#8FA6A2] focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
                   />
                 </div>
 
+                {/* SERVICE IMAGE URL */}
+                <div className="mt-5">
+                  <label className="mb-1.5 block text-base font-semibold text-[#164B4D]">
+                    Service Image URL
+                  </label>
+
+                  <input
+                    type="url"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleChange}
+                    placeholder="Paste service image URL"
+                    className="w-full rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition placeholder:text-[#8FA6A2] focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
+                  />
+
+                  <p className="mt-1.5 text-base text-[#8FA6A2]">
+                    Add a direct image URL to display this service image in the user app.
+                  </p>
+
+                  {formData.image && (
+                    <div className="mt-4 w-full max-w-sm">
+                      <p className="mb-2 text-base font-semibold text-[#164B4D]">
+                        Image Preview
+                      </p>
+
+                      <div className="h-40 overflow-hidden rounded-xl border border-[#CBDAD6] bg-[#F5F8F6] sm:h-44">
+                        <img
+                          src={formData.image}
+                          alt="Service preview"
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* ACTION AREA */}
-                <div className="mt-8 pt-5 border-t border-[#E7EFED] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="mt-8 flex flex-col justify-between gap-4 border-t border-[#E7EFED] pt-5 sm:flex-row sm:items-center">
+
                   <div>
-                    <p className="text-[12px] font-semibold text-[#164B4D]">
+                    <p className="text-base font-semibold text-[#164B4D]">
                       Create service
                     </p>
 
-                    <p className="text-[11px] text-[#8FA6A2] mt-0.5">
+                    <p className="mt-0.5 text-base text-[#8FA6A2]">
                       The service will be added to the Medicare registry.
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex w-full flex-col-reverse gap-3 sm:w-auto sm:flex-row sm:items-center">
+
                     <button
                       type="button"
                       onClick={() =>
@@ -221,9 +280,10 @@ const AddService = ({ onServiceAdded }) => {
                           name: "",
                           description: "",
                           department: "",
+                          image: "",
                         })
                       }
-                      className="px-5 py-2.5 rounded-xl border border-[#CBDAD6] text-[#526563] hover:bg-[#F5F8F6] hover:border-[#9ADBD3] font-semibold text-sm transition"
+                      className="w-full rounded-xl border border-[#CBDAD6] px-5 py-2.5 text-base font-semibold text-[#526563] transition hover:border-[#9ADBD3] hover:bg-[#F5F8F6] sm:w-auto"
                     >
                       Cancel
                     </button>
@@ -231,39 +291,44 @@ const AddService = ({ onServiceAdded }) => {
                     <button
                       type="submit"
                       disabled={loading || loadingDepartments}
-                      className="bg-[#164B4D] hover:bg-[#0F3437] disabled:bg-[#8FA6A2] disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl text-sm shadow-[0_4px_12px_rgba(15,52,55,0.15)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
+                      className="w-full rounded-xl bg-[#164B4D] px-6 py-2.5 text-base font-semibold text-white shadow-[0_4px_12px_rgba(15,52,55,0.15)] transition-colors hover:bg-[#0F3437] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#8FA6A2] sm:w-auto"
                     >
                       {loading ? "Adding..." : "Add Service"}
                     </button>
+
                   </div>
                 </div>
+
               </form>
             </div>
           </div>
 
           {/* INFO CARD */}
-          <div className="bg-[#DCF3EE] rounded-2xl p-5 border border-[#C0DCD7] flex flex-col md:flex-row items-start md:items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-[#164B4D] text-white flex items-center justify-center shrink-0 text-lg">
+          <div className="flex flex-col items-start gap-4 rounded-2xl border border-[#C0DCD7] bg-[#DCF3EE] p-4 sm:p-5 md:flex-row md:items-center">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#164B4D] text-lg text-white">
               +
             </div>
 
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="font-['Bricolage_Grotesque'] text-[16px] font-semibold text-[#164B4D]">
                   Service Registry
                 </span>
 
-                <span className="px-2 py-0.5 rounded bg-[#ADEFE7] text-[#00504A] text-[10px] font-bold">
+                <span className="rounded bg-[#ADEFE7] px-2 py-0.5 text-base font-bold text-[#00504A]">
                   MEDICARE
                 </span>
               </div>
 
-              <p className="text-xs text-[#526563] mt-0.5">
+              <p className="mt-0.5 text-base text-[#526563]">
                 Assign each service to the appropriate department for easier
                 management across the Medicare system.
               </p>
             </div>
+
           </div>
+
         </div>
       </div>
     </div>

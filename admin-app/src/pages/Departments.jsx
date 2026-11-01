@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
 
@@ -12,6 +13,7 @@ import api from "../api";
  */
 
 const fontStyles = `
+
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 .medicare-departments {
@@ -47,6 +49,280 @@ const fontStyles = `
         animation: none;
     }
 }
+
+/* TABLET RESPONSIVENESS */
+@media (max-width: 1023px) {
+    .medicare-departments {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .medicare-departments .max-w-\[1450px\] {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .medicare-departments .xl\:sticky {
+        position: relative;
+        top: auto;
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 767px) {
+    .medicare-departments {
+        overflow-x: hidden;
+    }
+
+    /* Main page spacing */
+    .medicare-departments > div {
+        padding: 16px;
+    }
+
+    .medicare-departments .max-w-\[1450px\] {
+        gap: 18px;
+    }
+
+    /* Header */
+    .medicare-departments h1 {
+        font-size: 23px;
+        line-height: 1.3;
+    }
+
+    .medicare-departments .flex.flex-col.lg\:flex-row.lg\:items-end {
+        gap: 14px;
+    }
+
+    .medicare-departments .flex.flex-col.lg\:flex-row.lg\:items-end > div:last-child {
+        width: 100%;
+    }
+
+    .medicare-departments .flex.flex-col.lg\:flex-row.lg\:items-end > div:last-child button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Overview statistics */
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div {
+        padding: 13px;
+        border-radius: 14px;
+        min-width: 0;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child {
+        gap: 6px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child > div:first-child {
+        min-width: 0;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child span:first-child {
+        font-size: 10px;
+        line-height: 1.4;
+        letter-spacing: 0.04em;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child span.md-display {
+        font-size: 27px;
+        line-height: 34px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child > div:last-child {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:last-child {
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:last-child span {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    /* Search and filter toolbar */
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 > div:first-child {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 input,
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 select {
+        width: 100%;
+        min-width: 0;
+        font-size: 13px;
+    }
+
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 > div:last-child {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .medicare-departments .bg-white.rounded-2xl.p-3.sm\:p-4 > div:last-child > span {
+        font-size: 11px;
+    }
+
+    /* Department cards */
+    .medicare-departments .xl\:col-span-8 {
+        min-width: 0;
+    }
+
+    .medicare-departments .xl\:col-span-8 > div {
+        padding: 14px;
+        border-radius: 15px;
+    }
+
+    .medicare-departments .xl\:col-span-8 h3 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .medicare-departments .xl\:col-span-8 p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .medicare-departments .xl\:col-span-8 .text-base {
+        font-size: 11px;
+    }
+
+    .medicare-departments .xl\:col-span-8 .rounded-xl.p-3 {
+        padding: 10px;
+    }
+
+    .medicare-departments .xl\:col-span-8 .w-12.h-12 {
+        width: 42px;
+        height: 42px;
+    }
+
+    .medicare-departments .xl\:col-span-8 .mb-5 {
+        margin-bottom: 14px;
+    }
+
+    /* Details panel */
+    .medicare-departments .xl\:col-span-4 {
+        min-width: 0;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .medicare-departments .xl\:col-span-4 h2 {
+        font-size: 18px;
+        line-height: 25px;
+    }
+
+    .medicare-departments .xl\:col-span-4 .text-base {
+        font-size: 12px;
+    }
+
+    .medicare-departments .xl\:col-span-4 .rounded-xl {
+        overflow-wrap: anywhere;
+    }
+
+    .medicare-departments .xl\:col-span-4 .max-w-\[130px\] {
+        max-width: 110px;
+    }
+
+    /* Edit modal */
+    .medicare-departments .fixed.inset-0 {
+        padding: 12px;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+    .medicare-departments .fixed.inset-0 > div {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92dvh;
+        border-radius: 16px;
+    }
+
+    .medicare-departments .fixed.inset-0 > div > div:first-child {
+        padding: 15px;
+    }
+
+    .medicare-departments .fixed.inset-0 form {
+        padding: 16px;
+    }
+
+    .medicare-departments .fixed.inset-0 h3 {
+        font-size: 17px;
+    }
+
+    .medicare-departments .fixed.inset-0 .text-base {
+        font-size: 12px;
+    }
+
+    .medicare-departments .fixed.inset-0 input:not([type="checkbox"]),
+    .medicare-departments .fixed.inset-0 textarea {
+        font-size: 13px;
+        padding: 11px 12px;
+    }
+
+    .medicare-departments .fixed.inset-0 form > div:last-child {
+        gap: 8px;
+    }
+
+    .medicare-departments .fixed.inset-0 form > div:last-child button {
+        flex: 1;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* Loading and empty states */
+    .medicare-departments .px-10.py-20 {
+        padding: 45px 18px;
+    }
+
+    .medicare-departments .px-8.py-16 {
+        padding: 35px 16px;
+    }
+}
+
+/* SMALL MOBILE DEVICES */
+@media (max-width: 380px) {
+    .medicare-departments > div {
+        padding: 11px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 {
+        gap: 8px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div {
+        padding: 10px;
+    }
+
+    .medicare-departments .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child span.md-display {
+        font-size: 24px;
+    }
+
+    .medicare-departments .xl\:col-span-8 > div {
+        padding: 12px;
+    }
+
+    .medicare-departments .xl\:col-span-8 .flex.items-start.justify-between.gap-3 {
+        gap: 7px;
+    }
+}
+
 `;
 
 const Departments = ({ onAddDepartment }) => {
@@ -204,13 +480,13 @@ const Departments = ({ onAddDepartment }) => {
                     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
                         <div>
                             <div className="flex items-center gap-2 mb-1.5">
-                                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#256862]">
+                                <span className="text-base font-bold uppercase tracking-[0.12em] text-[#256862]">
                                     Clinical Architecture
                                 </span>
 
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#92D2CB]" />
 
-                                <span className="text-[11px] font-semibold tracking-[0.04em] text-[#526563]">
+                                <span className="text-base font-semibold tracking-[0.04em] text-[#526563]">
                                     SYS-DEP-v4.2
                                 </span>
                             </div>
@@ -219,7 +495,7 @@ const Departments = ({ onAddDepartment }) => {
                                 Departments
                             </h1>
 
-                            <p className="text-xs text-[#526563] mt-1">
+                            <p className="text-base text-[#526563] mt-1">
                                 Organize specialties, doctors and services
                                 across Medicare.
                             </p>
@@ -229,7 +505,7 @@ const Departments = ({ onAddDepartment }) => {
                             <button
                                 type="button"
                                 onClick={onAddDepartment}
-                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#164B4D] text-white text-[13px] font-bold shadow-[0_8px_18px_-12px_rgba(15,52,55,0.7)] hover:bg-[#0F3437] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
+                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-bold shadow-[0_8px_18px_-12px_rgba(15,52,55,0.7)] hover:bg-[#0F3437] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
                             >
                                 <span className="text-[18px] leading-none">
                                     +
@@ -244,7 +520,7 @@ const Departments = ({ onAddDepartment }) => {
                     {error && (
                         <div
                             role="alert"
-                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-sm font-medium"
+                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-base font-medium"
                         >
                             <span className="material-symbols-outlined text-[18px] text-[#F28B5B]">
                                 error
@@ -279,7 +555,7 @@ const Departments = ({ onAddDepartment }) => {
                                 />
                             </svg>
 
-                            <p className="text-sm font-semibold text-[#526563]">
+                            <p className="text-base font-semibold text-[#526563]">
                                 Loading departments...
                             </p>
                         </div>
@@ -296,7 +572,7 @@ const Departments = ({ onAddDepartment }) => {
                                 No departments found
                             </h3>
 
-                            <p className="text-sm text-[#6F8884] mt-1">
+                            <p className="text-base text-[#6F8884] mt-1">
                                 Add your first Medicare department to
                                 get started.
                             </p>
@@ -304,7 +580,7 @@ const Departments = ({ onAddDepartment }) => {
                             <button
                                 type="button"
                                 onClick={onAddDepartment}
-                                className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#164B4D] text-white text-[13px] font-bold hover:bg-[#0F3437] transition-colors"
+                                className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-bold hover:bg-[#0F3437] transition-colors"
                             >
                                 <span className="text-[18px]">
                                     +
@@ -322,7 +598,7 @@ const Departments = ({ onAddDepartment }) => {
                                 <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all">
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6F8884]">
+                                            <span className="text-base font-bold uppercase tracking-[0.1em] text-[#6F8884]">
                                                 Total Departments
                                             </span>
 
@@ -339,11 +615,11 @@ const Departments = ({ onAddDepartment }) => {
                                     </div>
 
                                     <div className="flex items-center justify-between mt-4">
-                                        <span className="text-xs text-[#6F8884]">
+                                        <span className="text-base text-[#6F8884]">
                                             Registered units
                                         </span>
 
-                                        <span className="text-[11px] font-bold text-[#256862]">
+                                        <span className="text-base font-bold text-[#256862]">
                                             All units
                                         </span>
                                     </div>
@@ -353,7 +629,7 @@ const Departments = ({ onAddDepartment }) => {
                                 <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all">
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6F8884]">
+                                            <span className="text-base font-bold uppercase tracking-[0.1em] text-[#6F8884]">
                                                 Active Departments
                                             </span>
 
@@ -370,11 +646,11 @@ const Departments = ({ onAddDepartment }) => {
                                     </div>
 
                                     <div className="flex items-center justify-between mt-4">
-                                        <span className="text-xs text-[#6F8884]">
+                                        <span className="text-base text-[#6F8884]">
                                             Currently operational
                                         </span>
 
-                                        <span className="px-2 py-0.5 rounded bg-[#ADEFE7] text-[#00201D] text-[10px] font-bold">
+                                        <span className="px-2 py-0.5 rounded bg-[#ADEFE7] text-[#00201D] text-base font-bold">
                                             Active
                                         </span>
                                     </div>
@@ -384,7 +660,7 @@ const Departments = ({ onAddDepartment }) => {
                                 <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all">
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6F8884]">
+                                            <span className="text-base font-bold uppercase tracking-[0.1em] text-[#6F8884]">
                                                 Inactive Departments
                                             </span>
 
@@ -401,11 +677,11 @@ const Departments = ({ onAddDepartment }) => {
                                     </div>
 
                                     <div className="flex items-center justify-between mt-4">
-                                        <span className="text-xs text-[#6F8884]">
+                                        <span className="text-base text-[#6F8884]">
                                             Currently inactive
                                         </span>
 
-                                        <span className="text-[11px] font-bold text-[#8A9D99]">
+                                        <span className="text-base font-bold text-[#8A9D99]">
                                             Needs attention
                                         </span>
                                     </div>
@@ -415,7 +691,7 @@ const Departments = ({ onAddDepartment }) => {
                                 <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all">
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6F8884]">
+                                            <span className="text-base font-bold uppercase tracking-[0.1em] text-[#6F8884]">
                                                 Department Coverage
                                             </span>
 
@@ -439,11 +715,11 @@ const Departments = ({ onAddDepartment }) => {
                                     </div>
 
                                     <div className="flex items-center justify-between mt-4">
-                                        <span className="text-xs text-[#6F8884]">
+                                        <span className="text-base text-[#6F8884]">
                                             Active unit ratio
                                         </span>
 
-                                        <span className="text-[11px] font-bold text-[#256862]">
+                                        <span className="text-base font-bold text-[#256862]">
                                             Live
                                         </span>
                                     </div>
@@ -468,7 +744,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 )
                                             }
                                             placeholder="Search departments..."
-                                            className="w-full pl-10 pr-4 py-2.5 bg-[#E1F8F3] text-[#0F3437] placeholder:text-[#819894] rounded-xl text-sm outline-none focus:bg-white focus:ring-1 focus:ring-[#9ADBD3] transition-all"
+                                            className="w-full pl-10 pr-4 py-2.5 bg-[#E1F8F3] text-[#0F3437] placeholder:text-[#819894] rounded-xl text-base outline-none focus:bg-white focus:ring-1 focus:ring-[#9ADBD3] transition-all"
                                         />
                                     </div>
 
@@ -479,7 +755,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 e.target.value
                                             )
                                         }
-                                        className="px-3 py-2.5 bg-[#E1F8F3] text-[#0F3437] rounded-xl text-xs font-semibold outline-none cursor-pointer focus:ring-1 focus:ring-[#9ADBD3]"
+                                        className="px-3 py-2.5 bg-[#E1F8F3] text-[#0F3437] rounded-xl text-base font-semibold outline-none cursor-pointer focus:ring-1 focus:ring-[#9ADBD3]"
                                     >
                                         <option value="all">
                                             Status: All
@@ -496,7 +772,7 @@ const Departments = ({ onAddDepartment }) => {
                                 </div>
 
                                 <div className="flex items-center justify-between lg:justify-end gap-4">
-                                    <span className="text-[11px] font-semibold text-[#6F8884]">
+                                    <span className="text-base font-semibold text-[#6F8884]">
                                         Showing {filteredDepartments.length} of{" "}
                                         {totalDepartments} departments
                                     </span>
@@ -541,7 +817,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 No matching departments
                                             </h3>
 
-                                            <p className="text-sm text-[#6F8884] mt-1">
+                                            <p className="text-base text-[#6F8884] mt-1">
                                                 Try changing your search or
                                                 status filter.
                                             </p>
@@ -629,7 +905,7 @@ const Departments = ({ onAddDepartment }) => {
                                                                     />
                                                                 </div>
 
-                                                                <span className="text-[10px] text-[#819894] block mt-0.5 uppercase tracking-[0.08em] font-semibold">
+                                                                <span className="text-base text-[#819894] block mt-0.5 uppercase tracking-[0.08em] font-semibold">
                                                                     Medicare Clinical
                                                                     Unit
                                                                 </span>
@@ -638,7 +914,7 @@ const Departments = ({ onAddDepartment }) => {
 
                                                         <div className="flex items-center gap-1 flex-shrink-0">
                                                             <span
-                                                                className={`px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${
+                                                                className={`px-2 py-1 rounded-md text-base font-bold tracking-wider uppercase ${
                                                                     department.isActive
                                                                         ? "bg-[#ADEFE7] text-[#00201D]"
                                                                         : "bg-[#F1F4F3] text-[#6F8884]"
@@ -670,7 +946,7 @@ const Departments = ({ onAddDepartment }) => {
 
                                                     {/* DESCRIPTION */}
                                                     <p
-                                                        className={`text-sm leading-6 line-clamp-3 mb-5 ${
+                                                        className={`text-base leading-6 line-clamp-3 mb-5 ${
                                                             department.isActive
                                                                 ? "text-[#5B7773]"
                                                                 : "text-[#819894]"
@@ -702,14 +978,14 @@ const Departments = ({ onAddDepartment }) => {
                                                                         : "pause_circle"}
                                                                 </span>
 
-                                                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#6F8884]">
+                                                                <span className="text-base font-bold uppercase tracking-wider text-[#6F8884]">
                                                                     Department
                                                                     Status
                                                                 </span>
                                                             </div>
 
                                                             <span
-                                                                className={`text-xs font-bold ${
+                                                                className={`text-base font-bold ${
                                                                     department.isActive
                                                                         ? "text-[#164B4D]"
                                                                         : "text-[#819894]"
@@ -724,7 +1000,7 @@ const Departments = ({ onAddDepartment }) => {
 
                                                     {/* CARD FOOTER */}
                                                     <div className="flex items-center justify-between pt-1">
-                                                        <span className="text-[11px] font-semibold text-[#819894]">
+                                                        <span className="text-base font-semibold text-[#819894]">
                                                             Medicare Department
                                                         </span>
 
@@ -737,7 +1013,7 @@ const Departments = ({ onAddDepartment }) => {
                                                                     department
                                                                 );
                                                             }}
-                                                            className="text-[12px] font-bold text-[#256862] hover:text-[#164B4D] inline-flex items-center gap-1 transition-colors"
+                                                            className="text-base font-bold text-[#256862] hover:text-[#164B4D] inline-flex items-center gap-1 transition-colors"
                                                         >
                                                             Manage Unit
 
@@ -759,7 +1035,7 @@ const Departments = ({ onAddDepartment }) => {
                                             {/* PANEL HEADER */}
                                             <div className="flex items-start justify-between pb-4 mb-4 border-b border-[#E7EFED]">
                                                 <div>
-                                                    <span className="text-[10px] font-bold text-[#256862] uppercase tracking-[0.12em]">
+                                                    <span className="text-base font-bold text-[#256862] uppercase tracking-[0.12em]">
                                                         Unit Inspection
                                                     </span>
 
@@ -803,7 +1079,7 @@ const Departments = ({ onAddDepartment }) => {
                                                         </div>
 
                                                         <span
-                                                            className={`inline-flex items-center gap-1.5 mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                                            className={`inline-flex items-center gap-1.5 mt-1 px-2 py-0.5 rounded text-base font-bold uppercase tracking-wider ${
                                                                 selectedDepartment.isActive
                                                                     ? "bg-[#ADEFE7] text-[#00201D]"
                                                                     : "bg-[#F1F4F3] text-[#6F8884]"
@@ -824,7 +1100,7 @@ const Departments = ({ onAddDepartment }) => {
                                                     </div>
                                                 </div>
 
-                                                <p className="text-xs leading-5 text-[#5B7773] mt-4">
+                                                <p className="text-base leading-5 text-[#5B7773] mt-4">
                                                     {selectedDepartment.description ||
                                                         "No description available for this department."}
                                                 </p>
@@ -851,7 +1127,7 @@ const Departments = ({ onAddDepartment }) => {
 
                                             {/* DEPARTMENT STATUS */}
                                             <div className="mb-5">
-                                                <span className="text-[10px] font-bold text-[#6F8884] uppercase tracking-[0.1em] block mb-2">
+                                                <span className="text-base font-bold text-[#6F8884] uppercase tracking-[0.1em] block mb-2">
                                                     Department Status
                                                 </span>
 
@@ -869,13 +1145,13 @@ const Departments = ({ onAddDepartment }) => {
                                                                 : "pause_circle"}
                                                         </span>
 
-                                                        <span className="text-xs font-semibold text-[#0F3437]">
+                                                        <span className="text-base font-semibold text-[#0F3437]">
                                                             Operational status
                                                         </span>
                                                     </div>
 
                                                     <span
-                                                        className={`text-xs font-bold ${
+                                                        className={`text-base font-bold ${
                                                             selectedDepartment.isActive
                                                                 ? "text-[#256862]"
                                                                 : "text-[#819894]"
@@ -890,7 +1166,7 @@ const Departments = ({ onAddDepartment }) => {
 
                                             {/* QUICK INFORMATION */}
                                             <div className="space-y-2 mb-5">
-                                                <span className="text-[10px] font-bold text-[#6F8884] uppercase tracking-[0.1em] block mb-2">
+                                                <span className="text-base font-bold text-[#6F8884] uppercase tracking-[0.1em] block mb-2">
                                                     Department Information
                                                 </span>
 
@@ -900,12 +1176,12 @@ const Departments = ({ onAddDepartment }) => {
                                                             badge
                                                         </span>
 
-                                                        <span className="text-xs font-medium text-[#37595A]">
+                                                        <span className="text-base font-medium text-[#37595A]">
                                                             Department ID
                                                         </span>
                                                     </div>
 
-                                                    <span className="text-[10px] font-bold text-[#6F8884] max-w-[130px] truncate">
+                                                    <span className="text-base font-bold text-[#6F8884] max-w-[130px] truncate">
                                                         {selectedDepartment._id}
                                                     </span>
                                                 </div>
@@ -916,12 +1192,12 @@ const Departments = ({ onAddDepartment }) => {
                                                             description
                                                         </span>
 
-                                                        <span className="text-xs font-medium text-[#37595A]">
+                                                        <span className="text-base font-medium text-[#37595A]">
                                                             Description
                                                         </span>
                                                     </div>
 
-                                                    <span className="text-[10px] font-bold text-[#6F8884]">
+                                                    <span className="text-base font-bold text-[#6F8884]">
                                                         {selectedDepartment.description
                                                             ? "Available"
                                                             : "Not added"}
@@ -934,12 +1210,12 @@ const Departments = ({ onAddDepartment }) => {
                                                             image
                                                         </span>
 
-                                                        <span className="text-xs font-medium text-[#37595A]">
+                                                        <span className="text-base font-medium text-[#37595A]">
                                                             Department Image
                                                         </span>
                                                     </div>
 
-                                                    <span className="text-[10px] font-bold text-[#6F8884]">
+                                                    <span className="text-base font-bold text-[#6F8884]">
                                                         {selectedDepartment.image
                                                             ? "Available"
                                                             : "Not added"}
@@ -956,7 +1232,7 @@ const Departments = ({ onAddDepartment }) => {
                                                             selectedDepartment._id
                                                         )
                                                     }
-                                                    className={`w-full py-2.5 rounded-xl text-[12px] font-bold transition-all ${
+                                                    className={`w-full py-2.5 rounded-xl text-base font-bold transition-all ${
                                                         selectedDepartment.isActive
                                                             ? "bg-[#FDEEE6] text-[#A8441A] hover:bg-[#F9E2D5]"
                                                             : "bg-[#164B4D] text-white hover:bg-[#0F3437]"
@@ -974,7 +1250,7 @@ const Departments = ({ onAddDepartment }) => {
                                                             selectedDepartment
                                                         )
                                                     }
-                                                    className="w-full py-2.5 rounded-xl bg-[#E1F8F3] text-[#0F3437] hover:bg-[#D6EDE8] transition-colors text-[12px] font-bold"
+                                                    className="w-full py-2.5 rounded-xl bg-[#E1F8F3] text-[#0F3437] hover:bg-[#D6EDE8] transition-colors text-base font-bold"
                                                 >
                                                     Edit Department
                                                 </button>
@@ -993,7 +1269,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 Department Details
                                             </h3>
 
-                                            <p className="text-xs leading-5 text-[#6F8884] mt-1.5 max-w-[250px] mx-auto">
+                                            <p className="text-base leading-5 text-[#6F8884] mt-1.5 max-w-[250px] mx-auto">
                                                 Select a department card to
                                                 inspect its details and manage
                                                 its status.
@@ -1024,7 +1300,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 Edit Department
                                             </h3>
 
-                                            <p className="text-[11px] text-[#5B7773] mt-0.5">
+                                            <p className="text-base text-[#5B7773] mt-0.5">
                                                 Update department information
                                             </p>
                                         </div>
@@ -1050,7 +1326,7 @@ const Departments = ({ onAddDepartment }) => {
                                 >
                                     {/* NAME */}
                                     <div>
-                                        <label className="block text-[11px] font-bold text-[#37595A] uppercase tracking-wider mb-2">
+                                        <label className="block text-base font-bold text-[#37595A] uppercase tracking-wider mb-2">
                                             Department Name
                                         </label>
 
@@ -1068,13 +1344,13 @@ const Departments = ({ onAddDepartment }) => {
                                                 )
                                             }
                                             required
-                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-sm text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
+                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-base text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
                                         />
                                     </div>
 
                                     {/* DESCRIPTION */}
                                     <div className="mt-5">
-                                        <label className="block text-[11px] font-bold text-[#37595A] uppercase tracking-wider mb-2">
+                                        <label className="block text-base font-bold text-[#37595A] uppercase tracking-wider mb-2">
                                             Description
                                         </label>
 
@@ -1094,13 +1370,13 @@ const Departments = ({ onAddDepartment }) => {
                                                 )
                                             }
                                             placeholder="Enter department description..."
-                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-sm text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition resize-none"
+                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-base text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition resize-none"
                                         />
                                     </div>
 
                                     {/* IMAGE */}
                                     <div className="mt-5">
-                                        <label className="block text-[11px] font-bold text-[#37595A] uppercase tracking-wider mb-2">
+                                        <label className="block text-base font-bold text-[#37595A] uppercase tracking-wider mb-2">
                                             Image URL
                                         </label>
 
@@ -1118,7 +1394,7 @@ const Departments = ({ onAddDepartment }) => {
                                                 )
                                             }
                                             placeholder="Enter image URL..."
-                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-sm text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
+                                            className="w-full border border-[#D5E0DD] rounded-xl px-4 py-3 text-base text-[#0F3437] bg-[#F5F8F6] outline-none focus:bg-white focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
                                         />
                                     </div>
 
@@ -1127,12 +1403,12 @@ const Departments = ({ onAddDepartment }) => {
                                         <div>
                                             <label
                                                 htmlFor="departmentStatus"
-                                                className="text-sm font-bold text-[#0F3437]"
+                                                className="text-base font-bold text-[#0F3437]"
                                             >
                                                 Department is active
                                             </label>
 
-                                            <p className="text-[11px] text-[#6F8884] mt-0.5">
+                                            <p className="text-base text-[#6F8884] mt-0.5">
                                                 Controls whether this department
                                                 is operational.
                                             </p>
@@ -1164,7 +1440,7 @@ const Departments = ({ onAddDepartment }) => {
                                             onClick={() =>
                                                 setSelectedDepartment(null)
                                             }
-                                            className="px-4 py-2.5 rounded-xl border border-[#D5E0DD] text-[#37595A] text-[13px] font-semibold hover:bg-[#F5F8F6] transition-colors"
+                                            className="px-4 py-2.5 rounded-xl border border-[#D5E0DD] text-[#37595A] text-base font-semibold hover:bg-[#F5F8F6] transition-colors"
                                         >
                                             Cancel
                                         </button>
@@ -1172,7 +1448,7 @@ const Departments = ({ onAddDepartment }) => {
                                         <button
                                             type="submit"
                                             disabled={saving}
-                                            className="px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-[13px] font-bold hover:bg-[#0F3437] transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
+                                            className="px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-bold hover:bg-[#0F3437] transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
                                         >
                                             {saving
                                                 ? "Saving..."

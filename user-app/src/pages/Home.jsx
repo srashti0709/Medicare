@@ -154,7 +154,7 @@ const Home = () => {
                 />
 
 
-                
+
 
                 {/* PHOTO PLACEHOLDER:
                     Replace the content above with your image, for example:
@@ -204,55 +204,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* QUICK BENEFITS STRIP */}
-      <section className="relative z-10 mx-auto -mt-2 max-w-7xl px-6 pb-10">
-        <div className="grid grid-cols-1 gap-4 rounded-3xl border border-[#D4E4DE] bg-white p-5 shadow-[0_15px_45px_rgba(0,52,53,0.05)] sm:grid-cols-2 lg:grid-cols-4 lg:p-7">
-          {[
-            {
-              icon: Stethoscope,
-              title: "Find Specialists",
-              description: "Connect with doctors",
-            },
-            {
-              icon: CalendarCheck,
-              title: "Book Appointments",
-              description: "Schedule with ease",
-            },
-            {
-              icon: FileText,
-              title: "Understand Reports",
-              description: "AI-powered insights",
-            },
-            {
-              icon: MessageCircle,
-              title: "Get Assistance",
-              description: "Chat with Medicare AI",
-            },
-          ].map((item, index) => {
-            const Icon = item.icon;
 
-            return (
-              <div
-                key={item.title}
-                className={`flex items-center gap-4 px-3 py-3 transition-all duration-300 hover:-translate-y-1 ${index !== 0 ? "lg:border-l lg:border-[#E0EBE6] lg:pl-6" : ""
-                  }`}
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#E7F4F1] text-[#256862]">
-                  <Icon size={26} />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-[#003435]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-base text-[#65736F]">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       {/* WHY MEDICARE */}
       <WhyMedicare />
@@ -416,7 +368,7 @@ const Home = () => {
                       <BrainCircuit size={29} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-[#003435]">
+                      <h3 className="font-['Bricolage_Grotesque'] text-lg font-bold text-[#003435]">
                         Medicare AI
                       </h3>
                       <p className="mt-1 flex items-center gap-2 text-base text-[#65736F]">

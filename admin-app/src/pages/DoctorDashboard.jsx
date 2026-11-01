@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
-
+import DoctorNavbar from "../components/DoctorNavbar";
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
 
@@ -246,120 +246,235 @@ const DoctorDashboard = () => {
         "bg-white border border-[#CBDAD6] rounded-2xl shadow-sm";
 
     return (
-        <div className={`min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
-            {/* ================= TOP NAVBAR ================= */}
-            <header className="sticky top-0 z-40 w-full bg-white border-b border-[#CBDAD6] shadow-[0_1px_8px_rgba(0,0,0,0.03)] backdrop-blur-md">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-6">
-                    {/* Logo */}
-                    <div className="flex items-center gap-3 shrink-0">
-                        <a className="flex items-center gap-2.5" href="/">
-                            <div className="flex flex-col">
-                                <span className={`${heading} text-[20px] font-bold text-[#003435] tracking-tight leading-none`}>
-                                    Medicare
-                                </span>
-                                <span className="text-[10px] text-[#256862] font-semibold uppercase tracking-wider mt-0.5">
-                                    Healthcare Intelligence
-                                </span>
-                            </div>
-                        </a>
-                    </div>
+       <div className={`doctor-dashboard-page min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
+        <style>{`
+    /* =========================================
+       DOCTOR DASHBOARD - RESPONSIVE DESIGN
+       Desktop layout remains unchanged
+    ========================================= */
 
-                    {/* Center nav */}
-                    <nav className="hidden md:flex items-center gap-1.5 lg:gap-2">
-                        <button
-                            onClick={() => {
-                                window.location.href = "/doctor-schedule";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors"
-                        >
-                            My Schedule
-                        </button>
-                        <button
-                            onClick={() => {
-                                window.location.href = "/ai-risk-assessment";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors inline-flex items-center gap-1.5"
-                        >
-                            <span>AI Risk Assessment</span>
-                            <span className="px-1.5 rounded text-[10px] font-bold bg-[#ADEFE7] text-[#00201d]">
-                                AI
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => {
-                                window.location.href = "/patients";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors"
-                        >
-                            My Patients
-                        </button>
-                    </nav>
+    @media (max-width: 767px) {
 
-                    {/* Profile menu */}
-                    <div className="flex items-center gap-3 lg:gap-4 shrink-0">
-                        <div className="relative group">
-                            <button className="flex items-center gap-2.5 p-1 rounded-full hover:bg-[#E7F4F1] transition-colors text-left">
-                                <div className="relative">
-                                    <div className="w-9 h-9 rounded-full bg-[#164B4D] text-white flex items-center justify-center text-[13px] font-bold ring-2 ring-[#ADEFE7]">
-                                        {getInitials(doctorUser.name)}
-                                    </div>
-                                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#256862] ring-2 ring-white" />
-                                </div>
-                                <div className="hidden xl:flex flex-col">
-                                    <span className="text-[13px] text-[#003435] font-bold leading-tight">
-                                        {doctorUser.name}
-                                    </span>
-                                    <span className="text-[11px] text-[#404848] leading-none">
-                                        Doctor
-                                    </span>
-                                </div>
-                                <Icon name="expand_more" className="text-[#404848] text-[18px]" />
-                            </button>
+        /* Navbar */
+        .doctor-dashboard-page header > div {
+            padding-left: 16px;
+            padding-right: 16px;
+            height: 68px;
+        }
 
-                            <div className="absolute right-0 pt-2 w-56 hidden group-hover:block z-50">
-                                <div className="bg-white rounded-xl shadow-xl border border-[#CBDAD6] py-2">
-                                    <div className="px-4 py-2 border-b border-[#CBDAD6]/50 xl:hidden">
-                                        <p className="text-[13px] font-bold text-[#003435]">
-                                            {doctorUser.name}
-                                        </p>
-                                        <p className="text-[11px] text-[#404848]">Doctor</p>
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            window.location.href = "/doctor-profile";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#0a1f1c] hover:bg-[#e1f8f3] transition-colors text-left"
-                                    >
-                                        <Icon name="person" className="text-[18px] text-[#256862]" />
-                                        <span>Doctor Profile &amp; Credentials</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            window.location.href = "/doctor-schedule";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#0a1f1c] hover:bg-[#e1f8f3] transition-colors text-left"
-                                    >
-                                        <Icon name="calendar_today" className="text-[18px] text-[#256862]" />
-                                        <span>Duty Roster &amp; Shifts</span>
-                                    </button>
-                                    <div className="my-1 border-t border-[#CBDAD6]/50" />
-                                    <button
-                                        onClick={() => {
-                                            localStorage.removeItem("adminToken");
-                                            localStorage.removeItem("adminUser");
-                                            window.location.href = "/";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#ba1a1a] hover:bg-[#ffdad6]/40 transition-colors text-left"
-                                    >
-                                        <Icon name="logout" className="text-[18px]" />
-                                        <span>Logout</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+        .doctor-dashboard-page header .text-\\[20px\\] {
+            font-size: 18px;
+        }
+
+        .doctor-dashboard-page header .text-\\[10px\\] {
+            font-size: 9px;
+        }
+
+        /* Main container */
+        .doctor-dashboard-page main > div {
+            padding: 20px 14px;
+            gap: 24px;
+        }
+
+        /* Hero section */
+        .doctor-dashboard-page section > .relative.p-6 {
+            padding: 18px;
+        }
+
+        .doctor-dashboard-page h1 {
+            font-size: 27px;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+
+        .doctor-dashboard-page h3 {
+            font-size: 21px;
+            line-height: 1.3;
+        }
+
+        /* Hero action buttons */
+        .doctor-dashboard-page section .w-full.lg\\:w-auto {
+            width: 100%;
+        }
+
+        /* Hero sync information */
+        .doctor-dashboard-page section > .px-6.lg\\:px-8 {
+            padding: 12px 16px;
+            align-items: flex-start;
+        }
+
+        .doctor-dashboard-page section > .px-6.lg\\:px-8 > div {
+            flex-wrap: wrap;
+        }
+
+        /* KPI cards */
+        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 {
+            gap: 12px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 > div {
+            padding: 18px;
+        }
+
+        /* AI assessment cards */
+        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 {
+            gap: 14px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 > div {
+            padding: 18px;
+        }
+
+        /* Appointment heading and search */
+        .doctor-dashboard-page input[type="text"] {
+            min-width: 0;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .doctor-dashboard-page .min-w-\\[280px\\] {
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* Appointment filters */
+        .doctor-dashboard-page .overflow-x-auto {
+            max-width: 100%;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .doctor-dashboard-page .overflow-x-auto button {
+            flex-shrink: 0;
+        }
+
+        /* Appointment list and notes */
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 {
+            gap: 18px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div {
+            min-width: 0;
+        }
+
+        /* Appointment cards */
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div > div {
+            min-width: 0;
+        }
+
+        .doctor-dashboard-page h4 {
+            overflow-wrap: anywhere;
+        }
+
+        .doctor-dashboard-page textarea {
+            width: 100%;
+            min-width: 0;
+            font-size: 13px;
+        }
+
+        /* Patient information and appointment details */
+        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 {
+            gap: 10px;
+        }
+
+        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:first-child {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:last-child {
+            flex-shrink: 0;
+        }
+
+        /* Consultation notes */
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 .p-6 {
+            padding: 17px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 .flex.items-center.justify-between {
+            gap: 10px;
+        }
+
+        /* Note template buttons */
+        .doctor-dashboard-page .flex.flex-wrap.gap-1\\.5 {
+            gap: 6px;
+        }
+
+        /* Modal */
+        .doctor-dashboard-page .fixed.inset-0 {
+            padding: 12px;
+        }
+
+        .doctor-dashboard-page .fixed.inset-0 > div {
+            max-height: 90dvh;
+            overflow-y: auto;
+        }
+
+        .doctor-dashboard-page .fixed.inset-0 .p-6 {
+            padding: 18px;
+        }
+    }
+
+    /* =========================================
+       SMALL PHONES
+    ========================================= */
+
+    @media (max-width: 420px) {
+
+        .doctor-dashboard-page main > div {
+            padding: 16px 11px;
+            gap: 20px;
+        }
+
+        .doctor-dashboard-page h1 {
+            font-size: 24px;
+        }
+
+        .doctor-dashboard-page h3 {
+            font-size: 19px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 > div {
+            padding: 15px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 > div {
+            padding: 15px;
+        }
+
+        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div > div {
+            padding-left: 13px;
+            padding-right: 13px;
+        }
+
+        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 {
+            flex-wrap: wrap;
+        }
+
+        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:last-child {
+            align-items: flex-start;
+            width: 100%;
+            padding-left: 60px;
+        }
+
+        .doctor-dashboard-page .flex.items-center.justify-between.pt-1 {
+            align-items: flex-start;
+        }
+
+        .doctor-dashboard-page .flex.items-center.justify-between.pt-1 > div {
+            flex-wrap: wrap;
+        }
+
+        .doctor-dashboard-page button {
+            max-width: 100%;
+        }
+
+        .doctor-dashboard-page .fixed.inset-0 h3 {
+            font-size: 20px;
+        }
+    }
+`}</style>
+           <DoctorNavbar />
 
             {/* ================= MAIN ================= */}
             <main className="w-full">

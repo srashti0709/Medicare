@@ -64,13 +64,248 @@ const fontStyles = `
     animation: none;
   }
 }
+  
+/* =========================================
+   SERVICES PAGE RESPONSIVE STYLES
+   Desktop layout remains unchanged
+========================================= */
+
+.medicare-services-responsive {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  /* Main page spacing */
+  .medicare-services-responsive > div {
+    padding: 16px;
+  }
+
+  .medicare-services-responsive .max-w-\[1450px\] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Page header */
+  .medicare-services-responsive h2 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  .medicare-services-responsive > div > div > div:first-child > button {
+    width: 100%;
+  }
+
+  /* Overview cards */
+  .medicare-services-responsive .grid.grid-cols-1 {
+    gap: 12px;
+  }
+
+  /* Registry header */
+  .medicare-services-responsive .px-6.py-5 {
+    padding: 16px;
+  }
+
+  .medicare-services-responsive .px-6.pb-4 {
+    padding: 0 16px 16px;
+  }
+
+  /* Filter controls */
+  .medicare-services-responsive input[type="text"],
+  .medicare-services-responsive select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+
+  .medicare-services-responsive .relative.flex-1 {
+    width: 100%;
+  }
+
+  /* Registry table: scroll horizontally */
+  .medicare-services-responsive .overflow-x-auto {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .medicare-services-responsive table {
+    min-width: 900px;
+  }
+
+  /* Registry footer */
+  .medicare-services-responsive .px-6.py-4 {
+    padding: 14px 16px;
+    align-items: flex-start;
+  }
+
+  .medicare-services-responsive .px-6.py-4 > div {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  /* AI advisory */
+  .medicare-services-responsive .bg-\[\#DCF3EE\] {
+    padding: 16px;
+  }
+
+  /* Edit modal */
+  .medicare-services-responsive .fixed.inset-0 {
+    padding: 12px;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  .medicare-services-responsive .md-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-radius: 16px;
+  }
+
+  .medicare-services-responsive .md-modal > div:first-child {
+    padding: 16px;
+  }
+
+  .medicare-services-responsive .md-modal form > div:first-child {
+    padding: 18px 16px;
+    gap: 18px;
+  }
+
+  .medicare-services-responsive .md-modal form > div:last-child {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .medicare-services-responsive > div {
+    padding: 12px;
+  }
+
+  /* Metric cards */
+  .medicare-services-responsive .grid.grid-cols-1 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div {
+    padding: 13px;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div > div:first-child {
+    min-width: 0;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div span {
+    overflow-wrap: anywhere;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 .md-display {
+    font-size: 28px;
+    line-height: 34px;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div > div:last-child {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* Registry heading */
+  .medicare-services-responsive h3 {
+    font-size: 21px;
+    line-height: 1.35;
+  }
+
+  .medicare-services-responsive .px-6.py-5 > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Filters */
+  .medicare-services-responsive .px-6.pb-4 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Search placeholder */
+  .medicare-services-responsive input[type="text"] {
+    font-size: 13px;
+  }
+
+  /* Empty and loading states */
+  .medicare-services-responsive .py-20 {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  /* Footer */
+  .medicare-services-responsive .px-6.py-4 {
+    padding: 14px 12px;
+  }
+
+  .medicare-services-responsive .px-6.py-4 > div {
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  /* AI advisory */
+  .medicare-services-responsive .bg-\[\#DCF3EE\] > div {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Modal */
+  .medicare-services-responsive .md-modal form > div:last-child {
+    flex-direction: column-reverse;
+  }
+
+  .medicare-services-responsive .md-modal form > div:last-child button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .medicare-services-responsive .md-modal .w-40 {
+    max-width: 100%;
+  }
+}
+
+/* Extra-small phones */
+@media (max-width: 360px) {
+  .medicare-services-responsive > div {
+    padding: 10px;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .medicare-services-responsive .grid.grid-cols-1 > div {
+    padding: 15px;
+  }
+
+  .medicare-services-responsive .md-modal h3 {
+    font-size: 19px;
+  }
+}
+
 `;
 
 const inputClass =
-  "w-full bg-white border border-[#CBDAD6] rounded-xl px-3.5 py-2.5 text-sm text-[#0F3437] placeholder:text-[#8FA6A2] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60";
+  "w-full bg-white border border-[#CBDAD6] rounded-xl px-3.5 py-2.5 text-base text-[#0F3437] placeholder:text-[#8FA6A2] outline-none transition focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60";
 
 const labelClass =
-  "block text-[13px] font-semibold text-[#164B4D] mb-1.5";
+  "block text-base font-semibold text-[#164B4D] mb-1.5";
 
 const Services = ({ onAddService }) => {
   const [services, setServices] = useState([]);
@@ -93,7 +328,7 @@ const Services = ({ onAddService }) => {
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Failed to fetch services"
+        "Failed to fetch services"
       );
     } finally {
       setLoading(false);
@@ -156,7 +391,7 @@ const Services = ({ onAddService }) => {
 
       alert(
         error.response?.data?.message ||
-          "Failed to update service"
+        "Failed to update service"
       );
     } finally {
       setSaving(false);
@@ -194,7 +429,7 @@ const Services = ({ onAddService }) => {
 
       alert(
         error.response?.data?.message ||
-          "Failed to update service status"
+        "Failed to update service status"
       );
     }
   };
@@ -263,7 +498,7 @@ const Services = ({ onAddService }) => {
   };
 
   return (
-    <div className="medicare-services min-h-full">
+    <div className="medicare-services medicare-services-responsive min-h-full">
       <style>{fontStyles}</style>
 
       <div className="p-6 xl:p-8">
@@ -275,7 +510,7 @@ const Services = ({ onAddService }) => {
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-[#2E9C8F] animate-pulse" />
 
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#256862]">
+                <span className="text-base font-bold uppercase tracking-[0.16em] text-[#256862]">
                   Clinical Operations
                 </span>
               </div>
@@ -284,7 +519,7 @@ const Services = ({ onAddService }) => {
                 Services
               </h2>
 
-              <p className="text-xs text-[#526563] mt-1">
+              <p className="text-base text-[#526563] mt-1">
                 Manage hospital services and departments across
                 inpatient and outpatient care.
               </p>
@@ -292,7 +527,7 @@ const Services = ({ onAddService }) => {
 
             <button
               onClick={onAddService}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-sm font-semibold shadow-[0_4px_12px_rgba(15,52,55,0.15)] hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-semibold shadow-[0_4px_12px_rgba(15,52,55,0.15)] hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3] focus-visible:ring-offset-2"
             >
               <span className="text-lg leading-none">
                 +
@@ -306,7 +541,7 @@ const Services = ({ onAddService }) => {
           {error && (
             <div
               role="alert"
-              className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-sm font-medium"
+              className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-base font-medium"
             >
               <span className="text-[#F28B5B] font-bold">
                 !
@@ -323,7 +558,7 @@ const Services = ({ onAddService }) => {
               {/* TOTAL */}
               <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold text-[#5B7773] uppercase tracking-wider">
+                  <span className="text-base font-bold text-[#5B7773] uppercase tracking-wider">
                     Total Services
                   </span>
 
@@ -332,12 +567,12 @@ const Services = ({ onAddService }) => {
                       {totalServices}
                     </span>
 
-                    <span className="text-[11px] font-semibold text-[#256862]">
+                    <span className="text-base font-semibold text-[#256862]">
                       Catalog
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#5B7773] mt-1">
+                  <p className="text-base text-[#5B7773] mt-1">
                     Registered hospital services
                   </p>
                 </div>
@@ -352,7 +587,7 @@ const Services = ({ onAddService }) => {
               {/* ACTIVE */}
               <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold text-[#5B7773] uppercase tracking-wider">
+                  <span className="text-base font-bold text-[#5B7773] uppercase tracking-wider">
                     Active Services
                   </span>
 
@@ -361,12 +596,12 @@ const Services = ({ onAddService }) => {
                       {activeServices}
                     </span>
 
-                    <span className="px-1.5 py-0.5 rounded bg-[#ADEFE7] text-[#00504A] text-[11px] font-bold">
+                    <span className="px-1.5 py-0.5 rounded bg-[#ADEFE7] text-[#00504A] text-base font-bold">
                       Live
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#5B7773] mt-1">
+                  <p className="text-base text-[#5B7773] mt-1">
                     Available for booking
                   </p>
                 </div>
@@ -381,7 +616,7 @@ const Services = ({ onAddService }) => {
               {/* INACTIVE */}
               <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold text-[#5B7773] uppercase tracking-wider">
+                  <span className="text-base font-bold text-[#5B7773] uppercase tracking-wider">
                     Inactive Services
                   </span>
 
@@ -390,12 +625,12 @@ const Services = ({ onAddService }) => {
                       {inactiveServices}
                     </span>
 
-                    <span className="px-1.5 py-0.5 rounded bg-[#FFDBCD] text-[#7A3005] text-[11px] font-bold">
+                    <span className="px-1.5 py-0.5 rounded bg-[#FFDBCD] text-[#7A3005] text-base font-bold">
                       Review
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#5B7773] mt-1">
+                  <p className="text-base text-[#5B7773] mt-1">
                     Currently unavailable
                   </p>
                 </div>
@@ -410,7 +645,7 @@ const Services = ({ onAddService }) => {
               {/* DEPARTMENTS */}
               <div className="bg-white rounded-2xl p-5 border border-[#DCEAE7] shadow-[0_8px_30px_-22px_rgba(15,52,55,0.45)] hover:border-[#9ADBD3] transition-all flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold text-[#5B7773] uppercase tracking-wider">
+                  <span className="text-base font-bold text-[#5B7773] uppercase tracking-wider">
                     Departments Covered
                   </span>
 
@@ -419,12 +654,12 @@ const Services = ({ onAddService }) => {
                       {departmentCount}
                     </span>
 
-                    <span className="text-[11px] font-semibold text-[#256862]">
+                    <span className="text-base font-semibold text-[#256862]">
                       Clinical
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#5B7773] mt-1">
+                  <p className="text-base text-[#5B7773] mt-1">
                     Departments represented
                   </p>
                 </div>
@@ -448,13 +683,13 @@ const Services = ({ onAddService }) => {
                   Service Registry
                 </h3>
 
-                <p className="text-xs text-[#526563] mt-1">
+                <p className="text-base text-[#526563] mt-1">
                   Central directory of hospital services and departments.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E7EFED] text-[#5B7773] text-[11px] font-semibold">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E7EFED] text-[#5B7773] text-base font-semibold">
                   <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
                   Registry synced
                 </div>
@@ -486,7 +721,7 @@ const Services = ({ onAddService }) => {
                       setSearchTerm(e.target.value)
                     }
                     placeholder="Search services by name, department, or keyword..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-sm text-[#0F3437] placeholder:text-[#8FA6A2] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-base text-[#0F3437] placeholder:text-[#8FA6A2] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50 transition"
                   />
                 </div>
 
@@ -496,7 +731,7 @@ const Services = ({ onAddService }) => {
                   onChange={(e) =>
                     setDepartmentFilter(e.target.value)
                   }
-                  className="lg:w-52 px-3.5 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-[13px] font-semibold text-[#0F3437] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50"
+                  className="lg:w-52 px-3.5 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-base font-semibold text-[#0F3437] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50"
                 >
                   <option value="all">
                     All Departments
@@ -518,7 +753,7 @@ const Services = ({ onAddService }) => {
                   onChange={(e) =>
                     setStatusFilter(e.target.value)
                   }
-                  className="lg:w-40 px-3.5 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-[13px] font-semibold text-[#0F3437] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50"
+                  className="lg:w-40 px-3.5 py-2.5 bg-[#F5F8F6] border border-transparent rounded-xl text-base font-semibold text-[#0F3437] outline-none focus:bg-white focus:border-[#CBDAD6] focus:ring-2 focus:ring-[#9ADBD3]/50"
                 >
                   <option value="all">
                     Status: All
@@ -536,7 +771,7 @@ const Services = ({ onAddService }) => {
                 {/* RESET */}
                 <button
                   onClick={resetFilters}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#F5F8F6] hover:bg-[#E7EFED] rounded-xl text-[13px] font-semibold text-[#5B7773] transition-colors"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#F5F8F6] hover:bg-[#E7EFED] rounded-xl text-base font-semibold text-[#5B7773] transition-colors"
                 >
                   ↺
                   Reset
@@ -568,7 +803,7 @@ const Services = ({ onAddService }) => {
                   />
                 </svg>
 
-                <p className="text-sm font-medium text-[#526563]">
+                <p className="text-base font-medium text-[#526563]">
                   Loading services...
                 </p>
               </div>
@@ -583,7 +818,7 @@ const Services = ({ onAddService }) => {
                   No services found.
                 </h4>
 
-                <p className="text-sm text-[#526563] mt-1">
+                <p className="text-base text-[#526563] mt-1">
                   Try adjusting your search or filters.
                 </p>
               </div>
@@ -594,23 +829,23 @@ const Services = ({ onAddService }) => {
                   <table className="w-full min-w-[1000px] text-left">
                     <thead>
                       <tr className="bg-[#F2F8F6]">
-                        <th className="px-6 py-3.5 text-[11px] font-bold text-[#526563] uppercase tracking-wider">
+                        <th className="px-6 py-3.5 text-base font-bold text-[#526563] uppercase tracking-wider">
                           Service
                         </th>
 
-                        <th className="px-5 py-3.5 text-[11px] font-bold text-[#526563] uppercase tracking-wider">
+                        <th className="px-5 py-3.5 text-base font-bold text-[#526563] uppercase tracking-wider">
                           Department
                         </th>
 
-                        <th className="px-5 py-3.5 text-[11px] font-bold text-[#526563] uppercase tracking-wider">
+                        <th className="px-5 py-3.5 text-base font-bold text-[#526563] uppercase tracking-wider">
                           Description
                         </th>
 
-                        <th className="px-5 py-3.5 text-[11px] font-bold text-[#526563] uppercase tracking-wider">
+                        <th className="px-5 py-3.5 text-base font-bold text-[#526563] uppercase tracking-wider">
                           Status
                         </th>
 
-                        <th className="px-6 py-3.5 text-[11px] font-bold text-[#526563] uppercase tracking-wider text-right">
+                        <th className="px-6 py-3.5 text-base font-bold text-[#526563] uppercase tracking-wider text-right">
                           Actions
                         </th>
                       </tr>
@@ -620,33 +855,48 @@ const Services = ({ onAddService }) => {
                       {filteredServices.map((service) => (
                         <tr
                           key={service._id}
-                          className={`border-b border-[#EDF2F1] last:border-b-0 hover:bg-[#F7FBFA] transition-colors ${
-                            !service.isActive
+                          className={`border-b border-[#EDF2F1] last:border-b-0 hover:bg-[#F7FBFA] transition-colors ${!service.isActive
                               ? "bg-[#F5F8F6]/60"
                               : ""
-                          }`}
+                            }`}
                         >
+                          {/* SERVICE */}
                           {/* SERVICE */}
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3.5">
                               <div
-                                className={`md-display w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-base font-bold ring-1 ring-inset ${
-                                  service.isActive
-                                    ? "bg-[#9ADBD3]/45 text-[#164B4D] ring-[#9ADBD3]"
-                                    : "bg-[#FFDBCD] text-[#7A3005] ring-[#F28B5B]/30"
-                                }`}
+                                className={`w-12 h-12 shrink-0 rounded-xl overflow-hidden flex items-center justify-center ring-1 ring-inset ${service.isActive
+                                    ? "bg-[#9ADBD3]/45 ring-[#9ADBD3]"
+                                    : "bg-[#FFDBCD] ring-[#F28B5B]/30"
+                                  }`}
                               >
-                                {service.name
-                                  ?.charAt(0)
-                                  .toUpperCase()}
+                                {service.image ? (
+                                  <img
+                                    src={service.image}
+                                    alt={service.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                ) : (
+                                  <span
+                                    className={`md-display text-base font-bold ${service.isActive
+                                        ? "text-[#164B4D]"
+                                        : "text-[#7A3005]"
+                                      }`}
+                                  >
+                                    {service.name?.charAt(0).toUpperCase()}
+                                  </span>
+                                )}
                               </div>
 
                               <div className="min-w-0">
-                                <p className="font-semibold text-[14px] text-[#0F3437] truncate max-w-[280px]">
+                                <p className="font-semibold text-base text-[#0F3437] truncate max-w-[280px]">
                                   {service.name}
                                 </p>
 
-                                <p className="text-[11px] text-[#8FA6A2] mt-0.5">
+                                <p className="text-base text-[#8FA6A2] mt-0.5">
                                   Clinical service
                                 </p>
                               </div>
@@ -655,7 +905,7 @@ const Services = ({ onAddService }) => {
 
                           {/* DEPARTMENT */}
                           <td className="px-5 py-4">
-                            <span className="px-2.5 py-1 rounded-lg bg-[#E7EFED] text-[12px] font-semibold text-[#37595A] inline-block whitespace-nowrap">
+                            <span className="px-2.5 py-1 rounded-lg bg-[#E7EFED] text-base font-semibold text-[#37595A] inline-block whitespace-nowrap">
                               {service.department?.name ||
                                 "Unknown"}
                             </span>
@@ -663,7 +913,7 @@ const Services = ({ onAddService }) => {
 
                           {/* DESCRIPTION */}
                           <td className="px-5 py-4 max-w-[380px]">
-                            <p className="text-[13px] text-[#667876] truncate">
+                            <p className="text-base text-[#667876] truncate">
                               {service.description ||
                                 "No description"}
                             </p>
@@ -672,18 +922,16 @@ const Services = ({ onAddService }) => {
                           {/* STATUS */}
                           <td className="px-5 py-4">
                             <span
-                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${
-                                service.isActive
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-base font-bold border ${service.isActive
                                   ? "bg-[#ADEFE7] text-[#00504A] border-[#92D2CB]"
                                   : "bg-[#FFDBCD] text-[#7A3005] border-[#F28B5B]/40"
-                              }`}
+                                }`}
                             >
                               <span
-                                className={`w-1.5 h-1.5 rounded-full ${
-                                  service.isActive
+                                className={`w-1.5 h-1.5 rounded-full ${service.isActive
                                     ? "bg-[#256862]"
                                     : "bg-[#F28B5B]"
-                                }`}
+                                  }`}
                               />
 
                               {service.isActive
@@ -699,7 +947,7 @@ const Services = ({ onAddService }) => {
                                 onClick={() =>
                                   setSelectedService(service)
                                 }
-                                className="px-3 py-1.5 rounded-xl bg-[#F5F8F6] hover:bg-[#E7EFED] text-[#164B4D] text-[12px] font-semibold transition-colors"
+                                className="px-3 py-1.5 rounded-xl bg-[#F5F8F6] hover:bg-[#E7EFED] text-[#164B4D] text-base font-semibold transition-colors"
                               >
                                 Edit
                               </button>
@@ -710,11 +958,10 @@ const Services = ({ onAddService }) => {
                                     service._id
                                   )
                                 }
-                                className={`px-3 py-1.5 rounded-xl text-[12px] font-semibold transition-colors ${
-                                  service.isActive
+                                className={`px-3 py-1.5 rounded-xl text-base font-semibold transition-colors ${service.isActive
                                     ? "bg-white border border-[#F28B5B]/50 text-[#A8441A] hover:bg-[#F28B5B] hover:text-white"
                                     : "bg-[#164B4D] text-white hover:bg-[#0F3437]"
-                                }`}
+                                  }`}
                               >
                                 {service.isActive
                                   ? "Deactivate"
@@ -730,7 +977,7 @@ const Services = ({ onAddService }) => {
 
                 {/* FOOTER */}
                 <div className="px-6 py-4 bg-white flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-xs text-[#667876]">
+                  <div className="flex items-center gap-2 text-base text-[#667876]">
                     <span>
                       Showing{" "}
                       <strong className="text-[#0F3437]">
@@ -760,7 +1007,7 @@ const Services = ({ onAddService }) => {
                     </span>
                   </div>
 
-                  <span className="text-[11px] text-[#8FA6A2]">
+                  <span className="text-base text-[#8FA6A2]">
                     Registry updated from live services
                   </span>
                 </div>
@@ -781,12 +1028,12 @@ const Services = ({ onAddService }) => {
                     Medicare Services Intelligence
                   </span>
 
-                  <span className="px-2 py-0.5 rounded bg-[#ADEFE7] text-[#00504A] text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-[#ADEFE7] text-[#00504A] text-base font-bold">
                     HEALTH IQ
                   </span>
                 </div>
 
-                <p className="text-xs text-[#526563] mt-0.5">
+                <p className="text-base text-[#526563] mt-0.5">
                   Service availability and department assignments
                   are synchronized with your hospital management
                   system.
@@ -803,7 +1050,7 @@ const Services = ({ onAddService }) => {
                 {/* MODAL HEADER */}
                 <div className="flex items-start justify-between px-7 py-5 border-b border-[#E7EFED] bg-[#F5F8F6]">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#256862] mb-1">
+                    <p className="text-base uppercase tracking-[0.16em] font-bold text-[#256862] mb-1">
                       Service Management
                     </p>
 
@@ -811,7 +1058,7 @@ const Services = ({ onAddService }) => {
                       Edit Service
                     </h3>
 
-                    <p className="text-sm text-[#526563] mt-1">
+                    <p className="text-base text-[#526563] mt-1">
                       Update service information
                     </p>
                   </div>
@@ -923,37 +1170,57 @@ const Services = ({ onAddService }) => {
                     </div>
 
                     {/* IMAGE */}
+                    {/* IMAGE */}
                     <div>
                       <label className={labelClass}>
-                        Image URL
+                        Service Image URL
                       </label>
 
                       <input
-                        type="text"
-                        value={
-                          selectedService.image || ""
-                        }
+                        type="url"
+                        value={selectedService.image || ""}
                         onChange={(e) =>
-                          setSelectedService(
-                            (current) => ({
-                              ...current,
-                              image: e.target.value,
-                            })
-                          )
+                          setSelectedService((current) => ({
+                            ...current,
+                            image: e.target.value,
+                          }))
                         }
-                        placeholder="Enter image URL..."
+                        placeholder="Paste service image URL..."
                         className={inputClass}
                       />
+
+                      <p className="text-base text-[#8FA6A2] mt-1.5">
+                        Add a direct image URL for this service.
+                      </p>
+
+                      {selectedService.image && (
+                        <div className="mt-3">
+                          <p className="text-base font-semibold text-[#164B4D] mb-2">
+                            Image Preview
+                          </p>
+
+                          <div className="w-40 h-28 rounded-xl border border-[#CBDAD6] bg-[#F5F8F6] overflow-hidden">
+                            <img
+                              src={selectedService.image}
+                              alt={selectedService.name || "Service preview"}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* STATUS */}
                     <div className="flex items-center justify-between gap-4 p-4 bg-[#F5F8F6] border border-[#E7EFED] rounded-xl">
                       <div>
-                        <p className="text-sm font-semibold text-[#164B4D]">
+                        <p className="text-base font-semibold text-[#164B4D]">
                           Service is active
                         </p>
 
-                        <p className="text-xs text-[#526563] mt-0.5">
+                        <p className="text-base text-[#526563] mt-0.5">
                           Allow this service to remain available.
                         </p>
                       </div>
@@ -984,7 +1251,7 @@ const Services = ({ onAddService }) => {
                       onClick={() =>
                         setSelectedService(null)
                       }
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-[#CBDAD6] bg-white hover:bg-[#E7EFED] text-[#164B4D] text-sm font-semibold transition-colors"
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-[#CBDAD6] bg-white hover:bg-[#E7EFED] text-[#164B4D] text-base font-semibold transition-colors"
                     >
                       Cancel
                     </button>
@@ -992,7 +1259,7 @@ const Services = ({ onAddService }) => {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="flex-1 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold shadow-sm transition-colors"
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-semibold shadow-sm transition-colors"
                     >
                       {saving
                         ? "Saving..."

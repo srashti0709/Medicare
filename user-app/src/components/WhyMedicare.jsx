@@ -75,7 +75,7 @@ const WhyMedicare = () => {
                     <Icon size={28} strokeWidth={1.8} />
                   </div>
 
-                  <span className="font-['Bricolage_Grotesque'] text-4xl font-bold text-[#DCECE6] transition-colors duration-300 group-hover:text-[#ADEFE7]">
+                  <span className="font-['Bricolage_Grotesque'] text-4xl font-bold text-[#8abdaa] transition-colors duration-300 group-hover:text-[#84d8cf]">
                     {feature.number}
                   </span>
                 </div>

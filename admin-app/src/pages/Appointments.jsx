@@ -8,6 +8,8 @@ const fontStyles = `
     font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
     color: #0A1F1C;
     -webkit-font-smoothing: antialiased;
+    width: 100%;
+    min-width: 0;
 }
 
 .medicare-appointments .md-display {
@@ -60,6 +62,275 @@ const fontStyles = `
 .medicare-appointments ::-webkit-scrollbar-thumb {
     background: #9ADBD3;
     border-radius: 999px;
+}
+
+/* Prevent grid children from forcing horizontal page overflow */
+.medicare-appointments .grid,
+.medicare-appointments .flex {
+    min-width: 0;
+}
+
+.medicare-appointments .overflow-x-auto {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* TABLET RESPONSIVENESS */
+@media (min-width: 768px) and (max-width: 1279px) {
+
+    .medicare-appointments > div {
+        padding: 24px;
+    }
+
+    .medicare-appointments .max-w-\\[1450px\\] {
+        width: 100%;
+    }
+
+    .medicare-appointments table {
+        min-width: 900px;
+    }
+
+    .medicare-appointments .grid.grid-cols-12 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .medicare-appointments .xl\\:col-span-8,
+    .medicare-appointments .xl\\:col-span-4 {
+        grid-column: span 12 / span 12;
+        min-width: 0;
+    }
+
+    .medicare-appointments .xl\\:sticky {
+        position: static;
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 767px) {
+
+    /* PAGE SPACING */
+    .medicare-appointments > div {
+        padding: 14px;
+    }
+
+    .medicare-appointments .max-w-\\[1450px\\] {
+        width: 100%;
+        max-width: 100%;
+        gap: 18px;
+    }
+
+    /* PAGE HEADER */
+    .medicare-appointments h1 {
+        font-size: 23px;
+    }
+
+    .medicare-appointments .tracking-\\[0\\.15em\\] {
+        letter-spacing: 0.08em;
+    }
+
+    .medicare-appointments .xl\\:flex-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* GENERAL TYPOGRAPHY */
+    .medicare-appointments .text-base {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .medicare-appointments .text-lg {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .medicare-appointments .text-\\[25px\\] {
+        font-size: 23px;
+    }
+
+    .medicare-appointments .text-\\[30px\\] {
+        font-size: 25px;
+    }
+
+    .medicare-appointments .text-\\[26px\\] {
+        font-size: 23px;
+    }
+
+    /* METRIC CARDS */
+    .medicare-appointments .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .medicare-appointments .p-5 {
+        padding: 12px;
+    }
+
+    .medicare-appointments .p-4 {
+        padding: 12px;
+    }
+
+    .medicare-appointments .p-3\\.5 {
+        padding: 11px;
+    }
+
+    .medicare-appointments .p-3 {
+        padding: 10px;
+    }
+
+    .medicare-appointments .gap-5 {
+        gap: 12px;
+    }
+
+    .medicare-appointments .gap-4 {
+        gap: 10px;
+    }
+
+    /* METRIC LABELS */
+    .medicare-appointments .uppercase {
+        overflow-wrap: anywhere;
+    }
+
+    .medicare-appointments .tracking-\\[0\\.12em\\] {
+        letter-spacing: 0.06em;
+    }
+
+    /* UTILITY BAR */
+    .medicare-appointments .flex-wrap {
+        row-gap: 8px;
+    }
+
+    /* LIVE SCHEDULE */
+    .medicare-appointments .grid-cols-2 {
+        min-width: 0;
+    }
+
+    .medicare-appointments .grid-cols-2 > * {
+        min-width: 0;
+    }
+
+    .medicare-appointments .grid-cols-2 button {
+        padding: 9px;
+    }
+
+    /* MAIN CONTENT */
+    .medicare-appointments .grid-cols-12 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .medicare-appointments .col-span-12 {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .medicare-appointments .xl\\:sticky {
+        position: static;
+        top: auto;
+    }
+
+    /* APPOINTMENT TABLE */
+    .medicare-appointments table {
+        min-width: 950px;
+        width: 950px;
+        table-layout: auto;
+    }
+
+    .medicare-appointments th,
+    .medicare-appointments td {
+        white-space: nowrap;
+        padding: 12px;
+    }
+
+    .medicare-appointments td {
+        vertical-align: middle;
+    }
+
+    .medicare-appointments .overflow-x-auto {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+    }
+
+    /* TABLE HEADER */
+    .medicare-appointments .px-5.sm\\:px-6 {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* TABLE FOOTER */
+    .medicare-appointments .gap-4.text-base {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* DETAILS PANEL */
+    .medicare-appointments .grid-cols-2 {
+        min-width: 0;
+    }
+
+    .medicare-appointments .rounded-2xl {
+        border-radius: 15px;
+    }
+
+    /* PATIENT DETAILS */
+    .medicare-appointments .w-12.h-12 {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* BUTTONS */
+    .medicare-appointments button {
+        touch-action: manipulation;
+    }
+
+    .medicare-appointments .flex.items-center.gap-2 {
+        min-width: 0;
+    }
+
+    /* EMPTY STATE */
+    .medicare-appointments .px-10 {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .medicare-appointments .py-20 {
+        padding-top: 48px;
+        padding-bottom: 48px;
+    }
+
+    /* ERROR MESSAGE */
+    .medicare-appointments [role="alert"] {
+        padding: 12px;
+        font-size: 12px;
+    }
+}
+
+/* EXTRA SMALL MOBILE SCREENS */
+@media (max-width: 380px) {
+
+    .medicare-appointments > div {
+        padding: 10px;
+    }
+
+    .medicare-appointments .grid-cols-2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .medicare-appointments .p-5 {
+        padding: 13px;
+    }
+
+    .medicare-appointments .text-base {
+        font-size: 12px;
+    }
+
+    .medicare-appointments .text-\\[30px\\] {
+        font-size: 24px;
+    }
+
+    .medicare-appointments .gap-5 {
+        gap: 10px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -289,7 +560,7 @@ const Appointments = () => {
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
-                                <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#2E8179]">
+                                <span className="text-base font-bold tracking-[0.15em] uppercase text-[#2E8179]">
                                     Clinical Operations • Scheduling
                                 </span>
                             </div>
@@ -298,7 +569,7 @@ const Appointments = () => {
                                 Appointments
                             </h1>
 
-                            <p className="text-xs text-[#526563] mt-1">
+                            <p className="text-base text-[#526563] mt-1">
                                 Track and manage patient appointments across
                                 Medicare.
                             </p>
@@ -312,7 +583,7 @@ const Appointments = () => {
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#2E9C8F]" />
                                 </span>
 
-                                <span className="text-xs font-bold text-[#164B4D]">
+                                <span className="text-base font-bold text-[#164B4D]">
                                     Live Registry
                                 </span>
                             </div>
@@ -323,7 +594,7 @@ const Appointments = () => {
                     {error && (
                         <div
                             role="alert"
-                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3.5 rounded-xl text-sm font-medium"
+                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3.5 rounded-xl text-base font-medium"
                         >
                             <svg
                                 className="w-5 h-5 mt-0.5 shrink-0 text-[#F28B5B]"
@@ -369,7 +640,7 @@ const Appointments = () => {
                                 />
                             </svg>
 
-                            <p className="text-sm font-semibold text-[#526563]">
+                            <p className="text-base font-semibold text-[#526563]">
                                 Loading appointments...
                             </p>
                         </div>
@@ -383,7 +654,7 @@ const Appointments = () => {
                                     className={`${cardClass} p-5 hover:border-[#9ADBD3] transition-all`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                             Today's Total
                                         </span>
 
@@ -413,12 +684,12 @@ const Appointments = () => {
                                             {todayAppointments}
                                         </span>
 
-                                        <span className="px-2 py-0.5 rounded-full bg-[#E1F3F0] text-[#164B4D] text-[10px] font-bold">
+                                        <span className="px-2 py-0.5 rounded-full bg-[#E1F3F0] text-[#164B4D] text-base font-bold">
                                             TODAY
                                         </span>
                                     </div>
 
-                                    <p className="text-xs text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         Appointments scheduled today
                                     </p>
                                 </div>
@@ -428,7 +699,7 @@ const Appointments = () => {
                                     className={`${cardClass} p-5 hover:border-[#9ADBD3] transition-all`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                             Upcoming
                                         </span>
 
@@ -456,13 +727,13 @@ const Appointments = () => {
                                             {upcomingAppointments.length}
                                         </span>
 
-                                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E7EFED] text-[#256862] text-[10px] font-bold">
+                                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E7EFED] text-[#256862] text-base font-bold">
                                             <span className="w-1.5 h-1.5 rounded-full bg-[#2E9C8F]" />
                                             SCHEDULED
                                         </span>
                                     </div>
 
-                                    <p className="text-xs text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         Future active appointments
                                     </p>
                                 </div>
@@ -472,7 +743,7 @@ const Appointments = () => {
                                     className={`${cardClass} p-5 hover:border-[#9ADBD3] transition-all`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                             Completed
                                         </span>
 
@@ -500,12 +771,12 @@ const Appointments = () => {
                                             {completedAppointments}
                                         </span>
 
-                                        <span className="px-2 py-0.5 rounded-full bg-[#DDF1ED] text-[#164B4D] text-[10px] font-bold">
+                                        <span className="px-2 py-0.5 rounded-full bg-[#DDF1ED] text-[#164B4D] text-base font-bold">
                                             {completedRate}% RATE
                                         </span>
                                     </div>
 
-                                    <p className="text-xs text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         Successfully completed sessions
                                     </p>
                                 </div>
@@ -515,7 +786,7 @@ const Appointments = () => {
                                     className={`${cardClass} p-5 hover:border-[#F2C4A9] transition-all`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                             Attention
                                         </span>
 
@@ -550,12 +821,12 @@ const Appointments = () => {
                                             {pendingAppointments}
                                         </span>
 
-                                        <span className="px-2 py-0.5 rounded-full bg-[#FDEEE6] text-[#9A3F18] text-[10px] font-bold">
+                                        <span className="px-2 py-0.5 rounded-full bg-[#FDEEE6] text-[#9A3F18] text-base font-bold">
                                             PENDING
                                         </span>
                                     </div>
 
-                                    <p className="text-xs text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         {cancelledAppointments} cancelled
                                         appointments
                                     </p>
@@ -566,11 +837,11 @@ const Appointments = () => {
                             <div className={`${cardClass} p-4`}>
                                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#667876]">
+                                        <p className="text-base font-bold uppercase tracking-[0.14em] text-[#667876]">
                                             Clinical Operations
                                         </p>
 
-                                        <p className="text-sm font-semibold text-[#164B4D] mt-1">
+                                        <p className="text-base font-semibold text-[#164B4D] mt-1">
                                             Scheduling Orchestration
                                         </p>
                                     </div>
@@ -579,7 +850,7 @@ const Appointments = () => {
                                         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F2F8F6] border border-[#E7EFED]">
                                             <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
-                                            <span className="text-xs font-semibold text-[#526563]">
+                                            <span className="text-base font-semibold text-[#526563]">
                                                 {totalAppointments} Total Records
                                             </span>
                                         </div>
@@ -587,7 +858,7 @@ const Appointments = () => {
                                         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#E1F3F0]">
                                             <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
-                                            <span className="text-xs font-bold text-[#164B4D]">
+                                            <span className="text-base font-bold text-[#164B4D]">
                                                 {confirmedAppointments} Confirmed
                                             </span>
                                         </div>
@@ -595,7 +866,7 @@ const Appointments = () => {
                                         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FDEEE6]">
                                             <span className="w-2 h-2 rounded-full bg-[#F28B5B]" />
 
-                                            <span className="text-xs font-bold text-[#9A3F18]">
+                                            <span className="text-base font-bold text-[#9A3F18]">
                                                 {pendingAppointments} Pending
                                             </span>
                                         </div>
@@ -632,7 +903,7 @@ const Appointments = () => {
                                         No appointments found
                                     </h3>
 
-                                    <p className="text-sm text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         There are currently no appointments in
                                         the registry.
                                     </p>
@@ -653,13 +924,13 @@ const Appointments = () => {
                                                     <div className="flex items-center gap-2">
                                                         <span className="w-2.5 h-2.5 rounded-full bg-[#2E9C8F] md-live-dot" />
 
-                                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                                        <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                                             Live Day Tracker •
                                                             Appointment Density
                                                         </span>
                                                     </div>
 
-                                                    <span className="hidden sm:block text-[10px] font-bold uppercase tracking-wider text-[#2E8179]">
+                                                    <span className="hidden sm:block text-base font-bold uppercase tracking-wider text-[#2E8179]">
                                                         {todayAppointments} today
                                                     </span>
                                                 </div>
@@ -690,7 +961,7 @@ const Appointments = () => {
                                                                         }`}
                                                                     >
                                                                         <span
-                                                                            className={`block text-[10px] font-bold ${
+                                                                            className={`block text-base font-bold ${
                                                                                 isSelected
                                                                                     ? "text-[#164B4D]"
                                                                                     : "text-[#718B87]"
@@ -702,7 +973,7 @@ const Appointments = () => {
                                                                         </span>
 
                                                                         <span
-                                                                            className={`block mt-1 text-xs font-bold truncate ${
+                                                                            className={`block mt-1 text-base font-bold truncate ${
                                                                                 isSelected
                                                                                     ? "text-[#0A1F1C]"
                                                                                     : "text-[#164B4D]"
@@ -714,7 +985,7 @@ const Appointments = () => {
                                                                                 "Unknown"}
                                                                         </span>
 
-                                                                        <span className="block mt-0.5 text-[9px] font-semibold text-[#2E8179] truncate">
+                                                                        <span className="block mt-0.5 text-base font-semibold text-[#2E8179] truncate">
                                                                             {formatDoctorName(
                                                                                 appointment
                                                                                     .doctor
@@ -728,7 +999,7 @@ const Appointments = () => {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <div className="py-5 text-center text-xs text-[#718B87]">
+                                                    <div className="py-5 text-center text-base text-[#718B87]">
                                                         No upcoming appointments
                                                         available.
                                                     </div>
@@ -748,20 +1019,20 @@ const Appointments = () => {
                                                                 Appointments
                                                             </h2>
 
-                                                            <span className="px-2 py-0.5 rounded-full bg-[#ADEFE7] text-[#164B4D] text-[10px] font-bold">
+                                                            <span className="px-2 py-0.5 rounded-full bg-[#ADEFE7] text-[#164B4D] text-base font-bold">
                                                                 {
                                                                     appointments.length
                                                                 }
                                                             </span>
                                                         </div>
 
-                                                        <p className="text-xs text-[#667876] mt-1">
+                                                        <p className="text-base text-[#667876] mt-1">
                                                             Current hospital
                                                             appointment records
                                                         </p>
                                                     </div>
 
-                                                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#667876]">
+                                                    <div className="flex items-center gap-2 text-base font-bold uppercase tracking-wider text-[#667876]">
                                                         <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
                                                         Registry synced
                                                     </div>
@@ -772,27 +1043,27 @@ const Appointments = () => {
                                                     <table className="w-full table-fixed">
                                                         <thead>
                                                             <tr className="bg-[#164B4D] text-left">
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Patient
                                                                 </th>
 
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Doctor
                                                                 </th>
 
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Date & Time
                                                                 </th>
 
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Reason
                                                                 </th>
 
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Status
                                                                 </th>
 
-                                                                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
+                                                                <th className="px-5 py-3 text-base font-bold uppercase tracking-[0.08em] text-[#DDF4F1]">
                                                                     Actions
                                                                 </th>
                                                             </tr>
@@ -827,7 +1098,7 @@ const Appointments = () => {
                                                                             <td className="px-5 py-4">
                                                                                 <div className="flex items-center gap-3">
                                                                                     <div
-                                                                                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 ${
+                                                                                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-base font-bold shrink-0 ${
                                                                                             isSelected
                                                                                                 ? "bg-[#164B4D] text-white"
                                                                                                 : "bg-[#E1F3F0] text-[#164B4D]"
@@ -841,14 +1112,14 @@ const Appointments = () => {
                                                                                     </div>
 
                                                                                     <div className="min-w-0">
-                                                                                        <p className="font-bold text-sm text-[#0A1F1C] leading-snug">
+                                                                                        <p className="font-bold text-base text-[#0A1F1C] leading-snug">
                                                                                             {appointment
                                                                                                 .patient
                                                                                                 ?.name ||
                                                                                                 "Unknown"}
                                                                                         </p>
 
-                                                                                        <p className="text-[11px] text-[#718B87] mt-0.5 truncate max-w-[170px]">
+                                                                                        <p className="text-base text-[#718B87] mt-0.5 truncate max-w-[170px]">
                                                                                             {appointment
                                                                                                 .patient
                                                                                                 ?.email ||
@@ -860,7 +1131,7 @@ const Appointments = () => {
 
                                                                             {/* DOCTOR */}
                                                                             <td className="px-5 py-4">
-                                                                                <p className="font-bold text-sm text-[#0A1F1C] leading-snug">
+                                                                                <p className="font-bold text-base text-[#0A1F1C] leading-snug">
                                                                                     {formatDoctorName(
                                                                                         appointment
                                                                                             .doctor
@@ -869,7 +1140,7 @@ const Appointments = () => {
                                                                                     )}
                                                                                 </p>
 
-                                                                                <p className="text-[11px] font-semibold text-[#2E8179] mt-0.5">
+                                                                                <p className="text-base font-semibold text-[#2E8179] mt-0.5">
                                                                                     {appointment
                                                                                         .doctor
                                                                                         ?.specialization ||
@@ -879,13 +1150,13 @@ const Appointments = () => {
 
                                                                             {/* DATE */}
                                                                             <td className="px-5 py-4">
-                                                                                <p className="text-sm font-bold text-[#0A1F1C] whitespace-nowrap tabular-nums">
+                                                                                <p className="text-base font-bold text-[#0A1F1C] whitespace-nowrap tabular-nums">
                                                                                     {formatTime(
                                                                                         appointment.date
                                                                                     )}
                                                                                 </p>
 
-                                                                                <p className="text-[11px] text-[#718B87] mt-0.5 whitespace-nowrap">
+                                                                                <p className="text-base text-[#718B87] mt-0.5 whitespace-nowrap">
                                                                                     {formatDate(
                                                                                         appointment.date
                                                                                     )}
@@ -894,7 +1165,7 @@ const Appointments = () => {
 
                                                                             {/* REASON */}
                                                                             <td className="px-5 py-4">
-                                                                                <p className="text-sm text-[#37595A] max-w-[190px] truncate">
+                                                                                <p className="text-base text-[#37595A] max-w-[190px] truncate">
                                                                                     {appointment.reason ||
                                                                                         "Not specified"}
                                                                                 </p>
@@ -903,7 +1174,7 @@ const Appointments = () => {
                                                                             {/* STATUS */}
                                                                             <td className="px-5 py-4">
                                                                                 <span
-                                                                                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] font-bold capitalize border ${getStatusStyle(
+                                                                                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-base font-bold capitalize border ${getStatusStyle(
                                                                                         appointment.status
                                                                                     )}`}
                                                                                 >
@@ -939,7 +1210,7 @@ const Appointments = () => {
                                                                                                         "confirmed"
                                                                                                     )
                                                                                                 }
-                                                                                                className="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-[#164B4D] text-white hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
+                                                                                                className="px-3 py-1.5 rounded-xl text-base font-bold bg-[#164B4D] text-white hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
                                                                                             >
                                                                                                 Confirm
                                                                                             </button>
@@ -951,7 +1222,7 @@ const Appointments = () => {
                                                                                                         "cancelled"
                                                                                                     )
                                                                                                 }
-                                                                                                className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
+                                                                                                className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
                                                                                             >
                                                                                                 Cancel
                                                                                             </button>
@@ -968,7 +1239,7 @@ const Appointments = () => {
                                                                                                         "completed"
                                                                                                     )
                                                                                                 }
-                                                                                                className="px-3 py-1.5 rounded-xl text-[11px] font-bold border border-[#B9D8D4] bg-white text-[#164B4D] hover:bg-[#164B4D] hover:text-white hover:border-[#164B4D] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
+                                                                                                className="px-3 py-1.5 rounded-xl text-base font-bold border border-[#B9D8D4] bg-white text-[#164B4D] hover:bg-[#164B4D] hover:text-white hover:border-[#164B4D] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
                                                                                             >
                                                                                                 Complete
                                                                                             </button>
@@ -980,7 +1251,7 @@ const Appointments = () => {
                                                                                                         "cancelled"
                                                                                                     )
                                                                                                 }
-                                                                                                className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
+                                                                                                className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
                                                                                             >
                                                                                                 Cancel
                                                                                             </button>
@@ -989,7 +1260,7 @@ const Appointments = () => {
 
                                                                                     {appointment.status ===
                                                                                         "completed" && (
-                                                                                        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#5E7B77]">
+                                                                                        <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#5E7B77]">
                                                                                             <span className="w-1.5 h-1.5 rounded-full bg-[#2E9C8F]" />
                                                                                             Completed
                                                                                         </span>
@@ -997,7 +1268,7 @@ const Appointments = () => {
 
                                                                                     {appointment.status ===
                                                                                         "cancelled" && (
-                                                                                        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#8A9D99]">
+                                                                                        <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#8A9D99]">
                                                                                             <span className="w-1.5 h-1.5 rounded-full bg-[#A9BCB8]" />
                                                                                             No actions
                                                                                         </span>
@@ -1014,7 +1285,7 @@ const Appointments = () => {
 
                                                 {/* TABLE FOOTER */}
                                                 <div className="px-5 sm:px-6 py-3.5 border-t border-[#E7EFED] bg-[#FAFCFB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                                                    <p className="text-xs text-[#718B87]">
+                                                    <p className="text-base text-[#718B87]">
                                                         Showing{" "}
                                                         <span className="font-bold text-[#164B4D]">
                                                             {appointments.length}
@@ -1026,7 +1297,7 @@ const Appointments = () => {
                                                             : ""}
                                                     </p>
 
-                                                    <div className="flex items-center gap-4 text-xs">
+                                                    <div className="flex items-center gap-4 text-base">
                                                         <span className="flex items-center gap-1.5 text-[#718B87]">
                                                             <span className="w-2 h-2 rounded-full bg-[#F28B5B]" />
                                                             Pending:{" "}
@@ -1085,7 +1356,7 @@ const Appointments = () => {
                                                         </span>
                                                     </div>
 
-                                                    <span className="px-2 py-0.5 rounded-full bg-[#ADEFE7] text-[#164B4D] text-[9px] font-bold uppercase tracking-wide">
+                                                    <span className="px-2 py-0.5 rounded-full bg-[#ADEFE7] text-[#164B4D] text-base font-bold uppercase tracking-wide">
                                                         Selected
                                                     </span>
                                                 </div>
@@ -1096,7 +1367,7 @@ const Appointments = () => {
                                                         {/* PATIENT SUMMARY */}
                                                         <div className="p-3.5 bg-[#F2F8F6] rounded-xl flex items-center justify-between gap-3">
                                                             <div className="flex items-center gap-3 min-w-0">
-                                                                <div className="w-12 h-12 rounded-full bg-[#164B4D] text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-sm">
+                                                                <div className="w-12 h-12 rounded-full bg-[#164B4D] text-white flex items-center justify-center text-base font-bold shrink-0 shadow-sm">
                                                                     {getInitials(
                                                                         selectedAppointment
                                                                             .patient
@@ -1112,7 +1383,7 @@ const Appointments = () => {
                                                                             "Unknown"}
                                                                     </span>
 
-                                                                    <span className="text-[11px] text-[#718B87] block truncate mt-0.5">
+                                                                    <span className="text-base text-[#718B87] block truncate mt-0.5">
                                                                         {selectedAppointment
                                                                             .patient
                                                                             ?.email ||
@@ -1121,7 +1392,7 @@ const Appointments = () => {
                                                                 </div>
                                                             </div>
 
-                                                            <span className="text-[9px] font-bold px-2 py-1 rounded-md bg-[#E7EFED] text-[#164B4D] shrink-0">
+                                                            <span className="text-base font-bold px-2 py-1 rounded-md bg-[#E7EFED] text-[#164B4D] shrink-0">
                                                                 PATIENT
                                                             </span>
                                                         </div>
@@ -1129,11 +1400,11 @@ const Appointments = () => {
                                                         {/* DOCTOR / SPECIALIZATION */}
                                                         <div className="grid grid-cols-2 gap-2">
                                                             <div className="p-3 bg-[#F2F8F6] rounded-xl">
-                                                                <span className="block text-[9px] font-bold uppercase tracking-wider text-[#667876]">
+                                                                <span className="block text-base font-bold uppercase tracking-wider text-[#667876]">
                                                                     Attending Doctor
                                                                 </span>
 
-                                                                <span className="block text-xs font-bold text-[#164B4D] mt-1.5">
+                                                                <span className="block text-base font-bold text-[#164B4D] mt-1.5">
                                                                     {formatDoctorName(
                                                                         selectedAppointment
                                                                             .doctor
@@ -1142,7 +1413,7 @@ const Appointments = () => {
                                                                     )}
                                                                 </span>
 
-                                                                <span className="block text-[10px] text-[#2E8179] mt-0.5">
+                                                                <span className="block text-base text-[#2E8179] mt-0.5">
                                                                     {selectedAppointment
                                                                         .doctor
                                                                         ?.specialization ||
@@ -1151,15 +1422,15 @@ const Appointments = () => {
                                                             </div>
 
                                                             <div className="p-3 bg-[#F2F8F6] rounded-xl">
-                                                                <span className="block text-[9px] font-bold uppercase tracking-wider text-[#667876]">
+                                                                <span className="block text-base font-bold uppercase tracking-wider text-[#667876]">
                                                                     Appointment Type
                                                                 </span>
 
-                                                                <span className="block text-xs font-bold text-[#164B4D] mt-1.5">
+                                                                <span className="block text-base font-bold text-[#164B4D] mt-1.5">
                                                                     Consultation
                                                                 </span>
 
-                                                                <span className="block text-[10px] text-[#667876] mt-0.5">
+                                                                <span className="block text-base text-[#667876] mt-0.5">
                                                                     Hospital Visit
                                                                 </span>
                                                             </div>
@@ -1168,12 +1439,12 @@ const Appointments = () => {
                                                         {/* SESSION WINDOW */}
                                                         <div className="p-3.5 bg-white border border-[#E7EFED] rounded-xl shadow-sm">
                                                             <div className="flex items-center justify-between mb-2">
-                                                                <span className="text-[9px] font-bold uppercase tracking-wider text-[#667876]">
+                                                                <span className="text-base font-bold uppercase tracking-wider text-[#667876]">
                                                                     Session Window
                                                                 </span>
 
                                                                 <span
-                                                                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold capitalize border ${getStatusStyle(
+                                                                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-base font-bold capitalize border ${getStatusStyle(
                                                                         selectedAppointment.status
                                                                     )}`}
                                                                 >
@@ -1197,7 +1468,7 @@ const Appointments = () => {
                                                                         )}
                                                                     </span>
 
-                                                                    <span className="block text-xs text-[#718B87] mt-0.5">
+                                                                    <span className="block text-base text-[#718B87] mt-0.5">
                                                                         {formatDate(
                                                                             selectedAppointment.date
                                                                         )}
@@ -1226,11 +1497,11 @@ const Appointments = () => {
 
                                                         {/* REASON */}
                                                         <div>
-                                                            <span className="block text-[9px] font-bold uppercase tracking-wider text-[#667876] mb-1.5">
+                                                            <span className="block text-base font-bold uppercase tracking-wider text-[#667876] mb-1.5">
                                                                 Reason for Visit
                                                             </span>
 
-                                                            <div className="p-3.5 bg-[#F2F8F6] rounded-xl text-xs leading-relaxed text-[#37595A]">
+                                                            <div className="p-3.5 bg-[#F2F8F6] rounded-xl text-base leading-relaxed text-[#37595A]">
                                                                 {selectedAppointment.reason ||
                                                                     "No reason was specified for this appointment."}
                                                             </div>
@@ -1258,12 +1529,12 @@ const Appointments = () => {
                                                                 </div>
 
                                                                 <div>
-                                                                    <span className="block text-[9px] font-bold uppercase tracking-wider text-[#164B4D]">
+                                                                    <span className="block text-base font-bold uppercase tracking-wider text-[#164B4D]">
                                                                         Appointment
                                                                         Signal
                                                                     </span>
 
-                                                                    <span className="block text-[10px] text-[#526563] mt-0.5">
+                                                                    <span className="block text-base text-[#526563] mt-0.5">
                                                                         Current registry
                                                                         status
                                                                     </span>
@@ -1271,7 +1542,7 @@ const Appointments = () => {
                                                             </div>
 
                                                             <div className="flex items-center justify-between">
-                                                                <span className="text-xs font-semibold text-[#37595A]">
+                                                                <span className="text-base font-semibold text-[#37595A]">
                                                                     {selectedAppointment.status ===
                                                                     "confirmed"
                                                                         ? "Ready for patient check-in"
@@ -1304,7 +1575,7 @@ const Appointments = () => {
                                                                                 "confirmed"
                                                                             )
                                                                         }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
                                                                     >
                                                                         <svg
                                                                             className="w-4 h-4"
@@ -1327,7 +1598,7 @@ const Appointments = () => {
                                                                                 "cancelled"
                                                                             )
                                                                         }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
                                                                     >
                                                                         Cancel
                                                                         Appointment
@@ -1345,7 +1616,7 @@ const Appointments = () => {
                                                                                 "completed"
                                                                             )
                                                                         }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
                                                                     >
                                                                         <svg
                                                                             className="w-4 h-4"
@@ -1368,7 +1639,7 @@ const Appointments = () => {
                                                                                 "cancelled"
                                                                             )
                                                                         }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
                                                                     >
                                                                         Cancel
                                                                         Appointment
@@ -1378,7 +1649,7 @@ const Appointments = () => {
 
                                                             {selectedAppointment.status ===
                                                                 "completed" && (
-                                                                <div className="w-full py-2.5 rounded-xl bg-[#E1F3F0] text-[#164B4D] text-xs font-bold flex items-center justify-center gap-2">
+                                                                <div className="w-full py-2.5 rounded-xl bg-[#E1F3F0] text-[#164B4D] text-base font-bold flex items-center justify-center gap-2">
                                                                     <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
                                                                     Appointment
@@ -1388,7 +1659,7 @@ const Appointments = () => {
 
                                                             {selectedAppointment.status ===
                                                                 "cancelled" && (
-                                                                <div className="w-full py-2.5 rounded-xl bg-[#F1F4F3] text-[#718B87] text-xs font-bold flex items-center justify-center gap-2">
+                                                                <div className="w-full py-2.5 rounded-xl bg-[#F1F4F3] text-[#718B87] text-base font-bold flex items-center justify-center gap-2">
                                                                     <span className="w-2 h-2 rounded-full bg-[#A9BCB8]" />
 
                                                                     Appointment
@@ -1419,11 +1690,11 @@ const Appointments = () => {
                                                             </svg>
                                                         </div>
 
-                                                        <p className="text-sm font-semibold text-[#164B4D]">
+                                                        <p className="text-base font-semibold text-[#164B4D]">
                                                             Select an appointment
                                                         </p>
 
-                                                        <p className="text-xs text-[#718B87] mt-1">
+                                                        <p className="text-base text-[#718B87] mt-1">
                                                             Choose a record to
                                                             inspect its details.
                                                         </p>
@@ -1450,11 +1721,11 @@ const Appointments = () => {
                                                 </div>
 
                                                 <div>
-                                                    <span className="block text-[10px] font-bold uppercase tracking-wider text-[#164B4D]">
+                                                    <span className="block text-base font-bold uppercase tracking-wider text-[#164B4D]">
                                                         Smart Capacity Insight
                                                     </span>
 
-                                                    <span className="block text-xs text-[#667876] mt-1 leading-relaxed">
+                                                    <span className="block text-base text-[#667876] mt-1 leading-relaxed">
                                                         Appointment availability
                                                         and workload are derived
                                                         from the current hospital

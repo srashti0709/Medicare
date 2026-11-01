@@ -74,13 +74,209 @@ const fontStyles = `
         animation: none;
     }
 }
+    
+/* =========================================
+   MEDICARE DOCTORS - RESPONSIVE STYLES
+   Desktop layout remains unchanged
+========================================= */
+
+@media (max-width: 767px) {
+    .medicare-doctors-responsive {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    /* Page header */
+    .medicare-doctors-responsive > div:first-of-type {
+        padding: 20px 16px 18px;
+    }
+
+    .medicare-doctors-responsive h2 {
+        font-size: 23px;
+    }
+
+    .medicare-doctors-responsive > div:first-of-type > div {
+        gap: 16px;
+    }
+
+    .medicare-doctors-responsive > div:first-of-type button {
+        flex: 1;
+        justify-content: center;
+        min-width: 0;
+        padding: 11px 12px;
+    }
+
+    /* Consistent page spacing */
+    .medicare-doctors-responsive .px-6.xl\:px-8 {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* KPI cards */
+    .medicare-doctors-responsive .grid {
+        gap: 12px;
+    }
+
+    .medicare-doctors-responsive .rounded-2xl.p-5 {
+        padding: 16px;
+    }
+
+    /* Filter panel */
+    .medicare-doctors-responsive .bg-white.rounded-2xl.p-5 {
+        padding: 14px;
+    }
+
+    .medicare-doctors-responsive .relative.flex-1 {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .medicare-doctors-responsive select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .medicare-doctors-responsive .flex.items-center.justify-between.mt-3 {
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    /* Table: retain columns and allow horizontal scrolling */
+    .medicare-doctors-responsive table {
+        min-width: 1050px;
+    }
+
+    .medicare-doctors-responsive .overflow-x-auto {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .medicare-doctors-responsive th,
+    .medicare-doctors-responsive td {
+        white-space: nowrap;
+    }
+
+    /* Edit doctor modal */
+    .medicare-doctors-responsive .fixed.inset-0 {
+        align-items: flex-start;
+        justify-content: center;
+        padding: 12px;
+        overflow-y: auto;
+    }
+
+    .medicare-doctors-responsive .md-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100dvh - 24px);
+        margin: auto 0;
+        border-radius: 18px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .medicare-doctors-responsive .md-modal form {
+        padding: 18px 16px;
+    }
+
+    .medicare-doctors-responsive .md-modal form > .grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .medicare-doctors-responsive .md-modal .sticky {
+        padding: 14px 16px;
+        gap: 10px;
+    }
+
+    .medicare-doctors-responsive .md-modal .sticky h3 {
+        font-size: 19px;
+    }
+
+    .medicare-doctors-responsive .md-modal .sticky p {
+        max-width: 230px;
+    }
+
+    .medicare-doctors-responsive .md-modal form > div.mt-6 > .grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .medicare-doctors-responsive .md-modal form > div.mt-6 > .grid > div:last-child > div {
+        width: 100px;
+        height: 100px;
+    }
+
+    .medicare-doctors-responsive .md-modal form > div.mt-5.rounded-xl {
+        align-items: flex-start;
+        padding: 13px;
+    }
+
+    .medicare-doctors-responsive .md-modal form > div.mt-7 {
+        padding-top: 16px;
+    }
+
+    .medicare-doctors-responsive .md-modal form > div.mt-7 button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Empty and loading states */
+    .medicare-doctors-responsive .text-center {
+        overflow-wrap: anywhere;
+    }
+}
+
+/* Small phones */
+@media (max-width: 420px) {
+    .medicare-doctors-responsive > div:first-of-type {
+        padding: 17px 13px 15px;
+    }
+
+    .medicare-doctors-responsive .px-6.xl\:px-8 {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .medicare-doctors-responsive h2 {
+        font-size: 21px;
+    }
+
+    .medicare-doctors-responsive .rounded-2xl.p-5 {
+        padding: 14px;
+    }
+
+    .medicare-doctors-responsive .md-display.text-\[30px\] {
+        font-size: 27px;
+    }
+
+    .medicare-doctors-responsive > div:first-of-type button {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+
+    .medicare-doctors-responsive .md-modal .sticky {
+        padding: 12px;
+    }
+
+    .medicare-doctors-responsive .md-modal form {
+        padding: 15px 12px;
+    }
+
+    .medicare-doctors-responsive .md-modal .sticky p {
+        font-size: 12px;
+    }
+}
+
 `;
 
 const inputClass =
-    "w-full bg-[#F2F8F6] border border-[#D5E5E1] rounded-xl px-3.5 py-2.5 text-sm text-[#0A1F1C] placeholder:text-[#78908C] outline-none transition focus:border-[#256862] focus:ring-2 focus:ring-[#ADEFE7]/60";
+    "w-full bg-[#F2F8F6] border border-[#D5E5E1] rounded-xl px-3.5 py-2.5 text-base text-[#0A1F1C] placeholder:text-[#78908C] outline-none transition focus:border-[#256862] focus:ring-2 focus:ring-[#ADEFE7]/60";
 
 const labelClass =
-    "block text-[10px] font-bold uppercase tracking-[0.12em] text-[#164B4D] mb-2";
+    "block text-base font-bold uppercase tracking-[0.12em] text-[#164B4D] mb-2";
 
 const Doctors = ({ onAddDoctor }) => {
     const [doctors, setDoctors] = useState([]);
@@ -133,6 +329,7 @@ const Doctors = ({ onAddDoctor }) => {
                     consultationFee: Number(selectedDoctor.consultationFee),
                     phone: selectedDoctor.phone || "",
                     about: selectedDoctor.about || "",
+                    profileImage: selectedDoctor.profileImage || "",
                     isAvailable: selectedDoctor.isAvailable,
                 },
                 {
@@ -158,7 +355,7 @@ const Doctors = ({ onAddDoctor }) => {
 
             alert(
                 error.response?.data?.message ||
-                    "Failed to update doctor"
+                "Failed to update doctor"
             );
         } finally {
             setSaving(false);
@@ -196,7 +393,7 @@ const Doctors = ({ onAddDoctor }) => {
 
             alert(
                 error.response?.data?.message ||
-                    "Failed to update doctor availability"
+                "Failed to update doctor availability"
             );
         }
     };
@@ -295,7 +492,7 @@ const Doctors = ({ onAddDoctor }) => {
     };
 
     return (
-        <div className="medicare-doctors min-h-full">
+        <div className="medicare-doctors medicare-doctors-responsive min-h-full">
             <style>{fontStyles}</style>
 
             {/* PAGE HEADER */}
@@ -307,13 +504,13 @@ const Doctors = ({ onAddDoctor }) => {
                                 Doctors
                             </h2>
 
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ADEFE7] text-[#164B4D] text-[10px] font-bold uppercase tracking-[0.12em]">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ADEFE7] text-[#164B4D] text-base font-bold uppercase tracking-[0.12em]">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#256862]" />
                                 Active Roster
                             </span>
                         </div>
 
-                        <p className="text-xs text-[#526563] mt-1.5">
+                        <p className="text-base text-[#526563] mt-1.5">
                             Manage doctors, clinical information, availability,
                             and department assignments.
                         </p>
@@ -323,7 +520,7 @@ const Doctors = ({ onAddDoctor }) => {
                         <button
                             type="button"
                             onClick={fetchDoctors}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-[#164B4D] rounded-xl shadow-sm border border-[#DDE9E6] hover:bg-[#E1F8F3] transition-all text-sm font-semibold"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-[#164B4D] rounded-xl shadow-sm border border-[#DDE9E6] hover:bg-[#E1F8F3] transition-all text-base font-semibold"
                         >
                             <svg
                                 className="w-[17px] h-[17px]"
@@ -345,7 +542,7 @@ const Doctors = ({ onAddDoctor }) => {
                         <button
                             type="button"
                             onClick={onAddDoctor}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#164B4D] text-white rounded-xl shadow-[0_5px_14px_rgba(0,52,53,0.18)] hover:bg-[#003435] transition-all text-sm font-semibold"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#164B4D] text-white rounded-xl shadow-[0_5px_14px_rgba(0,52,53,0.18)] hover:bg-[#003435] transition-all text-base font-semibold"
                         >
                             <span className="text-[#ADEFE7] text-lg leading-none">
                                 +
@@ -361,7 +558,7 @@ const Doctors = ({ onAddDoctor }) => {
                 <div className="px-6 xl:px-8">
                     <div
                         role="alert"
-                        className="mb-5 flex items-start gap-3 bg-[#FFF4ED] border border-[#F5D1BE] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-sm font-medium"
+                        className="mb-5 flex items-start gap-3 bg-[#FFF4ED] border border-[#F5D1BE] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-base font-medium"
                     >
                         <svg
                             className="w-5 h-5 mt-0.5 shrink-0 text-[#F28B5B]"
@@ -387,7 +584,7 @@ const Doctors = ({ onAddDoctor }) => {
                         {/* Total */}
                         <div className="bg-white rounded-2xl p-5 shadow-[0_8px_24px_rgba(22,75,77,0.06)] flex items-center justify-between">
                             <div>
-                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                     Total Physicians
                                 </span>
 
@@ -397,7 +594,7 @@ const Doctors = ({ onAddDoctor }) => {
                                     </span>
                                 </div>
 
-                                <span className="text-xs text-[#256862] font-semibold">
+                                <span className="text-base text-[#256862] font-semibold">
                                     {departments.length}{" "}
                                     {departments.length === 1
                                         ? "Department"
@@ -424,7 +621,7 @@ const Doctors = ({ onAddDoctor }) => {
                         {/* Available */}
                         <div className="bg-white rounded-2xl p-5 shadow-[0_8px_24px_rgba(22,75,77,0.06)] flex items-center justify-between">
                             <div>
-                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                     On-Duty / Ready
                                 </span>
 
@@ -433,12 +630,12 @@ const Doctors = ({ onAddDoctor }) => {
                                         {availableDoctors}
                                     </span>
 
-                                    <span className="text-xs text-[#256862] font-bold">
+                                    <span className="text-base text-[#256862] font-bold">
                                         {availabilityPercentage}%
                                     </span>
                                 </div>
 
-                                <span className="text-xs text-[#667876]">
+                                <span className="text-base text-[#667876]">
                                     Available for appointments
                                 </span>
                             </div>
@@ -462,7 +659,7 @@ const Doctors = ({ onAddDoctor }) => {
                         {/* Unavailable */}
                         <div className="bg-white rounded-2xl p-5 shadow-[0_8px_24px_rgba(22,75,77,0.06)] flex items-center justify-between">
                             <div>
-                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                     Unavailable
                                 </span>
 
@@ -471,12 +668,12 @@ const Doctors = ({ onAddDoctor }) => {
                                         {unavailableDoctors}
                                     </span>
 
-                                    <span className="text-xs text-[#A55A38] font-semibold">
+                                    <span className="text-base text-[#A55A38] font-semibold">
                                         Off-duty
                                     </span>
                                 </div>
 
-                                <span className="text-xs text-[#667876]">
+                                <span className="text-base text-[#667876]">
                                     Currently unavailable
                                 </span>
                             </div>
@@ -500,7 +697,7 @@ const Doctors = ({ onAddDoctor }) => {
                         {/* Departments */}
                         <div className="bg-white rounded-2xl p-5 shadow-[0_8px_24px_rgba(22,75,77,0.06)] flex items-center justify-between">
                             <div>
-                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                     Departments
                                 </span>
 
@@ -510,7 +707,7 @@ const Doctors = ({ onAddDoctor }) => {
                                     </span>
                                 </div>
 
-                                <span className="text-xs text-[#667876]">
+                                <span className="text-base text-[#667876]">
                                     Clinical departments
                                 </span>
                             </div>
@@ -566,11 +763,11 @@ const Doctors = ({ onAddDoctor }) => {
                             />
                         </svg>
 
-                        <p className="text-sm font-semibold text-[#526563]">
+                        <p className="text-base font-semibold text-[#526563]">
                             Loading doctors...
                         </p>
 
-                        <p className="text-xs text-[#667876] mt-1">
+                        <p className="text-base text-[#667876] mt-1">
                             Preparing the active roster
                         </p>
                     </div>
@@ -596,14 +793,14 @@ const Doctors = ({ onAddDoctor }) => {
                             No doctors found
                         </h3>
 
-                        <p className="text-sm text-[#667876] mt-1">
+                        <p className="text-base text-[#667876] mt-1">
                             Add a doctor to begin building your active roster.
                         </p>
 
                         <button
                             type="button"
                             onClick={onAddDoctor}
-                            className="mt-5 px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-sm font-semibold hover:bg-[#003435] transition"
+                            className="mt-5 px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-semibold hover:bg-[#003435] transition"
                         >
                             + Add Doctor
                         </button>
@@ -641,7 +838,7 @@ const Doctors = ({ onAddDoctor }) => {
                                             setSearch(e.target.value)
                                         }
                                         placeholder="Search doctors, specialty, department..."
-                                        className="w-full pl-10 pr-4 py-2.5 bg-[#F2F8F6] rounded-xl text-sm text-[#0A1F1C] placeholder:text-[#667876] outline-none focus:ring-2 focus:ring-[#ADEFE7] transition"
+                                        className="w-full pl-10 pr-4 py-2.5 bg-[#F2F8F6] rounded-xl text-base text-[#0A1F1C] placeholder:text-[#667876] outline-none focus:ring-2 focus:ring-[#ADEFE7] transition"
                                     />
                                 </div>
 
@@ -654,7 +851,7 @@ const Doctors = ({ onAddDoctor }) => {
                                                 e.target.value
                                             )
                                         }
-                                        className="appearance-none min-w-[175px] bg-[#F2F8F6] text-[#0A1F1C] text-sm font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
+                                        className="appearance-none min-w-[175px] bg-[#F2F8F6] text-[#0A1F1C] text-base font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
                                     >
                                         <option>All Departments</option>
 
@@ -688,7 +885,7 @@ const Doctors = ({ onAddDoctor }) => {
                                                 e.target.value
                                             )
                                         }
-                                        className="appearance-none min-w-[190px] bg-[#F2F8F6] text-[#0A1F1C] text-sm font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
+                                        className="appearance-none min-w-[190px] bg-[#F2F8F6] text-[#0A1F1C] text-base font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
                                     >
                                         <option>All Specializations</option>
 
@@ -724,7 +921,7 @@ const Doctors = ({ onAddDoctor }) => {
                                                 e.target.value
                                             )
                                         }
-                                        className="appearance-none min-w-[155px] bg-[#F2F8F6] text-[#0A1F1C] text-sm font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
+                                        className="appearance-none min-w-[155px] bg-[#F2F8F6] text-[#0A1F1C] text-base font-semibold px-3.5 py-2.5 pr-9 rounded-xl outline-none hover:bg-[#E7F3F0] transition cursor-pointer"
                                     >
                                         <option>All Availability</option>
                                         <option value="Available">
@@ -772,7 +969,7 @@ const Doctors = ({ onAddDoctor }) => {
                             </div>
 
                             <div className="flex items-center justify-between mt-3 px-1">
-                                <p className="text-xs text-[#667876]">
+                                <p className="text-base text-[#667876]">
                                     Showing{" "}
                                     <span className="font-bold text-[#164B4D]">
                                         {filteredDoctors.length}
@@ -786,19 +983,19 @@ const Doctors = ({ onAddDoctor }) => {
 
                                 {(search ||
                                     departmentFilter !==
-                                        "All Departments" ||
+                                    "All Departments" ||
                                     specializationFilter !==
-                                        "All Specializations" ||
+                                    "All Specializations" ||
                                     availabilityFilter !==
-                                        "All Availability") && (
-                                    <button
-                                        type="button"
-                                        onClick={resetFilters}
-                                        className="text-xs font-bold text-[#256862] hover:text-[#003435]"
-                                    >
-                                        Clear filters
-                                    </button>
-                                )}
+                                    "All Availability") && (
+                                        <button
+                                            type="button"
+                                            onClick={resetFilters}
+                                            className="text-base font-bold text-[#256862] hover:text-[#003435]"
+                                        >
+                                            Clear filters
+                                        </button>
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -821,13 +1018,13 @@ const Doctors = ({ onAddDoctor }) => {
                                             ].map((heading) => (
                                                 <th
                                                     key={heading}
-                                                    className="py-3.5 px-5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876]"
+                                                    className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876]"
                                                 >
                                                     {heading}
                                                 </th>
                                             ))}
 
-                                            <th className="py-3.5 px-5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#667876] text-right">
+                                            <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876] text-right">
                                                 Actions
                                             </th>
                                         </tr>
@@ -840,30 +1037,36 @@ const Doctors = ({ onAddDoctor }) => {
                                                 className="group hover:bg-[#F2F8F6] transition-colors"
                                             >
                                                 {/* Profile */}
+
+                                                {/* Profile */}
                                                 <td className="py-4 px-5">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-11 h-11 rounded-full bg-[#ADEFE7]/55 text-[#164B4D] flex items-center justify-center shrink-0 ring-1 ring-[#C4E8E2]">
-                                                            <span className="md-display text-[15px] font-bold">
-                                                                {doctor.user?.name
-                                                                    ?.charAt(0)
-                                                                    .toUpperCase() ||
-                                                                    "D"}
-                                                            </span>
+                                                    <div className="flex items-center gap-3 min-w-[220px]">
+                                                        {/* Doctor Profile Image */}
+                                                        <div className="w-11 h-11 rounded-full bg-[#ADEFE7]/55 text-[#164B4D] flex items-center justify-center shrink-0 ring-1 ring-[#C4E8E2] overflow-hidden">
+                                                            {doctor.profileImage ? (
+                                                                <img
+                                                                    src={doctor.profileImage}
+                                                                    alt={doctor.user?.name || "Doctor"}
+                                                                    className="w-full h-full object-cover"
+                                                                    onError={(e) => {
+                                                                        e.currentTarget.style.display = "none";
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <span className="md-display text-base font-bold">
+                                                                    {doctor.user?.name?.charAt(0).toUpperCase() || "D"}
+                                                                </span>
+                                                            )}
                                                         </div>
 
+                                                        {/* Doctor Name and Email */}
                                                         <div className="min-w-0">
-                                                            <p className="md-display text-[15px] font-semibold text-[#003435] truncate group-hover:text-[#256862] transition-colors">
-                                                                {
-                                                                    doctor.user
-                                                                        ?.name
-                                                                }
+                                                            <p className="text-base font-bold text-[#164B4D] truncate">
+                                                                {doctor.user?.name || "Name unavailable"}
                                                             </p>
 
-                                                            <p className="text-xs text-[#667876] truncate mt-0.5">
-                                                                {
-                                                                    doctor.user
-                                                                        ?.email
-                                                                }
+                                                            <p className="text-base text-[#78908C] mt-0.5 truncate">
+                                                                {doctor.user?.email || "Email unavailable"}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -871,7 +1074,7 @@ const Doctors = ({ onAddDoctor }) => {
 
                                                 {/* Specialization */}
                                                 <td className="py-4 px-5">
-                                                    <span className="text-sm font-semibold text-[#0A1F1C]">
+                                                    <span className="text-base font-semibold text-[#0A1F1C]">
                                                         {
                                                             doctor.specialization
                                                         }
@@ -880,25 +1083,25 @@ const Doctors = ({ onAddDoctor }) => {
 
                                                 {/* Department */}
                                                 <td className="py-4 px-5">
-                                                    <span className="inline-flex px-2.5 py-1 rounded-lg bg-[#E7F3F0] text-[#164B4D] text-xs font-semibold">
+                                                    <span className="inline-flex px-2.5 py-1 rounded-lg bg-[#E7F3F0] text-[#164B4D] text-base font-semibold">
                                                         {doctor.department}
                                                     </span>
                                                 </td>
 
                                                 {/* Experience */}
                                                 <td className="py-4 px-5 whitespace-nowrap">
-                                                    <span className="md-display text-[15px] font-semibold text-[#164B4D]">
+                                                    <span className="md-display text-base font-semibold text-[#164B4D]">
                                                         {doctor.experience}
                                                     </span>
 
-                                                    <span className="text-xs text-[#667876] ml-1">
+                                                    <span className="text-base text-[#667876] ml-1">
                                                         yrs
                                                     </span>
                                                 </td>
 
                                                 {/* Fee */}
                                                 <td className="py-4 px-5 whitespace-nowrap">
-                                                    <span className="text-sm font-bold text-[#003435]">
+                                                    <span className="text-base font-bold text-[#003435]">
                                                         ₹
                                                         {
                                                             doctor.consultationFee
@@ -909,12 +1112,12 @@ const Doctors = ({ onAddDoctor }) => {
                                                 {/* Availability */}
                                                 <td className="py-4 px-5">
                                                     {doctor.isAvailable ? (
-                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ADEFE7]/45 text-[#256862] text-xs font-bold">
+                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ADEFE7]/45 text-[#256862] text-base font-bold">
                                                             <span className="w-2 h-2 rounded-full bg-[#256862]" />
                                                             Available
                                                         </span>
                                                     ) : (
-                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFF0E8] text-[#A9532A] text-xs font-bold">
+                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFF0E8] text-[#A9532A] text-base font-bold">
                                                             <span className="w-2 h-2 rounded-full bg-[#F28B5B]" />
                                                             Unavailable
                                                         </span>
@@ -923,7 +1126,7 @@ const Doctors = ({ onAddDoctor }) => {
 
                                                 {/* Status */}
                                                 <td className="py-4 px-5">
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#E7F3F0] text-[#164B4D] text-[10px] font-bold uppercase tracking-[0.12em]">
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#E7F3F0] text-[#164B4D] text-base font-bold uppercase tracking-[0.12em]">
                                                         <span className="w-1.5 h-1.5 rounded-full bg-[#256862]" />
                                                         Active
                                                     </span>
@@ -939,7 +1142,7 @@ const Doctors = ({ onAddDoctor }) => {
                                                                     doctor
                                                                 )
                                                             }
-                                                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F2F8F6] text-[#164B4D] text-xs font-bold hover:bg-[#ADEFE7] transition-colors"
+                                                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F2F8F6] text-[#164B4D] text-base font-bold hover:bg-[#ADEFE7] transition-colors"
                                                         >
                                                             <svg
                                                                 className="w-3.5 h-3.5"
@@ -958,11 +1161,10 @@ const Doctors = ({ onAddDoctor }) => {
                                                                     doctor._id
                                                                 )
                                                             }
-                                                            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-colors ${
-                                                                doctor.isAvailable
-                                                                    ? "bg-[#FFF0E8] text-[#A9532A] hover:bg-[#FADBCB]"
-                                                                    : "bg-[#164B4D] text-white hover:bg-[#003435]"
-                                                            }`}
+                                                            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-base font-bold transition-colors ${doctor.isAvailable
+                                                                ? "bg-[#FFF0E8] text-[#A9532A] hover:bg-[#FADBCB]"
+                                                                : "bg-[#164B4D] text-white hover:bg-[#003435]"
+                                                                }`}
                                                         >
                                                             {doctor.isAvailable
                                                                 ? "Deactivate"
@@ -996,18 +1198,18 @@ const Doctors = ({ onAddDoctor }) => {
                                         </svg>
                                     </div>
 
-                                    <p className="text-sm font-semibold text-[#164B4D]">
+                                    <p className="text-base font-semibold text-[#164B4D]">
                                         No matching doctors
                                     </p>
 
-                                    <p className="text-xs text-[#667876] mt-1">
+                                    <p className="text-base text-[#667876] mt-1">
                                         Try changing your search or filters.
                                     </p>
 
                                     <button
                                         type="button"
                                         onClick={resetFilters}
-                                        className="mt-4 text-xs font-bold text-[#256862] hover:text-[#003435]"
+                                        className="mt-4 text-base font-bold text-[#256862] hover:text-[#003435]"
                                     >
                                         Reset filters
                                     </button>
@@ -1017,7 +1219,7 @@ const Doctors = ({ onAddDoctor }) => {
                             {/* Table footer */}
                             {filteredDoctors.length > 0 && (
                                 <div className="px-5 py-3.5 border-t border-[#EDF2F1] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                                    <p className="text-xs text-[#667876]">
+                                    <p className="text-base text-[#667876]">
                                         Showing{" "}
                                         <span className="font-bold text-[#164B4D]">
                                             1–{filteredDoctors.length}
@@ -1029,7 +1231,7 @@ const Doctors = ({ onAddDoctor }) => {
                                         doctors
                                     </p>
 
-                                    <span className="text-xs font-semibold text-[#667876]">
+                                    <span className="text-base font-semibold text-[#667876]">
                                         Active roster
                                     </span>
                                 </div>
@@ -1070,7 +1272,7 @@ const Doctors = ({ onAddDoctor }) => {
                                         Edit Doctor
                                     </h3>
 
-                                    <p className="text-xs text-[#667876] mt-0.5">
+                                    <p className="text-base text-[#667876] mt-0.5">
                                         Update physician profile and clinical
                                         details
                                     </p>
@@ -1138,7 +1340,7 @@ const Doctors = ({ onAddDoctor }) => {
                                             selectedDoctor.user?.email || ""
                                         }
                                         disabled
-                                        className="w-full border border-[#DDE9E6] bg-[#EDF4F2] text-[#78908C] rounded-xl px-3.5 py-2.5 text-sm cursor-not-allowed"
+                                        className="w-full border border-[#DDE9E6] bg-[#EDF4F2] text-[#78908C] rounded-xl px-3.5 py-2.5 text-base cursor-not-allowed"
                                     />
                                 </div>
 
@@ -1280,6 +1482,61 @@ const Doctors = ({ onAddDoctor }) => {
                                 </div>
                             </div>
 
+                            {/* Profile Image */}
+                            <div className="mt-6">
+                                <h4 className="text-base font-bold text-[#164B4D] mb-3">
+                                    Doctor Profile Image
+                                </h4>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+                                    <div>
+                                        <label className={labelClass}>
+                                            Profile Image URL
+                                        </label>
+
+                                        <input
+                                            type="url"
+                                            value={selectedDoctor.profileImage || ""}
+                                            onChange={(e) =>
+                                                setSelectedDoctor((current) => ({
+                                                    ...current,
+                                                    profileImage: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="https://example.com/doctor.jpg"
+                                            className={inputClass}
+                                        />
+
+                                        <p className="text-base text-[#78908C] mt-2">
+                                            Paste a publicly accessible image URL.
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className={labelClass}>
+                                            Image Preview
+                                        </label>
+
+                                        <div className="w-28 h-28 rounded-2xl overflow-hidden border border-[#D5E5E1] bg-[#F2F8F6] flex items-center justify-center">
+                                            {selectedDoctor.profileImage ? (
+                                                <img
+                                                    src={selectedDoctor.profileImage}
+                                                    alt="Doctor preview"
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = "none";
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span className="text-base text-[#78908C] text-center px-2">
+                                                    No image
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* About */}
                             <div className="mt-5">
                                 <label className={labelClass}>
@@ -1302,11 +1559,11 @@ const Doctors = ({ onAddDoctor }) => {
                             {/* Availability */}
                             <div className="mt-5 rounded-xl border border-[#DDEAE7] bg-[#F2F8F6] p-4 flex items-center justify-between gap-4">
                                 <div>
-                                    <p className="text-sm font-bold text-[#164B4D]">
+                                    <p className="text-base font-bold text-[#164B4D]">
                                         Appointment Availability
                                     </p>
 
-                                    <p className="text-xs text-[#667876] mt-0.5">
+                                    <p className="text-base text-[#667876] mt-0.5">
                                         Allow patients to book appointments
                                         with this doctor.
                                     </p>
@@ -1339,7 +1596,7 @@ const Doctors = ({ onAddDoctor }) => {
                                     onClick={() =>
                                         setSelectedDoctor(null)
                                     }
-                                    className="px-5 py-2.5 rounded-xl border border-[#CBDDD9] bg-white text-[#164B4D] text-sm font-semibold hover:bg-[#F2F8F6] transition"
+                                    className="px-5 py-2.5 rounded-xl border border-[#CBDDD9] bg-white text-[#164B4D] text-base font-semibold hover:bg-[#F2F8F6] transition"
                                 >
                                     Cancel
                                 </button>
@@ -1347,7 +1604,7 @@ const Doctors = ({ onAddDoctor }) => {
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-sm font-semibold shadow-sm hover:bg-[#003435] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-5 py-2.5 rounded-xl bg-[#164B4D] text-white text-base font-semibold shadow-sm hover:bg-[#003435] transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {saving
                                         ? "Saving..."

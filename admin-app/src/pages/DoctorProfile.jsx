@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api";
-
+import DoctorNavbar from "../components/DoctorNavbar";
 const DoctorProfile = () => {
   const token = localStorage.getItem("adminToken");
 
@@ -133,7 +133,154 @@ const DoctorProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F8F6] px-4 py-7 sm:px-6 lg:px-8">
+  <>
+    <DoctorNavbar />
+
+    <div className="doctor-profile-page min-h-screen bg-[#F5F8F6] px-4 py-7 sm:px-6 lg:px-8">
+      <style>{`
+    /* =====================================
+       DOCTOR PROFILE - RESPONSIVE STYLING
+       Desktop design remains unchanged
+    ===================================== */
+
+    @media (max-width: 767px) {
+
+        .doctor-profile-page {
+            padding: 20px 14px;
+        }
+
+        /* Page heading */
+        .doctor-profile-page h1 {
+            font-size: 29px;
+            line-height: 1.2;
+        }
+
+        .doctor-profile-page > div > div:first-child {
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        /* Profile status card */
+        .doctor-profile-page > div > div:first-child > div:last-child {
+            width: 100%;
+            padding: 12px 14px;
+        }
+
+        .doctor-profile-page > div > div:first-child > div:last-child p:last-child {
+            font-size: 12px;
+        }
+
+        /* Section headers */
+        .doctor-profile-page section > div:first-child {
+            padding: 16px;
+            gap: 12px;
+        }
+
+        .doctor-profile-page section > div:first-child h2 {
+            font-size: 17px;
+            line-height: 1.35;
+        }
+
+        .doctor-profile-page section > div:first-child p {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Form fields */
+        .doctor-profile-page section .grid {
+            padding: 18px 16px;
+            gap: 17px;
+        }
+
+        .doctor-profile-page input:not([type="checkbox"]),
+        .doctor-profile-page textarea {
+            width: 100%;
+            min-width: 0;
+            font-size: 13px;
+        }
+
+        .doctor-profile-page textarea {
+            min-height: 120px;
+        }
+
+        /* Availability panel */
+        .doctor-profile-page section .rounded-2xl.border.border-\\[\\#CDE5DE\\] {
+            padding: 14px;
+        }
+
+        /* Save section */
+        .doctor-profile-page form > div:last-child {
+            gap: 14px;
+            padding-top: 17px;
+        }
+
+        .doctor-profile-page form > div:last-child button {
+            width: 100%;
+            min-height: 48px;
+        }
+
+        .doctor-profile-page form > div:last-child p {
+            font-size: 11px;
+        }
+    }
+
+    /* =====================================
+       SMALL MOBILE SCREENS
+    ===================================== */
+
+    @media (max-width: 420px) {
+
+        .doctor-profile-page {
+            padding: 16px 11px;
+        }
+
+        .doctor-profile-page h1 {
+            font-size: 26px;
+        }
+
+        .doctor-profile-page section {
+            border-radius: 15px;
+        }
+
+        .doctor-profile-page section > div:first-child {
+            padding: 14px;
+            gap: 10px;
+        }
+
+        .doctor-profile-page section > div:first-child > div:first-child {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+        }
+
+        .doctor-profile-page section .grid,
+        .doctor-profile-page section > div.space-y-6 {
+            padding: 15px;
+        }
+
+        .doctor-profile-page input:not([type="checkbox"]),
+        .doctor-profile-page textarea {
+            padding: 11px 12px;
+            font-size: 12px;
+        }
+
+        .doctor-profile-page label {
+            font-size: 11px;
+        }
+
+        .doctor-profile-page .rounded-2xl.border.border-\\[\\#CDE5DE\\] {
+            gap: 12px;
+        }
+
+        .doctor-profile-page .rounded-2xl.border.border-\\[\\#CDE5DE\\] label {
+            align-self: flex-start;
+        }
+
+        .doctor-profile-page form > div:last-child button {
+            padding: 12px 16px;
+        }
+    }
+`}</style>
       <div className="mx-auto max-w-6xl">
         {/* Page heading */}
         <div className="mb-7 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -407,7 +554,8 @@ const DoctorProfile = () => {
           </div>
         </form>
       </div>
-    </div>
+      </div>
+  </>
   );
 };
 

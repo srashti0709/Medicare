@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import DoctorNavbar from "../components/DoctorNavbar";
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
 
@@ -138,6 +138,338 @@ const DiabetesPrediction = () => {
     }, []);
 
     useEffect(() => {
+        const styleId = "diabetes-prediction-responsive";
+
+        if (document.getElementById(styleId)) return;
+
+        const style = document.createElement("style");
+        style.id = styleId;
+
+        style.textContent = `
+        @media (max-width: 767px) {
+            /* Main page */
+            .diabetes-page {
+                overflow-x: hidden;
+            }
+
+            .diabetes-page main {
+                padding: 28px 12px 0 !important;
+                min-height: calc(100vh - 64px);
+            }
+
+            .diabetes-page .diabetes-content {
+                padding: 16px 4px 24px !important;
+            }
+
+            /* Navbar */
+            .diabetes-page .diabetes-navbar-inner {
+                height: 64px !important;
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+                gap: 8px !important;
+            }
+
+            .diabetes-page .diabetes-navbar-inner > div:first-child span:first-child {
+                font-size: 18px;
+            }
+
+            .diabetes-page .diabetes-navbar-inner > div:first-child span:last-child {
+                font-size: 8px;
+            }
+
+            .diabetes-page .diabetes-navbar-inner .doctor-profile-button {
+                padding: 3px;
+            }
+
+            .diabetes-page .diabetes-navbar-inner .doctor-profile-button > span {
+                display: none;
+            }
+
+            /* Breadcrumb */
+            .diabetes-page .diabetes-breadcrumb {
+                flex-wrap: wrap;
+                gap: 5px;
+                font-size: 10px;
+                line-height: 1.6;
+            }
+
+            .diabetes-page .diabetes-breadcrumb .material-symbols-outlined {
+                font-size: 13px;
+            }
+
+            /* Page heading */
+            .diabetes-page .diabetes-page-title {
+                font-size: 25px !important;
+                line-height: 1.25 !important;
+            }
+
+            .diabetes-page .diabetes-page-description {
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            /* General cards */
+            .diabetes-page .diabetes-card {
+                padding: 16px !important;
+                border-radius: 16px;
+                margin-bottom: 16px;
+            }
+
+            /* Patient selection */
+            .diabetes-page .patient-heading {
+                gap: 10px;
+            }
+
+            .diabetes-page .patient-heading h2,
+            .diabetes-page .clinical-heading h2,
+            .diabetes-page .result-heading h2,
+            .diabetes-page .history-heading h2 {
+                font-size: 16px !important;
+                line-height: 23px !important;
+            }
+
+            .diabetes-page .patient-heading p,
+            .diabetes-page .clinical-heading p {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+            .diabetes-page .patient-heading .patient-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .diabetes-page .patient-heading .patient-title-row {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .diabetes-page .patient-selector {
+                width: 100% !important;
+            }
+
+            .diabetes-page .patient-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 9px;
+            }
+
+            .diabetes-page .patient-details .patient-divider {
+                display: none;
+            }
+
+            .diabetes-page .patient-details > div {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            /* Clinical measurements */
+            .diabetes-page .clinical-heading {
+                margin: -16px -16px 18px !important;
+                padding: 17px 16px !important;
+                gap: 10px;
+            }
+
+            .diabetes-page .clinical-heading > div:first-child {
+                width: 36px;
+                height: 36px;
+            }
+
+            .diabetes-page .clinical-fields {
+                grid-template-columns: minmax(0, 1fr) !important;
+                gap: 17px !important;
+            }
+
+            .diabetes-page .clinical-fields label {
+                font-size: 12px;
+            }
+
+            .diabetes-page .clinical-fields input {
+                font-size: 15px !important;
+                padding: 12px 76px 12px 13px !important;
+                min-height: 46px;
+            }
+
+            .diabetes-page .clinical-fields input + span {
+                right: 10px;
+                font-size: 10px;
+                padding: 5px 7px;
+            }
+
+            .diabetes-page .clinical-fields > div > span {
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .diabetes-page .clinical-submit {
+                padding-top: 16px;
+                margin-top: 5px;
+            }
+
+            .diabetes-page .clinical-submit button {
+                width: 100%;
+                min-height: 48px;
+                padding: 12px 15px;
+                font-size: 12px;
+            }
+
+            /* Prediction result */
+            .diabetes-page .prediction-result {
+                padding: 16px !important;
+            }
+
+            .diabetes-page .result-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding-bottom: 16px;
+                margin-bottom: 16px;
+            }
+
+            .diabetes-page .result-heading > div:last-child {
+                align-self: flex-start;
+            }
+
+            .diabetes-page .result-panels {
+                gap: 13px !important;
+            }
+
+            .diabetes-page .probability-panel {
+                padding: 15px !important;
+            }
+
+            .diabetes-page .probability-value {
+                font-size: 36px !important;
+                line-height: 44px !important;
+            }
+
+            .diabetes-page .probability-panel .prediction-label {
+                font-size: 11px;
+            }
+
+            .diabetes-page .probability-panel .prediction-status {
+                padding: 6px 9px;
+                font-size: 10px;
+            }
+
+            .diabetes-page .result-detail {
+                padding: 13px !important;
+                gap: 10px;
+            }
+
+            .diabetes-page .result-detail .result-detail-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .diabetes-page .result-notice {
+                margin: 20px -16px -16px !important;
+                padding: 13px 16px !important;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .diabetes-page .result-notice p {
+                font-size: 10px;
+                line-height: 1.6;
+            }
+
+            /* Prediction history */
+            .diabetes-page .history-section {
+                padding: 16px !important;
+            }
+
+            .diabetes-page .history-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding-bottom: 15px;
+            }
+
+            .diabetes-page .history-heading > div:first-child > div {
+                flex-wrap: wrap;
+            }
+
+            .diabetes-page .history-table-wrapper {
+                margin: 0 -4px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .diabetes-page .history-table {
+                min-width: 610px;
+                font-size: 12px;
+            }
+
+            .diabetes-page .history-table th,
+            .diabetes-page .history-table td {
+                padding: 12px 10px;
+                white-space: nowrap;
+            }
+
+            /* Footer */
+            .diabetes-page .diabetes-footer {
+                padding: 20px 14px;
+                margin-top: 18px;
+            }
+
+            .diabetes-page .diabetes-footer > div {
+                text-align: center;
+                gap: 8px;
+            }
+
+            .diabetes-page .diabetes-footer > div > div {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .diabetes-page main {
+                padding-left: 9px !important;
+                padding-right: 9px !important;
+            }
+
+            .diabetes-page .diabetes-content {
+                padding-left: 2px !important;
+                padding-right: 2px !important;
+            }
+
+            .diabetes-page .diabetes-page-title {
+                font-size: 22px !important;
+            }
+
+            .diabetes-page .diabetes-card,
+            .diabetes-page .prediction-result,
+            .diabetes-page .history-section {
+                padding: 13px !important;
+            }
+
+            .diabetes-page .clinical-heading {
+                margin: -13px -13px 16px !important;
+                padding: 15px 13px !important;
+            }
+
+            .diabetes-page .result-notice {
+                margin: 18px -13px -13px !important;
+                padding: 12px 13px !important;
+            }
+
+            .diabetes-page .probability-value {
+                font-size: 32px !important;
+            }
+        }
+    `;
+
+        document.head.appendChild(style);
+
+        return () => {
+            style.remove();
+        };
+    }, []);
+
+
+    useEffect(() => {
         const fetchPatients = async () => {
             try {
                 const token = localStorage.getItem("adminToken");
@@ -256,118 +588,8 @@ const DiabetesPrediction = () => {
     return (
         <div className={`min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
             {/* ================= TOP NAVBAR ================= */}
-            <header className="sticky top-0 z-40 w-full bg-white border-b border-[#CBDAD6] shadow-[0_1px_8px_rgba(0,0,0,0.03)] backdrop-blur-md">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-6">
-                    {/* Logo */}
-                    <div className="flex items-center gap-3 shrink-0">
-                        <a className="flex items-center gap-2.5" href="/">
-                            <div className="flex flex-col">
-                                <span className={`${heading} text-[20px] font-bold text-[#003435] tracking-tight leading-none`}>
-                                    Medicare
-                                </span>
-                                <span className="text-[10px] text-[#256862] font-semibold uppercase tracking-wider mt-0.5">
-                                    Healthcare Intelligence
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-
-                    {/* Center nav */}
-                    <nav className="hidden md:flex items-center gap-1.5 lg:gap-2">
-                        <button
-                            onClick={() => {
-                                window.location.href = "/doctor-schedule";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors"
-                        >
-                            My Schedule
-                        </button>
-                        <button
-                            onClick={() => {
-                                window.location.href = "/ai-risk-assessment";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors inline-flex items-center gap-1.5"
-                        >
-                            <span>AI Risk Assessment</span>
-                            <span className="px-1.5 rounded text-[10px] font-bold bg-[#ADEFE7] text-[#00201d]">
-                                AI
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => {
-                                window.location.href = "/patients";
-                            }}
-                            className="px-4 py-2 rounded-full text-[13px] font-semibold text-[#404848] hover:text-[#003435] hover:bg-[#E7F4F1] transition-colors"
-                        >
-                            My Patients
-                        </button>
-                    </nav>
-
-                    {/* Profile menu */}
-                    <div className="flex items-center gap-3 lg:gap-4 shrink-0">
-                        <div className="relative group">
-                            <button className="flex items-center gap-2.5 p-1 rounded-full hover:bg-[#E7F4F1] transition-colors text-left">
-                                <div className="relative">
-                                    <div className="w-9 h-9 rounded-full bg-[#164B4D] text-white flex items-center justify-center text-[13px] font-bold ring-2 ring-[#ADEFE7]">
-                                        {getInitials(doctorUser.name)}
-                                    </div>
-                                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#256862] ring-2 ring-white" />
-                                </div>
-                                <div className="hidden xl:flex flex-col">
-                                    <span className="text-[13px] text-[#003435] font-bold leading-tight">
-                                        {doctorUser.name}
-                                    </span>
-                                    <span className="text-[11px] text-[#404848] leading-none">
-                                        Doctor
-                                    </span>
-                                </div>
-                                <Icon name="expand_more" className="text-[#404848] text-[18px]" />
-                            </button>
-
-                            <div className="absolute right-0 pt-2 w-56 hidden group-hover:block z-50">
-                                <div className="bg-white rounded-xl shadow-xl border border-[#CBDAD6] py-2">
-                                    <div className="px-4 py-2 border-b border-[#CBDAD6]/50 xl:hidden">
-                                        <p className="text-[13px] font-bold text-[#003435]">
-                                            {doctorUser.name}
-                                        </p>
-                                        <p className="text-[11px] text-[#404848]">Doctor</p>
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            window.location.href = "/doctor-profile";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#0a1f1c] hover:bg-[#e1f8f3] transition-colors text-left"
-                                    >
-                                        <Icon name="person" className="text-[18px] text-[#256862]" />
-                                        <span>Doctor Profile &amp; Credentials</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            window.location.href = "/doctor-schedule";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#0a1f1c] hover:bg-[#e1f8f3] transition-colors text-left"
-                                    >
-                                        <Icon name="calendar_today" className="text-[18px] text-[#256862]" />
-                                        <span>Duty Roster &amp; Shifts</span>
-                                    </button>
-                                    <div className="my-1 border-t border-[#CBDAD6]/50" />
-                                    <button
-                                        onClick={() => {
-                                            localStorage.removeItem("adminToken");
-                                            localStorage.removeItem("adminUser");
-                                            window.location.href = "/";
-                                        }}
-                                        className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] font-semibold text-[#ba1a1a] hover:bg-[#ffdad6]/40 transition-colors text-left"
-                                    >
-                                        <Icon name="logout" className="text-[18px]" />
-                                        <span>Logout</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <DoctorNavbar />
+            
 
             {/* ================= MAIN ================= */}
             <main className="w-full max-w-7xl mx-auto px-5 pt-20 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">
@@ -616,8 +838,8 @@ const DiabetesPrediction = () => {
                                             </span>
                                             <span
                                                 className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold shadow-sm ${isHigher
-                                                        ? "bg-[#ffdbcd] text-[#360f00]"
-                                                        : "bg-[#adefe7] text-[#00201d]"
+                                                    ? "bg-[#ffdbcd] text-[#360f00]"
+                                                    : "bg-[#adefe7] text-[#00201d]"
                                                     }`}
                                             >
                                                 <Icon
@@ -650,8 +872,8 @@ const DiabetesPrediction = () => {
                                             <div className="relative w-full h-4 rounded-full bg-[#d6ede8] overflow-visible">
                                                 <div
                                                     className={`absolute top-0 left-0 bottom-0 rounded-full opacity-90 ${isHigher
-                                                            ? "bg-gradient-to-r from-[#256862] to-[#531c00]"
-                                                            : "bg-[#256862]"
+                                                        ? "bg-gradient-to-r from-[#256862] to-[#531c00]"
+                                                        : "bg-[#256862]"
                                                         }`}
                                                     style={{ width: `${Math.min(100, Math.max(0, resultProbability))}%` }}
                                                 />
@@ -770,8 +992,8 @@ const DiabetesPrediction = () => {
                                                         <td className="py-4 px-4 font-semibold">
                                                             <span
                                                                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${higher
-                                                                        ? "bg-[#ffdbcd] text-[#360f00]"
-                                                                        : "bg-[#adefe7] text-[#00201d]"
+                                                                    ? "bg-[#ffdbcd] text-[#360f00]"
+                                                                    : "bg-[#adefe7] text-[#00201d]"
                                                                     }`}
                                                             >
                                                                 <Icon

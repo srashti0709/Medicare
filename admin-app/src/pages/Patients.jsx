@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import api from "../api";
 
@@ -72,13 +73,242 @@ const fontStyles = `
         animation: none;
     }
 }
+    
+/* =========================================
+   RESPONSIVE PATIENTS PAGE
+========================================= */
+
+/* Tablets and mobile */
+@media (max-width: 767px) {
+    .medicare-patients-responsive > div:first-of-type {
+        padding: 20px 14px;
+    }
+
+    .medicare-patients-responsive > div:first-of-type > div {
+        gap: 20px;
+    }
+
+    /* Page heading */
+    .medicare-patients-responsive h2.md-display {
+        font-size: 25px;
+        line-height: 32px;
+    }
+
+    .medicare-patients-responsive > div:first-of-type > div > div:first-child > p {
+        font-size: 13px;
+        line-height: 20px;
+    }
+
+    .medicare-patients-responsive > div:first-of-type > div > div:last-child {
+        width: 100%;
+    }
+
+    .medicare-patients-responsive > div:first-of-type > div > div:last-child button {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+    }
+
+    /* Statistics */
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div {
+        padding: 14px;
+        min-width: 0;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child {
+        gap: 8px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child > div:last-child {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 .md-display {
+        font-size: 25px;
+        line-height: 32px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child span:first-child {
+        font-size: 10px;
+        line-height: 15px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:last-child {
+        font-size: 11px;
+        line-height: 16px;
+        margin-top: 12px;
+    }
+
+    /* Patient registry table */
+    .medicare-patients-responsive .overflow-x-auto {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .medicare-patients-responsive table {
+        min-width: 1050px;
+    }
+
+    .medicare-patients-responsive table th,
+    .medicare-patients-responsive table td {
+        padding: 12px 14px;
+    }
+
+    .medicare-patients-responsive table td button {
+        min-height: 38px;
+    }
+
+    /* Table footer */
+    .medicare-patients-responsive .border-t.border-\[\#EDF2F1\] {
+        padding: 13px 14px;
+    }
+
+    /* Empty and loading states */
+    .medicare-patients-responsive .text-center.px-10.py-20 {
+        padding: 48px 18px;
+    }
+
+    /* Modals */
+    .medicare-patients-responsive .fixed.inset-0.z-50 {
+        padding: 12px;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+    .medicare-patients-responsive .md-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        border-radius: 16px;
+    }
+
+    .medicare-patients-responsive .md-modal > div.px-6.py-5 {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .medicare-patients-responsive .md-modal > div.px-6.py-6,
+    .medicare-patients-responsive .md-modal form {
+        padding: 16px;
+    }
+
+    .medicare-patients-responsive .md-modal h3 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.items-center.justify-between.gap-5 {
+        gap: 12px;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.items-center.justify-between.gap-5 > span:last-child {
+        max-width: 60%;
+        overflow-wrap: anywhere;
+    }
+
+    .medicare-patients-responsive .md-modal input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .medicare-patients-responsive .md-modal button {
+        min-height: 42px;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .medicare-patients-responsive > div:first-of-type {
+        padding: 16px 11px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 {
+        gap: 10px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div {
+        padding: 12px 10px;
+        border-radius: 14px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 .md-display {
+        font-size: 23px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:first-child > div:last-child {
+        width: 32px;
+        height: 32px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:last-child {
+        font-size: 10px;
+        line-height: 15px;
+    }
+
+    .medicare-patients-responsive .md-modal > div.px-6.py-5 {
+        padding: 12px;
+    }
+
+    .medicare-patients-responsive .md-modal > div.px-6.py-6,
+    .medicare-patients-responsive .md-modal form {
+        padding: 13px;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.items-center.gap-4.p-4 {
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.items-center.gap-4.p-4 h4 {
+        overflow-wrap: anywhere;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.gap-3.pt-5 {
+        flex-direction: column-reverse;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.gap-3.pt-5 button {
+        width: 100%;
+        flex: none;
+    }
+
+    .medicare-patients-responsive .md-modal .flex.items-center.justify-between.gap-5 > span:last-child {
+        max-width: 55%;
+        font-size: 13px;
+    }
+}
+
+/* Extra-small phones */
+@media (max-width: 360px) {
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div {
+        padding: 15px;
+    }
+
+    .medicare-patients-responsive .grid.grid-cols-1.sm\:grid-cols-2.xl\:grid-cols-4 > div > div:last-child {
+        font-size: 12px;
+    }
+}
+
 `;
 
 const inputClass =
-    "w-full bg-[#F5FAF8] border border-[#D5E5E1] rounded-xl px-3.5 py-2.5 text-sm text-[#0A1F1C] placeholder:text-[#78908C] outline-none transition focus:border-[#256862] focus:ring-2 focus:ring-[#ADEFE7]/60";
+    "w-full bg-[#F5FAF8] border border-[#D5E5E1] rounded-xl px-3.5 py-2.5 text-base text-[#0A1F1C] placeholder:text-[#78908C] outline-none transition focus:border-[#256862] focus:ring-2 focus:ring-[#ADEFE7]/60";
 
 const labelClass =
-    "block text-[12px] font-bold uppercase tracking-wider text-[#164B4D] mb-2";
+    "block text-base font-bold uppercase tracking-wider text-[#164B4D] mb-2";
 
 const cardClass =
     "bg-white rounded-2xl shadow-[0_4px_18px_rgba(22,75,77,0.06)]";
@@ -113,7 +343,7 @@ const Patients = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to fetch patients"
+                "Failed to fetch patients"
             );
         } finally {
             setLoading(false);
@@ -143,7 +373,7 @@ const Patients = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to fetch patient details"
+                "Failed to fetch patient details"
             );
         } finally {
             setViewLoading(false);
@@ -200,7 +430,7 @@ const Patients = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to update patient"
+                "Failed to update patient"
             );
         } finally {
             setSaving(false);
@@ -230,16 +460,16 @@ const Patients = () => {
                 currentPatients.map((patient) =>
                     patient._id === updatedPatient.id
                         ? {
-                              ...patient,
-                              isActive: updatedPatient.isActive,
-                          }
+                            ...patient,
+                            isActive: updatedPatient.isActive,
+                        }
                         : patient
                 )
             );
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to update patient status"
+                "Failed to update patient status"
             );
         } finally {
             setStatusLoading(null);
@@ -275,7 +505,7 @@ const Patients = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to delete patient"
+                "Failed to delete patient"
             );
         } finally {
             setDeleteLoading(null);
@@ -305,7 +535,7 @@ const Patients = () => {
     }).length;
 
     return (
-        <div className="medicare-patients min-h-full">
+       <div className="medicare-patients medicare-patients-responsive min-h-full">
             <style>{fontStyles}</style>
 
             <div className="p-6 xl:p-8">
@@ -315,7 +545,7 @@ const Patients = () => {
                     <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#256862]">
+                                <span className="text-base font-bold uppercase tracking-[0.18em] text-[#256862]">
                                     Patient Registry
                                 </span>
 
@@ -326,7 +556,7 @@ const Patients = () => {
                                 Patients
                             </h2>
 
-                            <p className="text-xs text-[#526563] mt-1">
+                            <p className="text-base text-[#526563] mt-1">
                                 Manage registered patients and monitor their
                                 healthcare records.
                             </p>
@@ -335,7 +565,7 @@ const Patients = () => {
                         <div className="flex items-center gap-2">
                             <button
                                 type="button"
-                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#D5E5E1] text-[#164B4D] text-[13px] font-semibold shadow-[0_2px_8px_rgba(22,75,77,0.04)] hover:bg-[#F2F8F6] transition-colors"
+                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#D5E5E1] text-[#164B4D] text-base font-semibold shadow-[0_2px_8px_rgba(22,75,77,0.04)] hover:bg-[#F2F8F6] transition-colors"
                             >
                                 <span className="material-symbols-outlined text-[18px]">
                                     file_download
@@ -350,7 +580,7 @@ const Patients = () => {
                     {error && (
                         <div
                             role="alert"
-                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-sm font-medium"
+                            className="flex items-start gap-3 bg-[#FDF1EA] border border-[#F5CDB8] border-l-4 border-l-[#F28B5B] text-[#8F3A17] px-4 py-3 rounded-xl text-base font-medium"
                         >
                             <span className="material-symbols-outlined text-[19px] text-[#F28B5B]">
                                 error
@@ -368,7 +598,7 @@ const Patients = () => {
                             <div className={`${cardClass} p-5`}>
                                 <div className="flex items-start justify-between">
                                     <div>
-                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-wider text-[#667876]">
                                             Total Patients
                                         </span>
 
@@ -384,7 +614,7 @@ const Patients = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center gap-1.5 text-xs text-[#667876]">
+                                <div className="mt-4 flex items-center gap-1.5 text-base text-[#667876]">
                                     <span className="material-symbols-outlined text-[16px] text-[#256862]">
                                         groups
                                     </span>
@@ -397,7 +627,7 @@ const Patients = () => {
                             <div className={`${cardClass} p-5`}>
                                 <div className="flex items-start justify-between">
                                     <div>
-                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-wider text-[#667876]">
                                             New This Month
                                         </span>
 
@@ -413,7 +643,7 @@ const Patients = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center gap-1.5 text-xs text-[#667876]">
+                                <div className="mt-4 flex items-center gap-1.5 text-base text-[#667876]">
                                     <span className="material-symbols-outlined text-[16px] text-[#256862]">
                                         calendar_month
                                     </span>
@@ -426,7 +656,7 @@ const Patients = () => {
                             <div className={`${cardClass} p-5`}>
                                 <div className="flex items-start justify-between">
                                     <div>
-                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-wider text-[#667876]">
                                             Active Patients
                                         </span>
 
@@ -442,7 +672,7 @@ const Patients = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center gap-2 text-xs text-[#667876]">
+                                <div className="mt-4 flex items-center gap-2 text-base text-[#667876]">
                                     <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
                                     Currently active accounts
@@ -453,7 +683,7 @@ const Patients = () => {
                             <div className={`${cardClass} p-5`}>
                                 <div className="flex items-start justify-between">
                                     <div>
-                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#667876]">
+                                        <span className="text-base font-bold uppercase tracking-wider text-[#667876]">
                                             Inactive Patients
                                         </span>
 
@@ -469,7 +699,7 @@ const Patients = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center gap-1.5 text-xs text-[#667876]">
+                                <div className="mt-4 flex items-center gap-1.5 text-base text-[#667876]">
                                     <span className="material-symbols-outlined text-[16px] text-[#F28B5B]">
                                         info
                                     </span>
@@ -507,7 +737,7 @@ const Patients = () => {
                                 />
                             </svg>
 
-                            <p className="text-sm font-medium text-[#526563]">
+                            <p className="text-base font-medium text-[#526563]">
                                 Loading patients...
                             </p>
                         </div>
@@ -524,7 +754,7 @@ const Patients = () => {
                                 No patients found
                             </p>
 
-                            <p className="text-sm text-[#667876] mt-1">
+                            <p className="text-base text-[#667876] mt-1">
                                 Patient records will appear here once
                                 registered.
                             </p>
@@ -532,108 +762,76 @@ const Patients = () => {
                     ) : (
                         <>
                             {/* PATIENT REGISTRY */}
-                            <div className="bg-white rounded-2xl shadow-[0_4px_18px_rgba(22,75,77,0.06)] overflow-hidden">
-
-                                {/* Registry Header */}
-                                <div className="px-5 py-4 bg-[#F2F8F6] border-b border-[#E7EFED] flex flex-col md:flex-row md:items-center justify-between gap-3">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[20px] text-[#164B4D]">
-                                            clinical_notes
-                                        </span>
-
-                                        <span className="text-[14px] font-bold text-[#164B4D]">
-                                            Registered Patient Registry
-                                        </span>
-
-                                        <span className="px-2 py-0.5 rounded-full bg-[#D0E7E2] text-[#164B4D] text-[10px] font-bold">
-                                            {totalPatients} Records
-                                        </span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[10px] font-bold tracking-wider text-[#667876]">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-[#2E9C8F]" />
-
-                                        PATIENT DATA SYNCED
-                                    </div>
-                                </div>
-
-                                {/* Search Context Bar */}
-                                <div className="px-5 py-4 bg-white border-b border-[#E7EFED]">
-                                    <div className="relative max-w-xl">
-                                        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718884] text-[20px]">
-                                            search
-                                        </span>
-
-                                        <input
-                                            type="text"
-                                            placeholder="Search patient records..."
-                                            disabled
-                                            className="w-full pl-11 pr-4 py-2.5 bg-[#F2F8F6] rounded-xl text-sm text-[#0A1F1C] placeholder:text-[#78908C] outline-none cursor-default"
-                                        />
-                                    </div>
-                                </div>
+                            <div className="bg-white rounded-2xl shadow-[0_8px_24px_rgba(22,75,77,0.06)] overflow-hidden">
 
                                 {/* TABLE */}
                                 <div className="overflow-x-auto">
-                                    <table className="w-full text-left min-w-[900px]">
+                                    <table className="w-full text-left border-collapse min-w-[1050px]">
                                         <thead>
-                                            <tr className="bg-[#F2F8F6]">
-                                                <th className="px-5 py-3.5 text-[10px] font-bold text-[#526563] uppercase tracking-[0.14em]">
+                                            <tr className="bg-[#F2F8F6] border-b border-[#D5E5E1]">
+                                                <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                                     Patient
                                                 </th>
 
-                                                <th className="px-5 py-3.5 text-[10px] font-bold text-[#526563] uppercase tracking-[0.14em]">
+                                                <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                                     Email
                                                 </th>
 
-                                                <th className="px-5 py-3.5 text-[10px] font-bold text-[#526563] uppercase tracking-[0.14em] whitespace-nowrap">
+                                                <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876] whitespace-nowrap">
                                                     Registered
                                                 </th>
 
-                                                <th className="px-5 py-3.5 text-[10px] font-bold text-[#526563] uppercase tracking-[0.14em]">
+                                                <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
                                                     Status
                                                 </th>
 
-                                                <th className="px-5 py-3.5 text-[10px] font-bold text-[#526563] uppercase tracking-[0.14em] text-right">
+                                                <th className="py-3.5 px-5 text-base font-bold uppercase tracking-[0.12em] text-[#667876] text-right">
                                                     Actions
                                                 </th>
                                             </tr>
                                         </thead>
 
-                                        <tbody>
+                                        <tbody className="divide-y divide-[#EDF2F1]">
                                             {patients.map((patient) => (
                                                 <tr
                                                     key={patient._id}
-                                                    className="group border-b border-[#EDF2F1] last:border-b-0 bg-white hover:bg-[#F7FBFA] transition-colors"
+                                                    className="group hover:bg-[#F2F8F6] transition-colors"
                                                 >
                                                     {/* PATIENT */}
-                                                    <td className="px-5 py-4">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="relative">
-                                                                <div className="md-display w-10 h-10 rounded-xl bg-[#D7EEE9] text-[#164B4D] flex items-center justify-center text-sm font-bold ring-1 ring-inset ring-[#9ADBD3]">
-                                                                    {patient.name
-                                                                        ?.charAt(
-                                                                            0
-                                                                        )
-                                                                        .toUpperCase()}
+                                                    <td className="py-4 px-5">
+                                                        <div className="flex items-center gap-3 min-w-[220px]">
+                                                            <div className="relative shrink-0">
+                                                                <div className="md-display relative w-11 h-11 overflow-hidden rounded-full bg-[#ADEFE7]/55 text-[#164B4D] flex items-center justify-center text-base font-bold ring-1 ring-[#C4E8E2]">
+                                                                    <span>
+                                                                        {patient.name?.charAt(0).toUpperCase()}
+                                                                    </span>
+
+                                                                    {patient.profileImage && (
+                                                                        <img
+                                                                            src={patient.profileImage}
+                                                                            alt={patient.name}
+                                                                            className="absolute inset-0 w-full h-full object-cover"
+                                                                            onError={(e) => {
+                                                                                e.currentTarget.style.display = "none";
+                                                                            }}
+                                                                        />
+                                                                    )}
                                                                 </div>
 
                                                                 <span
-                                                                    className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${
-                                                                        patient.isActive ===
-                                                                        false
-                                                                            ? "bg-[#F28B5B]"
-                                                                            : "bg-[#2E9C8F]"
-                                                                    }`}
+                                                                    className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${patient.isActive === false
+                                                                        ? "bg-[#F28B5B]"
+                                                                        : "bg-[#2E9C8F]"
+                                                                        }`}
                                                                 />
                                                             </div>
 
                                                             <div className="min-w-0">
-                                                                <p className="md-display text-[14px] font-semibold text-[#164B4D] truncate">
+                                                                <p className="text-base font-bold text-[#164B4D] truncate">
                                                                     {patient.name}
                                                                 </p>
 
-                                                                <p className="text-[11px] text-[#718884] mt-0.5">
+                                                                <p className="text-base text-[#78908C] mt-0.5 truncate">
                                                                     Patient Record
                                                                 </p>
                                                             </div>
@@ -641,57 +839,45 @@ const Patients = () => {
                                                     </td>
 
                                                     {/* EMAIL */}
-                                                    <td className="px-5 py-4">
-                                                        <span className="text-[13px] text-[#37595A]">
+                                                    <td className="py-4 px-5">
+                                                        <span className="text-base font-semibold text-[#0A1F1C]">
                                                             {patient.email}
                                                         </span>
                                                     </td>
 
                                                     {/* REGISTERED */}
-                                                    <td className="px-5 py-4 whitespace-nowrap">
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="material-symbols-outlined text-[17px] text-[#718884]">
-                                                                calendar_today
-                                                            </span>
-
-                                                            <span className="text-[13px] text-[#37595A] tabular-nums">
-                                                                {new Date(
-                                                                    patient.createdAt
-                                                                ).toLocaleDateString()}
-                                                            </span>
-                                                        </div>
+                                                    <td className="py-4 px-5 whitespace-nowrap">
+                                                        <span className="text-base text-[#667876] tabular-nums">
+                                                            {new Date(
+                                                                patient.createdAt
+                                                            ).toLocaleDateString()}
+                                                        </span>
                                                     </td>
 
                                                     {/* STATUS */}
-                                                    <td className="px-5 py-4">
+                                                    <td className="py-4 px-5">
                                                         <span
-                                                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold ${
-                                                                patient.isActive ===
-                                                                false
-                                                                    ? "bg-[#FFE8DC] text-[#963E18]"
-                                                                    : "bg-[#DDF3EF] text-[#164B4D]"
-                                                            }`}
+                                                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-base font-bold ${patient.isActive === false
+                                                                ? "bg-[#FFF0E8] text-[#A9532A]"
+                                                                : "bg-[#ADEFE7]/45 text-[#256862]"
+                                                                }`}
                                                         >
                                                             <span
-                                                                className={`w-1.5 h-1.5 rounded-full ${
-                                                                    patient.isActive ===
-                                                                    false
-                                                                        ? "bg-[#F28B5B]"
-                                                                        : "bg-[#2E9C8F]"
-                                                                }`}
+                                                                className={`w-2 h-2 rounded-full ${patient.isActive === false
+                                                                    ? "bg-[#F28B5B]"
+                                                                    : "bg-[#256862]"
+                                                                    }`}
                                                             />
 
-                                                            {patient.isActive ===
-                                                            false
+                                                            {patient.isActive === false
                                                                 ? "Inactive"
                                                                 : "Active"}
                                                         </span>
                                                     </td>
 
                                                     {/* ACTIONS */}
-                                                    <td className="px-5 py-4">
-                                                        <div className="flex items-center justify-end gap-1">
-                                                            {/* VIEW */}
+                                                    <td className="py-4 px-5">
+                                                        <div className="flex items-center justify-end gap-2">
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -699,15 +885,14 @@ const Patients = () => {
                                                                         patient._id
                                                                     )
                                                                 }
-                                                                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#667876] hover:bg-[#DDF3EF] hover:text-[#164B4D] transition-colors"
-                                                                title="View Patient"
+                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F2F8F6] text-[#164B4D] text-base font-bold hover:bg-[#ADEFE7] transition-colors"
                                                             >
-                                                                <span className="material-symbols-outlined text-[19px]">
+                                                                <span className="material-symbols-outlined text-[17px]">
                                                                     visibility
                                                                 </span>
+                                                                View
                                                             </button>
 
-                                                            {/* EDIT */}
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -715,15 +900,14 @@ const Patients = () => {
                                                                         patient
                                                                     )
                                                                 }
-                                                                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#667876] hover:bg-[#E7EFED] hover:text-[#164B4D] transition-colors"
-                                                                title="Edit Patient"
+                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F2F8F6] text-[#164B4D] text-base font-bold hover:bg-[#ADEFE7] transition-colors"
                                                             >
-                                                                <span className="material-symbols-outlined text-[19px]">
+                                                                <span className="material-symbols-outlined text-[17px]">
                                                                     edit_note
                                                                 </span>
+                                                                Edit
                                                             </button>
 
-                                                            {/* TOGGLE */}
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -735,26 +919,18 @@ const Patients = () => {
                                                                     statusLoading ===
                                                                     patient._id
                                                                 }
-                                                                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#667876] hover:bg-[#DDF3EF] hover:text-[#164B4D] transition-colors disabled:opacity-50"
-                                                                title={
-                                                                    patient.isActive ===
-                                                                    false
-                                                                        ? "Activate Patient"
-                                                                        : "Deactivate Patient"
-                                                                }
+                                                                className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-base font-bold transition-colors disabled:opacity-50 ${patient.isActive
+                                                                    ? "bg-[#FFF0E8] text-[#A9532A] hover:bg-[#FADBCB]"
+                                                                    : "bg-[#164B4D] text-white hover:bg-[#003435]"
+                                                                    }`}
                                                             >
-                                                                <span className="material-symbols-outlined text-[19px]">
-                                                                    {statusLoading ===
-                                                                    patient._id
-                                                                        ? "progress_activity"
-                                                                        : patient.isActive ===
-                                                                          false
-                                                                        ? "person_add"
-                                                                        : "person_remove"}
-                                                                </span>
+                                                                {statusLoading === patient._id
+                                                                    ? "Updating..."
+                                                                    : patient.isActive === false
+                                                                        ? "Activate"
+                                                                        : "Deactivate"}
                                                             </button>
 
-                                                            {/* DELETE */}
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -766,15 +942,14 @@ const Patients = () => {
                                                                     deleteLoading ===
                                                                     patient._id
                                                                 }
-                                                                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#A8441A] hover:bg-[#FFE8DC] transition-colors disabled:opacity-50"
-                                                                title="Delete Patient"
+                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FFF0E8] text-[#A9532A] text-base font-bold hover:bg-[#FADBCB] transition-colors disabled:opacity-50"
                                                             >
-                                                                <span className="material-symbols-outlined text-[19px]">
-                                                                    {deleteLoading ===
-                                                                    patient._id
-                                                                        ? "progress_activity"
-                                                                        : "delete"}
+                                                                <span className="material-symbols-outlined text-[17px]">
+                                                                    delete
                                                                 </span>
+                                                                {deleteLoading === patient._id
+                                                                    ? "Deleting..."
+                                                                    : "Delete"}
                                                             </button>
                                                         </div>
                                                     </td>
@@ -784,9 +959,9 @@ const Patients = () => {
                                     </table>
                                 </div>
 
-                                {/* FOOTER */}
-                                <div className="px-5 py-3.5 bg-[#F2F8F6] border-t border-[#E7EFED] flex flex-col sm:flex-row items-center justify-between gap-2">
-                                    <span className="text-[11px] text-[#667876]">
+                                {/* TABLE FOOTER */}
+                                <div className="px-5 py-3.5 border-t border-[#EDF2F1] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                    <p className="text-base text-[#667876]">
                                         Showing{" "}
                                         <span className="font-bold text-[#164B4D]">
                                             1–{patients.length}
@@ -796,10 +971,10 @@ const Patients = () => {
                                             {patients.length}
                                         </span>{" "}
                                         patients
-                                    </span>
+                                    </p>
 
-                                    <span className="text-[10px] font-bold tracking-wider text-[#667876]">
-                                        EHR SYNC: OK
+                                    <span className="text-base font-semibold text-[#667876]">
+                                        Active patient registry
                                     </span>
                                 </div>
                             </div>
@@ -828,7 +1003,7 @@ const Patients = () => {
                                         Patient Details
                                     </h3>
 
-                                    <p className="text-[11px] text-[#718884]">
+                                    <p className="text-base text-[#718884]">
                                         Patient profile information
                                     </p>
                                 </div>
@@ -871,7 +1046,7 @@ const Patients = () => {
                                         />
                                     </svg>
 
-                                    <p className="text-sm font-medium text-[#526563]">
+                                    <p className="text-base font-medium text-[#526563]">
                                         Loading patient...
                                     </p>
                                 </div>
@@ -879,10 +1054,19 @@ const Patients = () => {
                                 <div>
                                     {/* IDENTITY */}
                                     <div className="flex items-center gap-4 p-4 rounded-xl bg-[#F2F8F6] mb-5">
-                                        <div className="md-display w-14 h-14 rounded-full bg-[#D7EEE9] text-[#164B4D] flex items-center justify-center text-lg font-bold ring-2 ring-[#9ADBD3]">
-                                            {selectedPatient.name
-                                                ?.charAt(0)
-                                                .toUpperCase()}
+                                        <div className="md-display w-14 h-14 shrink-0 overflow-hidden rounded-full bg-[#D7EEE9] text-[#164B4D] flex items-center justify-center text-lg font-bold ring-2 ring-[#9ADBD3]">
+                                            {selectedPatient.profileImage ? (
+                                                <img
+                                                    src={selectedPatient.profileImage}
+                                                    alt={selectedPatient.name}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = "none";
+                                                    }}
+                                                />
+                                            ) : (
+                                                selectedPatient.name?.charAt(0).toUpperCase()
+                                            )}
                                         </div>
 
                                         <div>
@@ -890,7 +1074,7 @@ const Patients = () => {
                                                 {selectedPatient.name}
                                             </h4>
 
-                                            <p className="text-sm text-[#718884] mt-0.5">
+                                            <p className="text-base text-[#718884] mt-0.5">
                                                 {selectedPatient.email}
                                             </p>
                                         </div>
@@ -904,7 +1088,7 @@ const Patients = () => {
                                                     person
                                                 </span>
 
-                                                <span className="text-[13px] font-medium text-[#5B7773]">
+                                                <span className="text-base font-medium text-[#5B7773]">
                                                     Name
                                                 </span>
                                             </div>
@@ -920,12 +1104,12 @@ const Patients = () => {
                                                     mail
                                                 </span>
 
-                                                <span className="text-[13px] font-medium text-[#5B7773]">
+                                                <span className="text-base font-medium text-[#5B7773]">
                                                     Email
                                                 </span>
                                             </div>
 
-                                            <span className="text-[#37595A] text-right break-all text-sm">
+                                            <span className="text-[#37595A] text-right break-all text-base">
                                                 {selectedPatient.email}
                                             </span>
                                         </div>
@@ -936,12 +1120,12 @@ const Patients = () => {
                                                     badge
                                                 </span>
 
-                                                <span className="text-[13px] font-medium text-[#5B7773]">
+                                                <span className="text-base font-medium text-[#5B7773]">
                                                     Account Type
                                                 </span>
                                             </div>
 
-                                            <span className="text-[#37595A] capitalize text-right text-sm">
+                                            <span className="text-[#37595A] capitalize text-right text-base">
                                                 {selectedPatient.role}
                                             </span>
                                         </div>
@@ -952,30 +1136,28 @@ const Patients = () => {
                                                     verified
                                                 </span>
 
-                                                <span className="text-[13px] font-medium text-[#5B7773]">
+                                                <span className="text-base font-medium text-[#5B7773]">
                                                     Status
                                                 </span>
                                             </div>
 
                                             <span
-                                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold ${
-                                                    selectedPatient.isActive ===
+                                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-base font-bold ${selectedPatient.isActive ===
                                                     false
-                                                        ? "bg-[#FFE8DC] text-[#963E18]"
-                                                        : "bg-[#DDF3EF] text-[#164B4D]"
-                                                }`}
+                                                    ? "bg-[#FFE8DC] text-[#963E18]"
+                                                    : "bg-[#DDF3EF] text-[#164B4D]"
+                                                    }`}
                                             >
                                                 <span
-                                                    className={`w-1.5 h-1.5 rounded-full ${
-                                                        selectedPatient.isActive ===
+                                                    className={`w-1.5 h-1.5 rounded-full ${selectedPatient.isActive ===
                                                         false
-                                                            ? "bg-[#F28B5B]"
-                                                            : "bg-[#2E9C8F]"
-                                                    }`}
+                                                        ? "bg-[#F28B5B]"
+                                                        : "bg-[#2E9C8F]"
+                                                        }`}
                                                 />
 
                                                 {selectedPatient.isActive ===
-                                                false
+                                                    false
                                                     ? "Inactive"
                                                     : "Active"}
                                             </span>
@@ -987,12 +1169,12 @@ const Patients = () => {
                                                     calendar_month
                                                 </span>
 
-                                                <span className="text-[13px] font-medium text-[#5B7773]">
+                                                <span className="text-base font-medium text-[#5B7773]">
                                                     Registered On
                                                 </span>
                                             </div>
 
-                                            <span className="text-[#37595A] text-right tabular-nums text-sm">
+                                            <span className="text-[#37595A] text-right tabular-nums text-base">
                                                 {new Date(
                                                     selectedPatient.createdAt
                                                 ).toLocaleDateString()}
@@ -1005,7 +1187,7 @@ const Patients = () => {
                                         onClick={() =>
                                             setSelectedPatient(null)
                                         }
-                                        className="w-full mt-5 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-sm font-semibold transition-colors"
+                                        className="w-full mt-5 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-semibold transition-colors"
                                     >
                                         Close
                                     </button>
@@ -1036,7 +1218,7 @@ const Patients = () => {
                                         Edit Patient
                                     </h3>
 
-                                    <p className="text-[11px] text-[#718884]">
+                                    <p className="text-base text-[#718884]">
                                         Update patient information
                                     </p>
                                 </div>
@@ -1065,23 +1247,15 @@ const Patients = () => {
                                     Full Name
                                 </label>
 
-                                <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#718884] text-[19px]">
-                                        person
-                                    </span>
-
-                                    <input
-                                        type="text"
-                                        value={editName}
-                                        onChange={(e) =>
-                                            setEditName(
-                                                e.target.value
-                                            )
-                                        }
-                                        required
-                                        className={`${inputClass} pl-10`}
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    value={editName}
+                                    onChange={(e) =>
+                                        setEditName(e.target.value)
+                                    }
+                                    required
+                                    className={inputClass}
+                                />
                             </div>
 
                             {/* EMAIL */}
@@ -1091,7 +1265,7 @@ const Patients = () => {
                                 </label>
 
                                 <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#718884] text-[19px]">
+                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#718884] text-base">
                                         mail
                                     </span>
 
@@ -1099,9 +1273,7 @@ const Patients = () => {
                                         type="email"
                                         value={editEmail}
                                         onChange={(e) =>
-                                            setEditEmail(
-                                                e.target.value
-                                            )
+                                            setEditEmail(e.target.value)
                                         }
                                         required
                                         className={`${inputClass} pl-10`}
@@ -1116,7 +1288,7 @@ const Patients = () => {
                                     onClick={() =>
                                         setEditingPatient(null)
                                     }
-                                    className="flex-1 px-4 py-2.5 rounded-xl border border-[#CBDAD6] bg-white hover:bg-[#F2F8F6] text-[#164B4D] text-sm font-semibold transition-colors"
+                                    className="flex-1 px-4 py-2.5 rounded-xl border border-[#CBDAD6] bg-white hover:bg-[#F2F8F6] text-[#164B4D] text-base font-semibold transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -1124,10 +1296,10 @@ const Patients = () => {
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-semibold transition-colors flex items-center justify-center gap-2"
                                 >
                                     {saving && (
-                                        <span className="material-symbols-outlined text-[17px] animate-spin">
+                                        <span className="material-symbols-outlined text-base animate-spin">
                                             progress_activity
                                         </span>
                                     )}

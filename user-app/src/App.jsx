@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -14,6 +15,8 @@ import NotFound from "./pages/NotFound";
 import HealthReportAnalyzer from "./pages/HealthReportAnalyzer";
 import AIAssistant from "./pages/AIAssistant";
 
+import AIFloatingChat from "./components/AIFloatingChat";
+
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +27,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route
           path="/book-appointment"
           element={
@@ -50,17 +54,21 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/health-report-analyzer"
           element={<HealthReportAnalyzer />}
         />
+
         <Route
           path="/ai-assistant"
           element={<AIAssistant />}
         />
-        <Route path="*" element={<NotFound />} />
 
+        <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <AIFloatingChat />
     </BrowserRouter>
   );
 }

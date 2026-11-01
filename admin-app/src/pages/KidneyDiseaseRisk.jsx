@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import DoctorNavbar from "../components/DoctorNavbar";
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
 
@@ -243,63 +243,249 @@ function KidneyDiseaseRisk() {
     );
 
     return (
-        <div className={`min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
+        <div className={`kidney-risk-page min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
+            <style>{`
+    /* Tablet and mobile */
+    @media (max-width: 767px) {
+        .kidney-risk-navbar > div {
+            height: 64px;
+            padding-left: 14px;
+            padding-right: 14px;
+        }
+
+        .kidney-risk-navbar > div > div:first-child {
+            gap: 0;
+        }
+
+        .kidney-risk-navbar > div > div:first-child > div {
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .kidney-risk-navbar > div > div:first-child span:first-child {
+            font-size: 17px;
+        }
+
+        .kidney-risk-navbar > div > div:first-child span:nth-child(2) {
+            font-size: 8px;
+            padding: 3px 5px;
+        }
+
+        .kidney-risk-navbar > div > div:last-child {
+            gap: 6px;
+        }
+
+        .kidney-risk-main {
+            padding: 64px 14px 0;
+        }
+
+        .kidney-risk-main > div {
+            padding-bottom: 32px;
+        }
+
+        .kidney-risk-main h1 {
+            font-size: 26px;
+            line-height: 33px;
+        }
+
+        .kidney-risk-main form {
+            gap: 16px;
+        }
+
+        .kidney-risk-main form > div,
+        .kidney-risk-main form .lg\\:col-span-5,
+        .kidney-risk-main form .lg\\:col-span-7 {
+            padding: 16px;
+            min-width: 0;
+        }
+
+        .kidney-risk-main form .grid {
+            min-width: 0;
+        }
+
+        .kidney-risk-main form input,
+        .kidney-risk-main form select {
+            min-height: 42px;
+            font-size: 14px;
+        }
+
+        .kidney-risk-main form label {
+            line-height: 1.4;
+        }
+
+        .kidney-risk-main form h3 {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .kidney-risk-main form .grid.grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kidney-risk-main form .flex.items-center.justify-between.pb-2 {
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kidney-risk-main form .flex.items-center.justify-between.pb-2 > span {
+            flex-shrink: 0;
+        }
+
+        .kidney-risk-main form > div:last-child {
+            align-items: stretch;
+            padding: 14px;
+        }
+
+        .kidney-risk-main form > div:last-child button {
+            width: 100%;
+            min-height: 46px;
+            white-space: normal;
+            text-align: center;
+        }
+
+        /* Assessment result */
+        .kidney-risk-main .mt-8.bg-white {
+            padding: 16px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white h2 {
+            font-size: 20px;
+            line-height: 27px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .text-\\[44px\\] {
+            font-size: 32px;
+            line-height: 40px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .text-\\[36px\\] {
+            font-size: 29px;
+            line-height: 36px;
+        }
+
+        /* Prediction history */
+        .kidney-risk-main table {
+            min-width: 520px;
+        }
+
+        .kidney-risk-main table th,
+        .kidney-risk-main table td {
+            padding: 12px 10px;
+            white-space: nowrap;
+        }
+
+        .kidney-risk-page footer {
+            padding: 22px 14px;
+            text-align: center;
+        }
+
+        .kidney-risk-page footer > div > div {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+    /* Small phones */
+    @media (max-width: 480px) {
+        .kidney-risk-navbar > div {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .kidney-risk-navbar > div > div:first-child span:nth-child(2) {
+            max-width: 145px;
+            white-space: normal;
+            line-height: 1.2;
+        }
+
+        .kidney-risk-main {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .kidney-risk-main h1 {
+            font-size: 23px;
+            line-height: 29px;
+        }
+
+        .kidney-risk-main form > div,
+        .kidney-risk-main form .lg\\:col-span-5,
+        .kidney-risk-main form .lg\\:col-span-7 {
+            padding: 13px;
+        }
+
+        .kidney-risk-main form .grid.grid-cols-2 {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kidney-risk-main form .flex.items-center.justify-between.pb-2 {
+            flex-wrap: wrap;
+        }
+
+        .kidney-risk-main form .flex.items-center.justify-between.pb-2 > span {
+            margin-left: 36px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white {
+            padding: 13px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .flex.items-center.gap-4 {
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .text-\\[44px\\] {
+            font-size: 28px;
+            line-height: 36px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .text-\\[36px\\] {
+            font-size: 25px;
+            line-height: 32px;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .flex.justify-between.items-baseline {
+            align-items: flex-start;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .kidney-risk-main .mt-8.bg-white .flex.justify-between.text-\\[12px\\] {
+            flex-wrap: nowrap;
+        }
+
+        .kidney-risk-page footer > div > div {
+            gap: 8px;
+        }
+
+        .kidney-risk-page footer span:last-child {
+            font-size: 10px;
+            line-height: 16px;
+        }
+    }
+
+    /* Very narrow phones */
+    @media (max-width: 360px) {
+        .kidney-risk-navbar > div > div:first-child span:nth-child(2) {
+            display: none;
+        }
+
+        .kidney-risk-main h1 {
+            font-size: 21px;
+        }
+
+        .kidney-risk-main form .flex.items-center.gap-4 {
+            gap: 9px;
+        }
+    }
+`}</style>
             {/* ================= TOP NAVBAR ================= */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(22,75,77,0.06)]">
-                <div className="h-20 w-full max-w-7xl mx-auto px-5 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 shrink-0">
-                        <div className="flex items-center gap-1">
-                            <span className={`${heading} text-[18px] leading-[26px] text-[#003435] font-bold tracking-tight`}>
-                                Medicare
-                            </span>
-                            <span className="bg-[#b9ecee] text-[#1a4e50] px-1 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase">
-                                HEALTHCARE INTELLIGENCE
-                            </span>
-                        </div>
-                        <span className="hidden lg:inline-flex items-center bg-[#adefe7] text-[#2c6e68] px-2 py-1 rounded-full text-[11px] uppercase tracking-wider font-bold">
-                            DOCTOR PORTAL
-                        </span>
-                    </div>
-
-                    <nav className="hidden xl:flex items-center gap-1 p-1 bg-[#e1f8f3] rounded-lg">
-                        {navItems.map((item) => (
-                            <button
-                                key={item.path}
-                                type="button"
-                                onClick={() => {
-                                    window.location.href = item.path;
-                                }}
-                                className={`px-4 py-1 rounded-lg text-[13px] font-semibold transition-colors ${item.path === "/ai-risk-assessment"
-                                        ? "bg-[#164b4d] text-white shadow-sm"
-                                        : "text-[#404848] hover:text-[#0a1f1c] hover:bg-[#d6ede8]"
-                                    }`}
-                            >
-                                {item.label}
-                            </button>
-                        ))}
-                    </nav>
-
-                    <div className="flex items-center gap-4 shrink-0">
-                        <div className="flex items-center gap-2 pl-1">
-                            <div className="w-8 h-8 rounded-full bg-[#164b4d] text-white flex items-center justify-center text-[12px] font-bold ring-1 ring-[#c0c8c8]">
-                                {getInitials(doctorUser.name)}
-                            </div>
-                            <div className="hidden sm:flex flex-col text-left">
-                                <span className="text-[13px] text-[#0a1f1c] leading-tight font-semibold">
-                                    {doctorUser.name}
-                                </span>
-                                <span className="text-[11px] text-[#404848] leading-tight font-bold">
-                                    Doctor
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+<DoctorNavbar />
 
             {/* ================= MAIN ================= */}
-            <main className="w-full max-w-7xl mx-auto px-5 pt-20 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">
-                <div className="flex flex-col w-full pb-16">
+<main className="kidney-risk-main w-full max-w-7xl mx-auto px-5 pt-24 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">
+                    <div className="flex flex-col w-full pb-16">
                     {/* ---------- Header ---------- */}
                     <div className="w-full flex flex-col gap-2 pt-4 pb-6">
                         <nav className="flex items-center gap-1 text-[12px] text-[#404848]">

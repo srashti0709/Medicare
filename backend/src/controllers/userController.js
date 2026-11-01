@@ -1,3 +1,4 @@
+
 const User = require("../models/User");
 const Appointment = require("../models/Appointment");
 
@@ -26,13 +27,12 @@ const getProfile = async (req, res) => {
     }
 };
 
-
 // ===============================
 // Update Own Profile
 // ===============================
 const updateProfile = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { name, profileImage } = req.body;
 
         if (!name || !name.trim()) {
             return res.status(400).json({
@@ -49,6 +49,10 @@ const updateProfile = async (req, res) => {
         }
 
         user.name = name.trim();
+
+        if (profileImage !== undefined) {
+            user.profileImage = profileImage.trim();
+        }
 
         await user.save();
 
@@ -67,7 +71,6 @@ const updateProfile = async (req, res) => {
         });
     }
 };
-
 
 // ===============================
 // Admin: Get All Patients
@@ -91,7 +94,6 @@ const getAllPatients = async (req, res) => {
         });
     }
 };
-
 
 // ===============================
 // Admin: Get Patient By ID
@@ -120,7 +122,6 @@ const getPatientById = async (req, res) => {
         });
     }
 };
-
 
 // ===============================
 // Admin: Update Patient
@@ -184,7 +185,6 @@ const updatePatient = async (req, res) => {
     }
 };
 
-
 // ===============================
 // Admin: Toggle Patient Status
 // ===============================
@@ -224,7 +224,6 @@ const togglePatientStatus = async (req, res) => {
     }
 };
 
-
 // ===============================
 // Admin: Delete Patient
 // ===============================
@@ -242,8 +241,9 @@ const deletePatient = async (req, res) => {
         }
 
         const existingAppointments = await Appointment.findOne({
-  patient: patient._id,
-});
+            patient: patient._id,
+        });
+
         if (existingAppointments) {
             return res.status(400).json({
                 message:

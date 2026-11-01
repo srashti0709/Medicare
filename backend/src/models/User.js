@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -22,17 +23,23 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
+    profileImage: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
     role: {
       type: String,
       enum: ["patient", "doctor", "admin"],
       default: "patient",
     },
+
     isActive: {
       type: Boolean,
       default: true,
     },
   },
-
   {
     timestamps: true,
   }

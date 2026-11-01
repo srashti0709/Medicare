@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   UserRound,
@@ -10,6 +11,8 @@ import {
   ArrowLeft,
   Sparkles,
   LockKeyhole,
+  ImagePlus,
+  Link as LinkIcon,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -20,6 +23,7 @@ import api from "../api";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -40,6 +44,7 @@ const Profile = () => {
 
         setUser(profile);
         setName(profile.name || "");
+        setProfileImage(profile.profileImage || "");
       } catch (error) {
         console.error("Failed to fetch profile", error);
 
@@ -74,6 +79,7 @@ const Profile = () => {
         "/users/profile",
         {
           name: name.trim(),
+          profileImage: profileImage.trim(),
         },
         {
           headers: {
@@ -84,6 +90,7 @@ const Profile = () => {
 
       setUser(response.data.user);
       setName(response.data.user.name);
+      setProfileImage(response.data.user.profileImage || "");
 
       localStorage.setItem(
         "user",
@@ -113,7 +120,6 @@ const Profile = () => {
         <div className="pointer-events-none absolute -bottom-40 -left-40 h-[350px] w-[350px] rounded-full bg-[#dcf3ee]/70 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 pb-10 pt-12 md:pb-14 md:pt-16">
-
           <Link
             to="/"
             className="mb-8 inline-flex items-center gap-2 text-base font-semibold text-[#256862] transition-colors hover:text-[#003435]"
@@ -160,7 +166,6 @@ const Profile = () => {
 
       {/* PROFILE CONTENT */}
       <section className="relative mx-auto max-w-7xl px-6 pb-20">
-
         {loading ? (
           <div className="flex min-h-[400px] flex-col items-center justify-center rounded-[32px] border border-[#D4E4DE] bg-white shadow-sm">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#E7F4F1] text-[#258B76]">
@@ -175,16 +180,25 @@ const Profile = () => {
           </div>
         ) : user ? (
           <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-3">
-
             {/* LEFT PROFILE CARD */}
             <div className="overflow-hidden rounded-[30px] border border-[#D4E4DE] bg-white shadow-[0_15px_45px_rgba(0,52,53,0.06)] lg:col-span-1">
-
               <div className="relative overflow-hidden bg-[#003435] px-7 pb-10 pt-9 text-center">
                 <div className="absolute -right-12 -top-16 h-48 w-48 rounded-full border-[25px] border-white/5" />
                 <div className="absolute -bottom-24 -left-10 h-48 w-48 rounded-full border-[25px] border-white/5" />
 
-                <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-[28px] border border-[#ADEFE7]/30 bg-[#ADEFE7] text-[#003435] shadow-lg">
-                  <UserRound size={46} strokeWidth={1.7} />
+                <div className="relative mx-auto flex h-28 w-28 items-center justify-center overflow-hidden rounded-[30px] border-2 border-[#ADEFE7]/50 bg-[#ADEFE7] text-[#003435] shadow-lg">
+                  {profileImage.trim() ? (
+                    <img
+                      src={profileImage.trim()}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <UserRound size={50} strokeWidth={1.7} />
+                  )}
                 </div>
 
                 <h2 className="relative mt-5 break-words font-['Bricolage_Grotesque'] text-2xl font-bold text-white">
@@ -198,7 +212,6 @@ const Profile = () => {
               </div>
 
               <div className="space-y-5 p-6 sm:p-7">
-
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#8A9A94]">
                     ACCOUNT OVERVIEW
@@ -250,7 +263,6 @@ const Profile = () => {
 
             {/* RIGHT EDIT PROFILE CARD */}
             <div className="rounded-[30px] border border-[#D4E4DE] bg-white p-6 shadow-[0_15px_45px_rgba(0,52,53,0.06)] sm:p-9 lg:col-span-2">
-
               <div className="mb-8 flex items-center gap-4 border-b border-[#E3ECE8] pb-7">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#E7F4F1] text-[#256862]">
                   <UserRound size={27} />
@@ -274,9 +286,7 @@ const Profile = () => {
                     <p className="text-sm font-bold">
                       Successfully Updated
                     </p>
-                    <p className="mt-1 text-sm">
-                      {message}
-                    </p>
+                    <p className="mt-1 text-sm">{message}</p>
                   </div>
                 </div>
               )}
@@ -289,14 +299,60 @@ const Profile = () => {
                     <p className="text-sm font-bold">
                       Something went wrong
                     </p>
-                    <p className="mt-1 text-sm">
-                      {error}
-                    </p>
+                    <p className="mt-1 text-sm">{error}</p>
                   </div>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-7">
+                {/* PROFILE IMAGE */}
+                <div>
+                  <label className="mb-3 flex items-center gap-2 text-sm font-bold text-[#164B4D]">
+                    <ImagePlus size={18} className="text-[#258B76]" />
+                    Profile Image
+                  </label>
+
+                  <div className="flex flex-col gap-5 rounded-2xl border border-[#D4E4DE] bg-[#F5F8F6] p-5 sm:flex-row sm:items-center">
+                    <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#C8DED6] bg-[#DDF3ED] text-[#256862]">
+                      {profileImage.trim() ? (
+                        <img
+                          src={profileImage.trim()}
+                          alt="Profile preview"
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <UserRound size={42} />
+                      )}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#164B4D]">
+                        <LinkIcon size={15} />
+                        Image URL
+                      </label>
+
+                      <input
+                        type="url"
+                        value={profileImage}
+                        onChange={(e) => {
+                          setProfileImage(e.target.value);
+                          setMessage("");
+                          setError("");
+                        }}
+                        placeholder="https://example.com/profile-image.jpg"
+                        className="w-full rounded-xl border border-[#CBDAD6] bg-white px-4 py-3 text-sm text-[#003435] outline-none transition-all placeholder:text-[#9AA9A3] hover:border-[#8EBFB2] focus:border-[#258B76] focus:ring-4 focus:ring-[#ADEFE7]/30"
+                      />
+
+                      <p className="mt-2 text-xs leading-5 text-[#87958F]">
+                        Paste a publicly accessible image URL to set your
+                        profile picture. Leave empty to use the default icon.
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
                 {/* FULL NAME */}
                 <div>
