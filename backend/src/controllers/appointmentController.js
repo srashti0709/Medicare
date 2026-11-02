@@ -170,6 +170,12 @@ const createAppointment = async (req, res) => {
       appointment: populatedAppointment,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "This appointment slot is already booked",
+      });
+    }
+
     res.status(500).json({
       message: "Failed to book appointment",
       error: error.message,

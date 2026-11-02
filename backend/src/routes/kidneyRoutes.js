@@ -1,4 +1,6 @@
+const authorizeRoles = require("../middleware/authorizeRoles");
 const express = require("express");
+const protect = require("../middleware/authMiddleware");
 
 const {
   kidneyPrediction,
@@ -7,10 +9,17 @@ const {
 
 const router = express.Router();
 
-router.post("/predict", kidneyPrediction);
+router.post(
+  "/predict",
+  protect,
+  authorizeRoles("patient", "doctor"),
+  kidneyPrediction
+);
 
 router.get(
   "/predictions/:patientId",
+  protect,
+  authorizeRoles("patient", "doctor"),
   getPatientKidneyPredictions
 );
 

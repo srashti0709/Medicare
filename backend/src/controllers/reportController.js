@@ -1,3 +1,4 @@
+
 const fs = require("fs");
 const { PDFParse } = require("pdf-parse");
 const { analyzeHealthReport } = require("../services/reportAIService");
@@ -15,12 +16,12 @@ const analyzeReport = async (req, res) => {
 
         if (req.file.mimetype === "application/pdf") {
             const fileBuffer = fs.readFileSync(req.file.path);
+
             const parser = new PDFParse({
                 data: fileBuffer
             });
 
             const pdfData = await parser.getText();
-
             reportText = pdfData.text;
         } else {
             return res.status(400).json({
@@ -38,7 +39,7 @@ const analyzeReport = async (req, res) => {
 
         const result = await analyzeHealthReport(reportText);
 
-        res.status(200).json({
+        return res.status(200).json({
             ...result,
             data: {
                 ...result.data,
@@ -47,15 +48,21 @@ const analyzeReport = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(
-            "Health Report Analysis Error:",
-            error.message
-        );
+        console.error("Health Report Analysis Error:", error.message);
 
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Failed to analyze health report"
         });
+    } finally {
+        if (req.file?.path) {
+            try {
+                await fs.promises.unlink(req.file.path);
+                console.log("Temporary report file deleted.");
+            } catch (cleanupError) {
+                console.error("Report cleanup failed:", cleanupError.message);
+            }
+        }
     }
 };
 

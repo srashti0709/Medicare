@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Eye,
@@ -16,8 +16,6 @@ import Footer from "../components/Footer";
 import api from "../api";
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -82,7 +80,7 @@ const Login = () => {
         @keyframes login-fade-up {
           from {
             opacity: 0;
-            transform: translateY(18px);
+            transform: translateY(22px);
           }
           to {
             opacity: 1;
@@ -90,12 +88,43 @@ const Login = () => {
           }
         }
 
+        @keyframes login-fade-left {
+          from {
+            opacity: 0;
+            transform: translateX(-24px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes login-fade-right {
+          from {
+            opacity: 0;
+            transform: translateX(24px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
         @keyframes login-float {
           0%, 100% {
-            transform: translateY(0px);
+            transform: translateY(0);
           }
           50% {
-            transform: translateY(-10px);
+            transform: translateY(-12px);
+          }
+        }
+
+        @keyframes login-float-reverse {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+          }
+          50% {
+            transform: translateY(12px) translateX(-8px);
           }
         }
 
@@ -104,66 +133,139 @@ const Login = () => {
             box-shadow: 0 0 0 0 rgba(173,239,231,.22);
           }
           50% {
-            box-shadow: 0 0 0 12px rgba(173,239,231,0);
+            box-shadow: 0 0 0 13px rgba(173,239,231,0);
           }
         }
 
-        .login-enter {
-          animation: login-fade-up .7s cubic-bezier(.2,.8,.2,1) both;
+        @keyframes login-glow {
+          0%, 100% {
+            opacity: .45;
+          }
+          50% {
+            opacity: .9;
+          }
         }
 
-        .login-enter-delayed {
-          animation: login-fade-up .8s .12s cubic-bezier(.2,.8,.2,1) both;
+        @keyframes login-spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes login-orbit {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .login-brand-enter {
+          animation: login-fade-left .85s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        .login-form-enter {
+          animation: login-fade-right .85s .12s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        .login-content-enter {
+          animation: login-fade-up .75s .25s cubic-bezier(.2,.8,.2,1) both;
         }
 
         .login-float {
           animation: login-float 5s ease-in-out infinite;
         }
 
+        .login-float-reverse {
+          animation: login-float-reverse 7s ease-in-out infinite;
+        }
+
         .login-pulse {
           animation: login-pulse 2.8s ease-out infinite;
         }
 
+        .login-glow {
+          animation: login-glow 4s ease-in-out infinite;
+        }
+
+        .login-orbit {
+          animation: login-orbit 24s linear infinite;
+        }
+
         .login-field {
           transition:
-            border-color .2s ease,
-            box-shadow .2s ease,
-            background .2s ease,
-            transform .2s ease;
+            border-color .25s ease,
+            box-shadow .25s ease,
+            background .25s ease,
+            transform .25s ease;
         }
 
         .login-field:focus-within {
           border-color: #256862;
           background: #fff;
           box-shadow: 0 0 0 4px rgba(37,104,98,.10);
+          transform: translateY(-1px);
         }
 
         .login-submit {
           transition:
-            transform .2s ease,
-            box-shadow .2s ease,
-            background .2s ease;
+            transform .25s ease,
+            box-shadow .25s ease,
+            background .25s ease;
         }
 
         .login-submit:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(0,52,53,.2);
+          transform: translateY(-3px);
+          box-shadow: 0 14px 28px rgba(0,52,53,.22);
         }
 
         .login-submit:active:not(:disabled) {
-          transform: translateY(0);
+          transform: translateY(-1px) scale(.99);
+        }
+
+        .login-link {
+          transition:
+            color .2s ease,
+            letter-spacing .2s ease;
+        }
+
+        .login-link:hover {
+          letter-spacing: .01em;
+        }
+
+        .login-brand-card {
+          transition:
+            transform .35s ease,
+            border-color .35s ease,
+            background .35s ease;
+        }
+
+        .login-brand-card:hover {
+          transform: translateY(-5px);
+          border-color: rgba(173,239,231,.4);
+          background: rgba(255,255,255,.12);
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .login-enter,
-          .login-enter-delayed,
+          .login-brand-enter,
+          .login-form-enter,
+          .login-content-enter,
           .login-float,
-          .login-pulse {
+          .login-float-reverse,
+          .login-pulse,
+          .login-glow,
+          .login-orbit {
             animation: none !important;
           }
 
           .login-field,
-          .login-submit {
+          .login-submit,
+          .login-link,
+          .login-brand-card {
             transition: none !important;
           }
         }
@@ -173,26 +275,31 @@ const Login = () => {
 
       <main className="relative mx-auto flex w-full max-w-7xl items-center px-4 py-10 sm:px-6 md:min-h-[calc(100vh-150px)] md:py-14 lg:px-8">
 
-        <div className="pointer-events-none absolute -left-28 top-10 h-72 w-72 rounded-full bg-[#ADEFE7]/40 blur-3xl" />
+        {/* Animated background decorations */}
+        <div className="pointer-events-none absolute -left-28 top-10 h-72 w-72 rounded-full bg-[#ADEFE7]/40 blur-3xl login-glow" />
 
-        <div className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-[#D7ECE6]/70 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-[#D7ECE6]/70 blur-3xl login-glow" />
+
+        <div className="pointer-events-none absolute right-[12%] top-10 h-24 w-24 rounded-full border border-[#ADEFE7]/40 login-float-reverse" />
+
+        <div className="pointer-events-none absolute bottom-16 left-[8%] h-16 w-16 rounded-full border border-[#A5DCD2]/50 login-float" />
 
         <div className="relative grid w-full overflow-hidden rounded-[2rem] border border-[#CBDAD6] bg-white shadow-[0_24px_80px_rgba(0,52,53,0.09)] lg:min-h-[650px] lg:grid-cols-[1.02fr_.98fr]">
 
           {/* Brand Panel */}
+          <section className="login-grid login-brand-enter relative hidden flex-col justify-between overflow-hidden bg-[#003435] p-10 text-white lg:flex xl:p-14">
 
-          <section className="login-grid relative hidden flex-col justify-between overflow-hidden bg-[#003435] p-10 text-white lg:flex xl:p-14">
+            {/* Decorative circles */}
+            <div className="pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full border border-[#ADEFE7]/20 login-orbit" />
 
-            <div className="absolute -right-28 -top-28 h-80 w-80 rounded-full border border-[#ADEFE7]/20" />
+            <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full border border-[#ADEFE7]/20 login-float-reverse" />
 
-            <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full border border-[#ADEFE7]/20" />
-
-            <div className="absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-[#256862]/40 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-[#256862]/40 blur-2xl login-glow" />
 
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 backdrop-blur">
+              <div className="inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.07] px-4 py-3 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/[0.12]">
 
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ADEFE7] text-[#003435]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ADEFE7] text-[#003435] transition duration-300 hover:rotate-6">
                   <HeartPulse size={23} strokeWidth={2.4} />
                 </span>
 
@@ -212,7 +319,7 @@ const Login = () => {
             <div className="relative z-10 my-12 max-w-lg">
 
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#ADEFE7]/25 bg-[#ADEFE7]/10 px-3 py-1.5 text-base font-bold tracking-wide text-[#ADEFE7]">
-                <Sparkles size={16} />
+                <Sparkles size={16} className="login-float" />
                 YOUR HEALTH, IN GOOD HANDS
               </div>
 
@@ -227,7 +334,7 @@ const Login = () => {
                 and keep your health journey moving forward.
               </p>
 
-              <div className="login-float relative mt-12 max-w-sm rounded-3xl border border-white/15 bg-white/[0.08] p-5 shadow-2xl backdrop-blur-md">
+              <div className="login-brand-card login-float relative mt-12 max-w-sm rounded-3xl border border-white/15 bg-white/[0.08] p-5 shadow-2xl backdrop-blur-md">
 
                 <div className="flex items-center gap-4">
 
@@ -268,8 +375,7 @@ const Login = () => {
           </section>
 
           {/* Login Form */}
-
-          <section className="login-enter flex items-center justify-center px-5 py-10 sm:px-10 sm:py-14 lg:px-12 xl:px-16">
+          <section className="login-form-enter flex items-center justify-center px-5 py-10 sm:px-10 sm:py-14 lg:px-12 xl:px-16">
 
             <div className="w-full max-w-md">
 
@@ -291,7 +397,7 @@ const Login = () => {
 
               </div>
 
-              <div className="login-enter-delayed">
+              <div className="login-content-enter">
 
                 <div className="mb-7">
 
@@ -310,11 +416,10 @@ const Login = () => {
                 </div>
 
                 {/* Error Message */}
-
                 {error && (
                   <div
                     role="alert"
-                    className="mb-5 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-base text-red-700"
+                    className="mb-5 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-base text-red-700 animate-[login-fade-up_.35s_ease-out_both]"
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 font-bold">
                       !
@@ -327,8 +432,8 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="space-y-5">
 
                   {/* Email */}
+                  <div className="animate-[login-fade-up_.6s_.15s_both]">
 
-                  <div>
                     <label
                       htmlFor="login-email"
                       className="mb-2 block text-base font-extrabold uppercase tracking-[0.08em] text-[#344A45]"
@@ -355,8 +460,7 @@ const Login = () => {
                   </div>
 
                   {/* Password */}
-
-                  <div>
+                  <div className="animate-[login-fade-up_.6s_.25s_both]">
 
                     <div className="mb-2 flex items-center justify-between">
 
@@ -388,7 +492,7 @@ const Login = () => {
                         type="button"
                         onClick={() => setShowPassword((current) => !current)}
                         aria-label={showPassword ? "Hide password" : "Show password"}
-                        className="rounded-lg p-1.5 text-[#6B8B83] transition hover:bg-[#E7F4F1] hover:text-[#003435] focus:outline-none focus:ring-2 focus:ring-[#256862]/30"
+                        className="rounded-lg p-1.5 text-[#6B8B83] transition duration-200 hover:rotate-6 hover:bg-[#E7F4F1] hover:text-[#003435] focus:outline-none focus:ring-2 focus:ring-[#256862]/30"
                       >
                         {showPassword ? (
                           <EyeOff size={18} />
@@ -401,36 +505,37 @@ const Login = () => {
                   </div>
 
                   {/* Login Button */}
+                  <div className="animate-[login-fade-up_.6s_.35s_both]">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="login-submit group flex w-full items-center justify-center gap-2 rounded-2xl bg-[#003435] px-5 py-4 text-base font-extrabold text-white shadow-[0_8px_18px_rgba(0,52,53,0.14)] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="login-submit group flex w-full items-center justify-center gap-2 rounded-2xl bg-[#003435] px-5 py-4 text-base font-extrabold text-white shadow-[0_8px_18px_rgba(0,52,53,0.14)] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
+                      {loading ? (
+                        <>
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white" />
+                          Logging in...
+                        </>
+                      ) : (
+                        <>
+                          Login to your account
 
-                    {loading ? (
-                      <>
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white" />
-                        Logging in...
-                      </>
-                    ) : (
-                      <>
-                        Login to your account
+                          <ArrowRight
+                            size={17}
+                            className="transition-transform duration-200 group-hover:translate-x-1"
+                          />
+                        </>
+                      )}
 
-                        <ArrowRight
-                          size={17}
-                          className="transition-transform duration-200 group-hover:translate-x-1"
-                        />
-                      </>
-                    )}
-
-                  </button>
+                    </button>
+                  </div>
 
                 </form>
 
                 {/* Register Link */}
-
                 <div className="my-7 flex items-center gap-3">
+
                   <div className="h-px flex-1 bg-[#E4ECE8]" />
 
                   <span className="text-base font-bold uppercase tracking-[0.1em] text-[#9AA9A4]">
@@ -438,6 +543,7 @@ const Login = () => {
                   </span>
 
                   <div className="h-px flex-1 bg-[#E4ECE8]" />
+
                 </div>
 
                 <p className="text-center text-base text-[#65736F]">
@@ -445,7 +551,7 @@ const Login = () => {
 
                   <Link
                     to="/register"
-                    className="font-extrabold text-[#256862] underline decoration-[#ADEFE7] decoration-2 underline-offset-4 transition hover:text-[#003435]"
+                    className="login-link font-extrabold text-[#256862] underline decoration-[#ADEFE7] decoration-2 underline-offset-4 hover:text-[#003435]"
                   >
                     Create an account
                   </Link>

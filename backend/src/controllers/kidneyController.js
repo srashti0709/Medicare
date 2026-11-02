@@ -1,7 +1,30 @@
-const Prediction = require("../models/predictionModel");
 
+const Prediction = require("../models/predictionModel");
+const Appointment = require("../models/Appointment");
+const Doctor = require("../models/Doctor");
 const { predictKidneyDisease } = require("../services/aiService");
 
+const authorizePatientAccess = async (req, patientId) => {
+    if (req.user.role === "patient") {
+        return req.user.id === patientId;
+    }
+
+    if (req.user.role === "doctor") {
+        const doctor = await Doctor.findOne({ user: req.user.id });
+
+        if (!doctor) return false;
+
+        const appointment = await Appointment.findOne({
+            patient: patientId,
+            doctor: doctor._id,
+            status: { $in: ["confirmed", "completed"] }
+        });
+
+        return !!appointment;
+    }
+
+    return false;
+};
 
 const kidneyPrediction = async (req, res) => {
     try {
@@ -33,9 +56,7 @@ const kidneyPrediction = async (req, res) => {
             ane
         } = req.body;
 
-
         if (
-            !patient ||
             age === undefined ||
             bp === undefined ||
             sg === undefined ||
@@ -66,6 +87,22 @@ const kidneyPrediction = async (req, res) => {
             });
         }
 
+        const patientId =
+            req.user.role === "patient" ? req.user.id : patient;
+
+        if (!patientId) {
+            return res.status(400).json({
+                message: "Patient ID is required"
+            });
+        }
+
+        const hasAccess = await authorizePatientAccess(req, patientId);
+
+        if (!hasAccess) {
+            return res.status(403).json({
+                message: "You are not authorized to access this patient's records."
+            });
+        }
 
         const result = await predictKidneyDisease({
             age,
@@ -94,14 +131,12 @@ const kidneyPrediction = async (req, res) => {
             ane
         });
 
-
         const savedPrediction = await Prediction.create({
-            patient,
+            patient: patientId,
             disease: "kidney",
             prediction: result.prediction,
             probability: result.probability
         });
-
 
         res.status(200).json({
             success: true,
@@ -110,10 +145,7 @@ const kidneyPrediction = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(
-            "Kidney Prediction Error:",
-            error.message
-        );
+        console.error("Kidney Prediction Error:", error.message);
 
         res.status(500).json({
             success: false,
@@ -122,16 +154,22 @@ const kidneyPrediction = async (req, res) => {
     }
 };
 
-
 const getPatientKidneyPredictions = async (req, res) => {
     try {
         const { patientId } = req.params;
+
+        const hasAccess = await authorizePatientAccess(req, patientId);
+
+        if (!hasAccess) {
+            return res.status(403).json({
+                message: "You are not authorized to access this patient's records."
+            });
+        }
 
         const predictions = await Prediction.find({
             patient: patientId,
             disease: "kidney"
         }).sort({ createdAt: -1 });
-
 
         res.status(200).json({
             success: true,
@@ -139,10 +177,7 @@ const getPatientKidneyPredictions = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(
-            "Get Kidney Predictions Error:",
-            error.message
-        );
+        console.error("Get Kidney Predictions Error:", error.message);
 
         res.status(500).json({
             success: false,
@@ -150,7 +185,6 @@ const getPatientKidneyPredictions = async (req, res) => {
         });
     }
 };
-
 
 module.exports = {
     kidneyPrediction,

@@ -1,15 +1,35 @@
+
 const Prediction = require("../models/predictionModel");
+const Appointment = require("../models/Appointment");
+const Doctor = require("../models/Doctor");
 const { predictDiabetes } = require("../services/aiService");
 
+// Check whether the logged-in user can access this patient's records
+const authorizePatientAccess = async (req, patientId) => {
+    if (req.user.role === "patient") {
+        return req.user.id === patientId;
+    }
 
-// -----------------------------------
+    if (req.user.role === "doctor") {
+        const doctor = await Doctor.findOne({ user: req.user.id });
+
+        if (!doctor) return false;
+
+        const appointment = await Appointment.findOne({
+            patient: patientId,
+            doctor: doctor._id,
+            status: { $in: ["confirmed", "completed"] }
+        });
+
+        return !!appointment;
+    }
+
+    return false;
+};
+
 // Diabetes Prediction
-// -----------------------------------
-
 const diabetesPrediction = async (req, res) => {
-
     try {
-
         const {
             patient,
             Pregnancies,
@@ -22,10 +42,24 @@ const diabetesPrediction = async (req, res) => {
             Age
         } = req.body;
 
+        const patientId =
+            req.user.role === "patient" ? req.user.id : patient;
 
-        // Basic validation
+        if (!patientId) {
+            return res.status(400).json({
+                message: "Patient ID is required"
+            });
+        }
+
+        const hasAccess = await authorizePatientAccess(req, patientId);
+
+        if (!hasAccess) {
+            return res.status(403).json({
+                message: "You are not authorized to access this patient's records."
+            });
+        }
+
         if (
-            !patient ||
             Pregnancies === undefined ||
             Glucose === undefined ||
             BloodPressure === undefined ||
@@ -40,8 +74,6 @@ const diabetesPrediction = async (req, res) => {
             });
         }
 
-
-        // Send data to AI service
         const result = await predictDiabetes({
             Pregnancies,
             Glucose,
@@ -53,10 +85,8 @@ const diabetesPrediction = async (req, res) => {
             Age
         });
 
-
-        // Return AI result
         const savedPrediction = await Prediction.create({
-            patient: req.body.patient,
+            patient: patientId,
             disease: "diabetes",
             prediction: result.prediction,
             probability: result.probability,
@@ -70,11 +100,7 @@ const diabetesPrediction = async (req, res) => {
         });
 
     } catch (error) {
-
-        console.error(
-            "Diabetes Prediction Error:",
-            error.message
-        );
+        console.error("Diabetes Prediction Error:", error.message);
 
         res.status(500).json({
             success: false,
@@ -82,19 +108,30 @@ const diabetesPrediction = async (req, res) => {
         });
     }
 };
+
+// Get Patient Diabetes History
 const getPatientPredictions = async (req, res) => {
     try {
         const { patientId } = req.params;
 
+        const hasAccess = await authorizePatientAccess(req, patientId);
+
+        if (!hasAccess) {
+            return res.status(403).json({
+                message: "You are not authorized to access this patient's records."
+            });
+        }
+
         const predictions = await Prediction.find({
-  patient: patientId,
-  disease: "kidney"
-}).sort({ createdAt: -1 });
+            patient: patientId,
+            disease: "diabetes"
+        }).sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
             data: predictions
         });
+
     } catch (error) {
         console.error("Get Predictions Error:", error.message);
 
@@ -104,7 +141,6 @@ const getPatientPredictions = async (req, res) => {
         });
     }
 };
-
 
 module.exports = {
     diabetesPrediction,
