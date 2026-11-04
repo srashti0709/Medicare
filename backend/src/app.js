@@ -15,6 +15,7 @@ const diabetesRoutes = require("./routes/diabetesRoutes");
 const kidneyRoutes = require("./routes/kidneyRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
+const healthTimelineRoutes = require("./routes/healthTimelineRoutes");
 
 const {
     notFound,
@@ -53,6 +54,7 @@ app.use("/api/diabetes", diabetesRoutes);
 app.use("/api/kidney", kidneyRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/assistant", assistantRoutes);
+app.use("/api/health-timeline", healthTimelineRoutes);
 
 // Handle unknown routes
 app.use(notFound);

@@ -95,6 +95,14 @@ const Navbar = () => {
                 My Appointments
               </Link>
             )}
+            {currentUser && (
+              <Link
+                to="/health-timeline"
+                className={navLinkClass}
+              >
+                Health Timeline
+              </Link>
+            )}
           </div>
 
           {/* Desktop User Actions */}
@@ -195,6 +203,15 @@ const Navbar = () => {
                   className={mobileLinkClass}
                 >
                   My Appointments
+                </Link>
+              )}
+              {currentUser && (
+                <Link
+                  to="/health-timeline"
+                  onClick={closeMenu}
+                  className={mobileLinkClass}
+                >
+                  Health Timeline
                 </Link>
               )}
 
