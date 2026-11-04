@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import {
   HeartPulse,
@@ -138,6 +137,8 @@ const Tilt = ({
 
 const AIAssistant = () => {
   const [message, setMessage] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const chatScrollRef = useRef(null);
 
   const [messages, setMessages] = useState([
     {
@@ -146,6 +147,13 @@ const AIAssistant = () => {
         "Hi! 👋 I'm your Medicare AI Assistant. I can help you find doctors, explore services, and book appointments. How can I help you today?",
     },
   ]);
+
+  /* Smoothly scroll the chat to the newest message */
+  useEffect(() => {
+    const node = chatScrollRef.current;
+    if (!node) return;
+    node.scrollTo({ top: node.scrollHeight, behavior: "smooth" });
+  }, [messages, isTyping]);
 
   const handleSend = async () => {
     if (!message.trim()) return;
@@ -161,6 +169,7 @@ const AIAssistant = () => {
     ]);
 
     setMessage("");
+    setIsTyping(true);
 
     try {
       const token = localStorage.getItem("userToken");
@@ -209,6 +218,8 @@ const AIAssistant = () => {
           content: "Unable to connect to the Medicare Assistant.",
         },
       ]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -355,6 +366,15 @@ const AIAssistant = () => {
           }
         }
 
+        @keyframes ai-ecg {
+          from {
+            stroke-dashoffset: 100;
+          }
+          to {
+            stroke-dashoffset: -100;
+          }
+        }
+
         .ai-enter {
           opacity: 0;
           animation: ai-rise .9s cubic-bezier(.22,1,.36,1) forwards;
@@ -390,6 +410,11 @@ const AIAssistant = () => {
 
         .ai-dot {
           animation: ai-dot 1.2s ease-in-out infinite;
+        }
+
+        .ai-ecg {
+          stroke-dasharray: 100;
+          animation: ai-ecg 4s linear infinite;
         }
 
         /* -------------------------------- */
@@ -471,17 +496,21 @@ const AIAssistant = () => {
             background .25s ease;
         }
 
+        .ai-send svg {
+          transition: transform .3s cubic-bezier(.22,1,.36,1);
+        }
+
         .ai-send:hover:not(:disabled) {
           transform: translateY(-3px);
           box-shadow: 0 12px 24px rgba(0,52,53,.22);
         }
 
-        .ai-send:active:not(:disabled) {
-          transform: scale(.96);
+        .ai-send:hover:not(:disabled) svg {
+          transform: translate(3px,-3px) rotate(8deg);
         }
 
-        .ai-chat-scroll {
-          scroll-behavior: smooth;
+        .ai-send:active:not(:disabled) {
+          transform: scale(.96);
         }
 
         .ai-chat-scroll::-webkit-scrollbar {
@@ -549,6 +578,11 @@ const AIAssistant = () => {
             animation: none !important;
           }
 
+          .ai-ecg {
+            animation: none !important;
+            stroke-dashoffset: 0;
+          }
+
           .ai-reveal,
           .ai-reveal.ai-reveal-in {
             opacity: 1 !important;
@@ -558,11 +592,16 @@ const AIAssistant = () => {
 
           .ai-action,
           .ai-send,
+          .ai-send svg,
           .ai-input,
           .ai-action-icon,
           .ai-action-arrow,
           .ai-card {
             transition: none !important;
+          }
+
+          .ai-chat-scroll {
+            scroll-behavior: auto;
           }
         }
       `}</style>
@@ -668,6 +707,26 @@ const AIAssistant = () => {
 
                 <div className="absolute -left-16 -bottom-24 h-48 w-48 rounded-full bg-[#ADEFE7]/5 blur-2xl" />
 
+                {/* Animated heartbeat line */}
+                <svg
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-10 w-full opacity-40"
+                  viewBox="0 0 400 40"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    className="ai-ecg"
+                    pathLength="100"
+                    d="M0 24 H120 L134 24 L146 6 L160 36 L172 14 L182 24 H400"
+                    stroke="#ADEFE7"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+
                 <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                   <div className="flex items-center gap-4">
@@ -713,7 +772,10 @@ const AIAssistant = () => {
 
               {/* Chat Messages */}
 
-              <div className="ai-chat-scroll h-[440px] sm:h-[500px] overflow-y-auto bg-[#F8FBF9] p-4 sm:p-7 space-y-6">
+              <div
+                ref={chatScrollRef}
+                className="ai-chat-scroll h-[440px] sm:h-[500px] overflow-y-auto scroll-smooth bg-[#F8FBF9] p-4 sm:p-7 space-y-6"
+              >
 
                 <div className="mb-2 flex items-center justify-center">
 
@@ -782,6 +844,33 @@ const AIAssistant = () => {
                   </div>
 
                 ))}
+
+                {/* Typing indicator */}
+
+                {isTyping && (
+
+                  <div className="ai-message flex justify-start gap-3">
+
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#DDF2EC] text-[#256862] shadow-sm">
+                      <Bot size={21} />
+                    </div>
+
+                    <div
+                      className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#E2ECE7] bg-white px-5 py-5 shadow-sm"
+                      aria-label="Medicare Assistant is typing"
+                    >
+                      {[0, 1, 2].map((dot) => (
+                        <span
+                          key={dot}
+                          className="ai-dot h-2 w-2 rounded-full bg-[#258B76]"
+                          style={{ animationDelay: `${dot * 0.18}s` }}
+                        />
+                      ))}
+                    </div>
+
+                  </div>
+
+                )}
 
               </div>
 

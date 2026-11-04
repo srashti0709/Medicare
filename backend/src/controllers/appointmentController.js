@@ -1,6 +1,7 @@
 const Appointment = require("../models/Appointment");
 const Doctor = require("../models/Doctor");
 const DoctorSchedule = require("../models/DoctorSchedule");
+const { bookAppointment } = require("../services/appointmentService");
 const User = require("../models/User");
 const createAppointment = async (req, res) => {
   try {
@@ -12,173 +13,34 @@ const createAppointment = async (req, res) => {
       });
     }
 
-    // Check if patient account is active
-    const patient = await User.findById(req.user.id);
-
-    if (!patient) {
-      return res.status(404).json({
-        message: "Patient not found",
-      });
-    }
-
-    if (patient.isActive === false) {
-      return res.status(403).json({
-        message:
-          "Your account has been deactivated. You cannot book an appointment.",
-      });
-    }
-
-    const doctorExists = await Doctor.findById(doctor);
-    if (!doctorExists) {
-      return res.status(404).json({
-        message: "Doctor not found",
-      });
-    }
-
-    if (!doctorExists.isAvailable) {
-      return res.status(400).json({
-        message: "Doctor is currently unavailable",
-      });
-    }
-
-    const appointmentDate = new Date(date);
-
-    if (isNaN(appointmentDate.getTime())) {
-      return res.status(400).json({
-        message: "Invalid appointment date",
-      });
-    }
-
-    if (appointmentDate <= new Date()) {
-      return res.status(400).json({
-        message: "Appointment date must be in the future",
-      });
-    }
-
-    const schedule = await DoctorSchedule.findOne({
-      doctor,
-    });
-
-    if (!schedule) {
-      return res.status(400).json({
-        message: "Doctor schedule is not available",
-      });
-    }
-
-    const dayName = appointmentDate.toLocaleDateString(
-      "en-US",
-      {
-        weekday: "long",
-      }
-    );
-
-    if (!schedule.workingDays.includes(dayName)) {
-      return res.status(400).json({
-        message: "Doctor is not available on this day",
-      });
-    }
-
-    const hours = appointmentDate.getHours();
-    const minutes = appointmentDate.getMinutes();
-
-    const appointmentMinutes =
-      hours * 60 + minutes;
-
-    const [startHour, startMinute] =
-      schedule.startTime.split(":").map(Number);
-
-    const [endHour, endMinute] =
-      schedule.endTime.split(":").map(Number);
-
-    const startMinutes =
-      startHour * 60 + startMinute;
-
-    const endMinutes =
-      endHour * 60 + endMinute;
-
-    if (
-      appointmentMinutes < startMinutes ||
-      appointmentMinutes >= endMinutes
-    ) {
-      return res.status(400).json({
-        message:
-          "Appointment time is outside the doctor's working hours",
-      });
-    }
-
-    const minutesFromStart =
-      appointmentMinutes - startMinutes;
-
-    if (
-      minutesFromStart % schedule.slotDuration !==
-      0
-    ) {
-      return res.status(400).json({
-        message:
-          "Please select a valid appointment slot",
-      });
-    }
-
-    const appointmentEndMinutes =
-      appointmentMinutes + schedule.slotDuration;
-
-    if (appointmentEndMinutes > endMinutes) {
-      return res.status(400).json({
-        message:
-          "Appointment slot exceeds doctor's working hours",
-      });
-    }
-
-    const existingAppointment =
-      await Appointment.findOne({
-        doctor,
-        date: appointmentDate,
-        status: {
-          $ne: "cancelled",
-        },
-      });
-
-    if (existingAppointment) {
-      return res.status(400).json({
-        message:
-          "This appointment slot is already booked",
-      });
-    }
-
-    const appointment = await Appointment.create({
-      patient: req.user.id,
-      doctor,
-      date: appointmentDate,
+    const appointment = await bookAppointment({
+      patientId: req.user.id,
+      doctorId: doctor,
+      date,
       reason,
     });
 
-    const populatedAppointment =
-      await Appointment.findById(
-        appointment._id
-      )
-        .populate("patient", "name email")
-        .populate({
-          path: "doctor",
-          populate: {
-            path: "user",
-            select: "name email",
-          },
-        });
+    const populatedAppointment = await Appointment.findById(
+      appointment._id
+    )
+      .populate("patient", "name email")
+      .populate({
+        path: "doctor",
+        populate: {
+          path: "user",
+          select: "name email",
+        },
+      });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Appointment booked successfully",
       appointment: populatedAppointment,
     });
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(409).json({
-        message: "This appointment slot is already booked",
-      });
-    }
-
-    res.status(500).json({
-      message: "Failed to book appointment",
-      error: error.message,
+    return res.status(error.statusCode || 500).json({
+      message: error.statusCode
+        ? error.message
+        : "Failed to book appointment",
     });
   }
 };

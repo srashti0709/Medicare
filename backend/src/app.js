@@ -1,6 +1,6 @@
+
 const express = require("express");
 const cors = require("cors");
-
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -16,16 +16,22 @@ const kidneyRoutes = require("./routes/kidneyRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
 
+const {
+    notFound,
+    errorHandler,
+} = require("./middleware/errorMiddleware");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/api/slots", slotRoutes);
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "Medicare API is running",
-  });
+    res.json({
+        message: "Medicare API is running",
+    });
 });
 
 app.use("/api/auth", authRoutes);
@@ -40,5 +46,11 @@ app.use("/api/diabetes", diabetesRoutes);
 app.use("/api/kidney", kidneyRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/assistant", assistantRoutes);
+
+// Handle unknown routes
+app.use(notFound);
+
+// Centralized error handler (must remain last)
+app.use(errorHandler);
 
 module.exports = app;
