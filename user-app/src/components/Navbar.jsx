@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   HeartPulse,
   Menu,
@@ -95,12 +96,22 @@ const Navbar = () => {
                 My Appointments
               </Link>
             )}
+
             {currentUser && (
               <Link
                 to="/health-timeline"
                 className={navLinkClass}
               >
                 Health Timeline
+              </Link>
+            )}
+
+            {currentUser && (
+              <Link
+                to="/report-comparison"
+                className={navLinkClass}
+              >
+                Report Comparison
               </Link>
             )}
           </div>
@@ -126,7 +137,11 @@ const Navbar = () => {
                       My Profile
                     </p>
                   </div>
-                  <ChevronDown size={16} className="text-[#65736F]" />
+
+                  <ChevronDown
+                    size={16}
+                    className="text-[#65736F]"
+                  />
                 </Link>
 
                 <button
@@ -169,7 +184,6 @@ const Navbar = () => {
         {/* Mobile and Tablet Navigation */}
         {menuOpen && (
           <div className="lg:hidden pb-6 pt-4 border-t border-[#D4E4DE]">
-
             <div className="bg-white border border-[#D4E4DE] rounded-2xl p-3 shadow-[0_10px_30px_rgba(0,52,53,0.05)]">
 
               <Link
@@ -205,6 +219,7 @@ const Navbar = () => {
                   My Appointments
                 </Link>
               )}
+
               {currentUser && (
                 <Link
                   to="/health-timeline"
@@ -212,6 +227,16 @@ const Navbar = () => {
                   className={mobileLinkClass}
                 >
                   Health Timeline
+                </Link>
+              )}
+
+              {currentUser && (
+                <Link
+                  to="/report-comparison"
+                  onClick={closeMenu}
+                  className={mobileLinkClass}
+                >
+                  Report Comparison
                 </Link>
               )}
 

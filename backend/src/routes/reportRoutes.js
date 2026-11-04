@@ -5,7 +5,10 @@ const multer = require("multer");
 const protect = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
-const { analyzeReport } = require("../controllers/reportController");
+const {
+    analyzeReport,
+    getMyReportHistory,
+} = require("../controllers/reportController");
 
 const router = express.Router();
 
@@ -13,7 +16,7 @@ const upload = multer({
     dest: "uploads/reports/",
     limits: {
         fileSize: 5 * 1024 * 1024,
-        files: 1
+        files: 1,
     },
     fileFilter: (req, file, cb) => {
         const isPDF =
@@ -25,9 +28,18 @@ const upload = multer({
         }
 
         cb(null, true);
-    }
+    },
 });
 
+// Get saved reports for the authenticated patient.
+router.get(
+    "/history",
+    protect,
+    authorizeRoles("patient"),
+    getMyReportHistory
+);
+
+// Upload and analyze a new report.
 router.post(
     "/upload",
     protect,

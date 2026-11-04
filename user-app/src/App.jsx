@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import HealthReportAnalyzer from "./pages/HealthReportAnalyzer";
 import AIAssistant from "./pages/AIAssistant";
 import HealthTimeline from "./pages/HealthTimeline";
+import ReportComparison from "./pages/ReportComparison";
 
 import AIFloatingChat from "./components/AIFloatingChat";
 
@@ -55,11 +56,21 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/health-timeline"
           element={
             <ProtectedRoute>
               <HealthTimeline />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/report-comparison"
+          element={
+            <ProtectedRoute>
+              <ReportComparison />
             </ProtectedRoute>
           }
         />

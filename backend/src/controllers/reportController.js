@@ -34,7 +34,6 @@ const analyzeReport = async (req, res) => {
             });
         }
 
-        // Send extracted text to the AI service.
         const result = await analyzeHealthReport(reportText);
 
         if (!result.success || !result.data) {
@@ -44,7 +43,6 @@ const analyzeReport = async (req, res) => {
             });
         }
 
-        // Save the successful analysis for this patient.
         const savedAnalysis = await ReportAnalysis.create({
             patient: req.user.id,
             originalFilename: req.file.originalname,
@@ -65,7 +63,6 @@ const analyzeReport = async (req, res) => {
                 saved_at: savedAnalysis.createdAt,
             },
         });
-
     } catch (error) {
         console.error("Health Report Analysis Error:", error.message);
 
@@ -85,4 +82,34 @@ const analyzeReport = async (req, res) => {
     }
 };
 
-module.exports = { analyzeReport };
+// Fetch saved reports belonging to the logged-in patient.
+const getMyReportHistory = async (req, res) => {
+    try {
+        const reports = await ReportAnalysis.find({
+            patient: req.user.id,
+        })
+            .select(
+                "originalFilename summary keyFindings normalValues abnormalValues questionsToDiscuss createdAt"
+            )
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return res.status(200).json({
+            success: true,
+            count: reports.length,
+            data: reports,
+        });
+    } catch (error) {
+        console.error("Report History Error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch report history",
+        });
+    }
+};
+
+module.exports = {
+    analyzeReport,
+    getMyReportHistory,
+};
