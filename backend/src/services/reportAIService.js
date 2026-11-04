@@ -1,13 +1,13 @@
-const axios = require("axios");
 
-const AI_SERVICE_URL = "http://localhost:8000";
+const axios = require("axios");
+const { AI_SERVICE_URL } = require("../config/serviceConfig");
 
 const analyzeHealthReport = async (reportText) => {
     try {
         const response = await axios.post(
             `${AI_SERVICE_URL}/api/report/analyze`,
             {
-                report_text: reportText
+                report_text: reportText,
             }
         );
 
@@ -23,5 +23,5 @@ const analyzeHealthReport = async (reportText) => {
 };
 
 module.exports = {
-    analyzeHealthReport
+    analyzeHealthReport,
 };

@@ -10,8 +10,10 @@ const authorize = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
-const AI_SERVICE_URL = "http://localhost:8000";
-const BACKEND_URL = "http://localhost:5000";
+const {
+    AI_SERVICE_URL,
+    BACKEND_URL,
+} = require("../config/serviceConfig");
 
 const PENDING_BOOKING_EXPIRY = 10 * 60 * 1000;
 
