@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
 import DoctorNavbar from "../components/DoctorNavbar";
+
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
 
@@ -18,17 +19,17 @@ const getInitials = (name = "") =>
         .toUpperCase() || "PT";
 
 const statusStyles = {
-    pending: "bg-[#ffdbcd] text-[#7a3005]",
-    confirmed: "bg-[#ADEFE7] text-[#00504a]",
-    completed: "bg-[#dcf3ee] text-[#2c6e68]",
-    cancelled: "bg-[#ffdad6] text-[#93000a]",
+    pending: "bg-[#FFF0E8] text-[#9A431A]",
+    confirmed: "bg-[#DDF5EF] text-[#12665D]",
+    completed: "bg-[#E7F4F1] text-[#256862]",
+    cancelled: "bg-[#FFE8E6] text-[#A83232]",
 };
 
 const statusDot = {
-    pending: "bg-[#ff9665]",
+    pending: "bg-[#E68B55]",
     confirmed: "bg-[#256862]",
-    completed: "bg-[#2c6e68]",
-    cancelled: "bg-[#ba1a1a]",
+    completed: "bg-[#2C6E68]",
+    cancelled: "bg-[#BA1A1A]",
 };
 
 const noteTemplates = [
@@ -54,12 +55,18 @@ const DoctorDashboard = () => {
         completedAppointments: 0,
         totalPatients: 0,
     });
+
     const [loading, setLoading] = useState(true);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [notes, setNotes] = useState({});
     const [savingNotes, setSavingNotes] = useState(null);
 
-    // UI-only state (design: filters, search, active notes subject)
+    const [preConsultation, setPreConsultation] = useState(null);
+    const [preConsultationLoading, setPreConsultationLoading] = useState(false);
+    const [preConsultationError, setPreConsultationError] = useState("");
+    const [preConsultationAppointmentId, setPreConsultationAppointmentId] =
+        useState(null);
+
     const [statusFilter, setStatusFilter] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [activeId, setActiveId] = useState(null);
@@ -69,10 +76,10 @@ const DoctorDashboard = () => {
         localStorage.getItem("adminUser") || "{}"
     );
 
-    // Load the icon font used by the design (visual only)
     useEffect(() => {
         const href =
             "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Manrope:wght@400..700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap";
+
         if (!document.querySelector(`link[href="${href}"]`)) {
             const link = document.createElement("link");
             link.rel = "stylesheet";
@@ -91,7 +98,6 @@ const DoctorDashboard = () => {
                                 Authorization: `Bearer ${token}`,
                             },
                         }),
-
                         api.get("/dashboard/doctor-stats", {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -100,10 +106,15 @@ const DoctorDashboard = () => {
                     ]);
 
                 setAppointments(
-                    appointmentsResponse.data.appointments
+                    appointmentsResponse.data.appointments || []
                 );
 
-                setStats(statsResponse.data.stats);
+                setStats(statsResponse.data.stats || {
+                    todayAppointments: 0,
+                    upcomingAppointments: 0,
+                    completedAppointments: 0,
+                    totalPatients: 0,
+                });
             } catch (error) {
                 console.error(
                     "Failed to fetch doctor dashboard data",
@@ -116,6 +127,7 @@ const DoctorDashboard = () => {
 
         fetchDashboardData();
     }, [token]);
+
     const updateStatus = async (appointmentId, status) => {
         try {
             await api.patch(
@@ -143,6 +155,7 @@ const DoctorDashboard = () => {
             );
         }
     };
+
     const saveNotes = async (appointmentId, appointmentNotes) => {
         if (!appointmentNotes.trim()) {
             alert("Please enter consultation notes.");
@@ -154,9 +167,7 @@ const DoctorDashboard = () => {
 
             const response = await api.patch(
                 `/appointments/${appointmentId}/notes`,
-                {
-                    notes: appointmentNotes,
-                },
+                { notes: appointmentNotes },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -174,10 +185,7 @@ const DoctorDashboard = () => {
 
             alert("Consultation notes saved successfully.");
         } catch (error) {
-            console.error(
-                "Failed to save consultation notes",
-                error
-            );
+            console.error("Failed to save consultation notes", error);
 
             alert(
                 error.response?.data?.message ||
@@ -188,31 +196,89 @@ const DoctorDashboard = () => {
         }
     };
 
-    // ---------- Derived values (display only) ----------
+    const fetchPreConsultationSummary = async (appointment) => {
+        if (!["confirmed", "completed"].includes(appointment.status)) {
+            return;
+        }
+
+        setActiveId(appointment._id);
+        setPreConsultationAppointmentId(appointment._id);
+        setPreConsultation(null);
+        setPreConsultationError("");
+        setPreConsultationLoading(true);
+
+        try {
+            const response = await api.get(
+                `/appointments/${appointment._id}/pre-consultation`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setPreConsultation(response.data.data);
+        } catch (error) {
+            console.error(
+                "Failed to fetch pre-consultation summary",
+                error
+            );
+
+            setPreConsultationError(
+                error.response?.data?.message ||
+                "Unable to load the pre-consultation summary."
+            );
+        } finally {
+            setPreConsultationLoading(false);
+        }
+    };
+
     const counts = useMemo(() => {
-        const c = { all: appointments.length, pending: 0, confirmed: 0, completed: 0, cancelled: 0 };
-        appointments.forEach((a) => {
-            if (c[a.status] !== undefined) c[a.status] += 1;
+        const result = {
+            all: appointments.length,
+            pending: 0,
+            confirmed: 0,
+            completed: 0,
+            cancelled: 0,
+        };
+
+        appointments.forEach((appointment) => {
+            if (result[appointment.status] !== undefined) {
+                result[appointment.status] += 1;
+            }
         });
-        return c;
+
+        return result;
     }, [appointments]);
 
     const filteredAppointments = useMemo(() => {
         const term = searchTerm.trim().toLowerCase();
-        return appointments.filter((a) => {
+
+        return appointments.filter((appointment) => {
             const matchesStatus =
-                statusFilter === "all" || a.status === statusFilter;
+                statusFilter === "all" ||
+                appointment.status === statusFilter;
+
             const matchesSearch =
                 !term ||
-                (a.patient?.name || "").toLowerCase().includes(term) ||
-                (a.patient?.email || "").toLowerCase().includes(term) ||
-                String(a._id || "").toLowerCase().includes(term);
+                (appointment.patient?.name || "")
+                    .toLowerCase()
+                    .includes(term) ||
+                (appointment.patient?.email || "")
+                    .toLowerCase()
+                    .includes(term) ||
+                String(appointment._id || "")
+                    .toLowerCase()
+                    .includes(term);
+
             return matchesStatus && matchesSearch;
         });
     }, [appointments, statusFilter, searchTerm]);
 
     const activeAppointment =
-        appointments.find((a) => a._id === activeId) || appointments[0] || null;
+        appointments.find((appointment) => appointment._id === activeId) ||
+        appointments[0] ||
+        null;
 
     const activeNotesValue = activeAppointment
         ? notes[activeAppointment._id] ??
@@ -221,12 +287,20 @@ const DoctorDashboard = () => {
         : "";
 
     const completionPercent = appointments.length
-        ? Math.round((counts.completed / appointments.length) * 100)
+        ? Math.round(
+            (counts.completed / appointments.length) * 100
+        )
         : 0;
 
     const hour = new Date().getHours();
+
     const greeting =
-        hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        hour < 12
+            ? "Good morning"
+            : hour < 18
+                ? "Good afternoon"
+                : "Good evening";
+
     const todayLabel = new Date().toLocaleDateString(undefined, {
         weekday: "long",
         month: "short",
@@ -243,248 +317,193 @@ const DoctorDashboard = () => {
     ];
 
     const cardBase =
-        "bg-white border border-[#CBDAD6] rounded-2xl shadow-sm";
+        "bg-white border border-[#CBDAD6] rounded-2xl shadow-[0_3px_14px_rgba(0,52,53,0.035)]";
+
+    const availableRecordCount =
+        (preConsultation?.reports?.length || 0) +
+        (preConsultation?.screenings?.length || 0) +
+        (preConsultation?.previousAppointments?.length || 0);
 
     return (
-       <div className={`doctor-dashboard-page min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
-        <style>{`
-    /* =========================================
-       DOCTOR DASHBOARD - RESPONSIVE DESIGN
-       Desktop layout remains unchanged
-    ========================================= */
+        <div
+            className={`doctor-dashboard-page min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}
+        >
+            <style>{`
+                .doctor-dashboard-page {
+                    --medicare-teal: #003435;
+                    --medicare-secondary: #256862;
+                    --medicare-mint: #E7F4F1;
+                }
 
-    @media (max-width: 767px) {
+                .doctor-dashboard-page button {
+                    -webkit-tap-highlight-color: transparent;
+                }
 
-        /* Navbar */
-        .doctor-dashboard-page header > div {
-            padding-left: 16px;
-            padding-right: 16px;
-            height: 68px;
-        }
+                .doctor-dashboard-page button:focus-visible,
+                .doctor-dashboard-page input:focus-visible,
+                .doctor-dashboard-page textarea:focus-visible {
+                    outline: 2px solid #256862;
+                    outline-offset: 2px;
+                }
 
-        .doctor-dashboard-page header .text-\\[20px\\] {
-            font-size: 18px;
-        }
+                .doctor-dashboard-page .dashboard-card {
+                    transition: box-shadow 180ms ease, border-color 180ms ease,
+                        transform 180ms ease;
+                }
 
-        .doctor-dashboard-page header .text-\\[10px\\] {
-            font-size: 9px;
-        }
+                .doctor-dashboard-page .dashboard-card:hover {
+                    box-shadow: 0 8px 24px rgba(0, 52, 53, 0.07);
+                }
 
-        /* Main container */
-        .doctor-dashboard-page main > div {
-            padding: 20px 14px;
-            gap: 24px;
-        }
+                .doctor-dashboard-page .summary-section {
+                    scroll-margin-top: 24px;
+                }
 
-        /* Hero section */
-        .doctor-dashboard-page section > .relative.p-6 {
-            padding: 18px;
-        }
+                .doctor-dashboard-page .appointment-grid > div {
+                    min-width: 0;
+                }
 
-        .doctor-dashboard-page h1 {
-            font-size: 27px;
-            line-height: 1.25;
-            overflow-wrap: anywhere;
-        }
+                .doctor-dashboard-page .summary-content {
+                    max-height: 760px;
+                    overflow-y: auto;
+                    scrollbar-width: thin;
+                    scrollbar-color: #CBDAD6 transparent;
+                }
 
-        .doctor-dashboard-page h3 {
-            font-size: 21px;
-            line-height: 1.3;
-        }
+                .doctor-dashboard-page .summary-content::-webkit-scrollbar {
+                    width: 5px;
+                }
 
-        /* Hero action buttons */
-        .doctor-dashboard-page section .w-full.lg\\:w-auto {
-            width: 100%;
-        }
+                .doctor-dashboard-page .summary-content::-webkit-scrollbar-thumb {
+                    background: #CBDAD6;
+                    border-radius: 20px;
+                }
 
-        /* Hero sync information */
-        .doctor-dashboard-page section > .px-6.lg\\:px-8 {
-            padding: 12px 16px;
-            align-items: flex-start;
-        }
+                @media (max-width: 767px) {
+                    .doctor-dashboard-page main > div {
+                        padding: 20px 14px;
+                        gap: 24px;
+                    }
 
-        .doctor-dashboard-page section > .px-6.lg\\:px-8 > div {
-            flex-wrap: wrap;
-        }
+                    .doctor-dashboard-page .hero-content {
+                        padding: 20px;
+                    }
 
-        /* KPI cards */
-        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 {
-            gap: 12px;
-        }
+                    .doctor-dashboard-page h1 {
+                        font-size: 28px;
+                        line-height: 1.25;
+                        overflow-wrap: anywhere;
+                    }
 
-        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 > div {
-            padding: 18px;
-        }
+                    .doctor-dashboard-page h3 {
+                        font-size: 21px;
+                        line-height: 1.3;
+                    }
 
-        /* AI assessment cards */
-        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 {
-            gap: 14px;
-        }
+                    .doctor-dashboard-page .hero-actions {
+                        width: 100%;
+                    }
 
-        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 > div {
-            padding: 18px;
-        }
+                    .doctor-dashboard-page .hero-actions button {
+                        flex: 1;
+                    }
 
-        /* Appointment heading and search */
-        .doctor-dashboard-page input[type="text"] {
-            min-width: 0;
-            width: 100%;
-            font-size: 12px;
-        }
+                    .doctor-dashboard-page .appointment-toolbar {
+                        align-items: stretch;
+                    }
 
-        .doctor-dashboard-page .min-w-\\[280px\\] {
-            min-width: 0;
-            width: 100%;
-        }
+                    .doctor-dashboard-page .appointment-search {
+                        width: 100%;
+                        min-width: 0;
+                    }
 
-        /* Appointment filters */
-        .doctor-dashboard-page .overflow-x-auto {
-            max-width: 100%;
-            scrollbar-width: thin;
-            -webkit-overflow-scrolling: touch;
-        }
+                    .doctor-dashboard-page .filter-list {
+                        max-width: 100%;
+                        overflow-x: auto;
+                        scrollbar-width: thin;
+                        -webkit-overflow-scrolling: touch;
+                    }
 
-        .doctor-dashboard-page .overflow-x-auto button {
-            flex-shrink: 0;
-        }
+                    .doctor-dashboard-page .filter-list button {
+                        flex-shrink: 0;
+                    }
 
-        /* Appointment list and notes */
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 {
-            gap: 18px;
-        }
+                    .doctor-dashboard-page .appointment-grid {
+                        gap: 18px;
+                    }
 
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div {
-            min-width: 0;
-        }
+                    .doctor-dashboard-page .dashboard-panel {
+                        padding: 18px;
+                    }
 
-        /* Appointment cards */
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div > div {
-            min-width: 0;
-        }
+                    .doctor-dashboard-page textarea {
+                        min-width: 0;
+                        width: 100%;
+                        font-size: 13px;
+                    }
 
-        .doctor-dashboard-page h4 {
-            overflow-wrap: anywhere;
-        }
+                    .doctor-dashboard-page .appointment-card-header {
+                        gap: 12px;
+                    }
 
-        .doctor-dashboard-page textarea {
-            width: 100%;
-            min-width: 0;
-            font-size: 13px;
-        }
+                    .doctor-dashboard-page .appointment-card-header > div:first-child {
+                        min-width: 0;
+                        flex: 1;
+                    }
 
-        /* Patient information and appointment details */
-        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 {
-            gap: 10px;
-        }
+                    .doctor-dashboard-page .appointment-card-header h4 {
+                        overflow-wrap: anywhere;
+                    }
 
-        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:first-child {
-            min-width: 0;
-            flex: 1;
-        }
+                    .doctor-dashboard-page .summary-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
 
-        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:last-child {
-            flex-shrink: 0;
-        }
+                    .doctor-dashboard-page .summary-content {
+                        max-height: none;
+                        overflow: visible;
+                    }
+                }
 
-        /* Consultation notes */
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 .p-6 {
-            padding: 17px;
-        }
+                @media (max-width: 420px) {
+                    .doctor-dashboard-page main > div {
+                        padding: 16px 11px;
+                        gap: 20px;
+                    }
 
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 .flex.items-center.justify-between {
-            gap: 10px;
-        }
+                    .doctor-dashboard-page h1 {
+                        font-size: 25px;
+                    }
 
-        /* Note template buttons */
-        .doctor-dashboard-page .flex.flex-wrap.gap-1\\.5 {
-            gap: 6px;
-        }
+                    .doctor-dashboard-page h3 {
+                        font-size: 19px;
+                    }
 
-        /* Modal */
-        .doctor-dashboard-page .fixed.inset-0 {
-            padding: 12px;
-        }
+                    .doctor-dashboard-page .summary-grid {
+                        grid-template-columns: 1fr;
+                    }
 
-        .doctor-dashboard-page .fixed.inset-0 > div {
-            max-height: 90dvh;
-            overflow-y: auto;
-        }
+                    .doctor-dashboard-page .appointment-card-header {
+                        flex-wrap: wrap;
+                    }
 
-        .doctor-dashboard-page .fixed.inset-0 .p-6 {
-            padding: 18px;
-        }
-    }
+                    .doctor-dashboard-page .appointment-card-actions {
+                        align-items: flex-start;
+                    }
+                }
+            `}</style>
 
-    /* =========================================
-       SMALL PHONES
-    ========================================= */
+            <DoctorNavbar />
 
-    @media (max-width: 420px) {
-
-        .doctor-dashboard-page main > div {
-            padding: 16px 11px;
-            gap: 20px;
-        }
-
-        .doctor-dashboard-page h1 {
-            font-size: 24px;
-        }
-
-        .doctor-dashboard-page h3 {
-            font-size: 19px;
-        }
-
-        .doctor-dashboard-page .grid.grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4 > div {
-            padding: 15px;
-        }
-
-        .doctor-dashboard-page .grid.grid-cols-1.md\\:grid-cols-2 > div {
-            padding: 15px;
-        }
-
-        .doctor-dashboard-page .grid.grid-cols-1.lg\\:grid-cols-12 > div > div {
-            padding-left: 13px;
-            padding-right: 13px;
-        }
-
-        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 {
-            flex-wrap: wrap;
-        }
-
-        .doctor-dashboard-page .flex.items-start.justify-between.gap-2 > div:last-child {
-            align-items: flex-start;
-            width: 100%;
-            padding-left: 60px;
-        }
-
-        .doctor-dashboard-page .flex.items-center.justify-between.pt-1 {
-            align-items: flex-start;
-        }
-
-        .doctor-dashboard-page .flex.items-center.justify-between.pt-1 > div {
-            flex-wrap: wrap;
-        }
-
-        .doctor-dashboard-page button {
-            max-width: 100%;
-        }
-
-        .doctor-dashboard-page .fixed.inset-0 h3 {
-            font-size: 20px;
-        }
-    }
-`}</style>
-           <DoctorNavbar />
-
-            {/* ================= MAIN ================= */}
             <main className="w-full">
                 <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8">
-                    {/* ---------- Hero ---------- */}
+
+                    {/* Hero */}
                     <section className={`relative overflow-hidden ${cardBase}`}>
                         <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-[#ADEFE7]/30 blur-3xl pointer-events-none" />
                         <div className="absolute left-1/3 -bottom-24 w-72 h-72 rounded-full bg-[#B9ECEE]/30 blur-3xl pointer-events-none" />
 
-                        <div className="relative p-6 lg:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                        <div className="hero-content relative p-6 lg:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                             <div className="flex flex-col gap-1 max-w-3xl">
                                 <div className="flex flex-wrap items-center gap-2 mb-1">
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E7F4F1] text-[#164B4D] text-[12px] font-bold border border-[#ADEFE7] tracking-wide uppercase">
@@ -492,46 +511,51 @@ const DoctorDashboard = () => {
                                         Doctor Portal Active
                                     </span>
                                 </div>
+
                                 <h1 className={`${heading} text-[32px] leading-[40px] lg:text-[44px] lg:leading-[52px] font-bold text-[#003435] tracking-tight`}>
                                     {greeting}, {doctorUser.name}
                                 </h1>
-                                <p className="text-[14px] leading-[22px] text-[#404848]">
-                                    Here's your clinical overview and patient queue for today.{" "}
-                                    {todayLabel} • {stats.todayAppointments} scheduled encounters.
+
+                                <p className="text-[14px] leading-[22px] text-[#404848] mt-1">
+                                    Here's your clinical overview and patient queue for today.
+                                    {" "}{todayLabel} • {stats.todayAppointments} scheduled encounters.
                                 </p>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto shrink-0">
+                            <div className="hero-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto shrink-0">
                                 <button
                                     onClick={() => {
                                         window.location.href = "/doctor-schedule";
                                     }}
-                                    className="inline-flex items-center justify-center gap-1 px-5 py-2.5 rounded-xl bg-[#dcf3ee] hover:bg-[#d6ede8] text-[#003435] text-[13px] font-semibold transition-colors shadow-sm"
+                                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#dcf3ee] hover:bg-[#d6ede8] text-[#003435] text-[13px] font-semibold transition-colors"
                                 >
                                     <Icon name="calendar_today" className="text-[18px]" />
-                                    <span>My Schedule</span>
+                                    My Schedule
                                 </button>
+
                                 <button
                                     onClick={() => {
                                         window.location.href = "/doctor-profile";
                                     }}
-                                    className="inline-flex items-center justify-center gap-1 px-5 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm"
+                                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm"
                                 >
                                     <Icon name="person" className="text-[18px]" />
-                                    <span>My Profile</span>
+                                    My Profile
                                 </button>
                             </div>
                         </div>
 
-                        <div className="px-6 lg:px-8 py-3 bg-[#E7F4F1]/60 border-t border-[#CBDAD6]/60 flex flex-wrap items-center justify-between gap-4">
+                        <div className="px-6 lg:px-8 py-3 bg-[#E7F4F1]/60 border-t border-[#CBDAD6]/60 flex flex-wrap items-center justify-between gap-3">
                             <div className="flex items-center gap-2">
+                                <Icon name="verified_user" className="text-[#256862] text-[17px]" />
                                 <span className="text-[11px] text-[#404848] uppercase font-bold tracking-wider">
-                                    Sync Buffer:
+                                    Workspace Status:
                                 </span>
                                 <span className="text-[12px] text-[#003435] font-bold">
-                                    Encrypted Active Pipeline
+                                    Secure Clinical Workspace
                                 </span>
                             </div>
+
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={() => {
@@ -539,92 +563,94 @@ const DoctorDashboard = () => {
                                     }}
                                     className="text-[#256862] hover:text-[#003435] text-[11px] font-bold flex items-center gap-1 transition-colors"
                                 >
-                                    <span>My Shift Schedule</span>
+                                    My Shift Schedule
                                     <Icon name="arrow_forward" className="text-[14px]" />
                                 </button>
+
                                 <span className="text-[#c0c8c8]">•</span>
+
                                 <button
                                     onClick={() => {
                                         window.location.href = "/doctor-profile";
                                     }}
                                     className="text-[#256862] hover:text-[#003435] text-[11px] font-bold flex items-center gap-1 transition-colors"
                                 >
-                                    <span>Clinical Credentials</span>
+                                    Clinical Credentials
                                     <Icon name="badge" className="text-[14px]" />
                                 </button>
                             </div>
                         </div>
                     </section>
 
-                    {/* ---------- KPI cards ---------- */}
+                    {/* KPI Cards */}
                     <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                        {/* KPI 1 */}
-                        <div className={`p-6 ${cardBase} flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all group`}>
+                        <div className={`dashboard-card p-5 lg:p-6 ${cardBase}`}>
                             <div className="flex items-start justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-[11px] uppercase tracking-wider text-[#404848] font-bold">
+                                <div>
+                                    <span className="text-[11px] uppercase tracking-wider text-[#647472] font-bold">
                                         Today's Appointments
                                     </span>
-                                    <span className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
+                                    <p className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
                                         {stats.todayAppointments}
-                                    </span>
+                                    </p>
                                 </div>
-                                <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435] group-hover:bg-[#ADEFE7] transition-colors">
-                                    <Icon name="calendar_today" className="text-[24px]" />
+                                <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435]">
+                                    <Icon name="calendar_today" className="text-[23px]" />
                                 </div>
                             </div>
-                            <div className="mt-4 pt-1 flex items-center justify-between">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#ffdbcd] text-[#7a3005] text-[11px] font-bold">
-                                    <Icon name="priority_high" className="text-[14px]" />
+
+                            <div className="mt-5 pt-3 border-t border-[#E7F0ED] flex items-center justify-between gap-2">
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FFF0E8] text-[#9A431A] text-[11px] font-bold">
+                                    <Icon name="schedule" className="text-[14px]" />
                                     {counts.pending} Pending
                                 </span>
-                                <span className="text-[12px] text-[#404848]">
+                                <span className="text-[12px] text-[#647472] font-medium">
                                     {counts.confirmed} Confirmed
                                 </span>
                             </div>
                         </div>
 
-                        {/* KPI 2 */}
-                        <div className={`p-6 ${cardBase} flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all group`}>
+                        <div className={`dashboard-card p-5 lg:p-6 ${cardBase}`}>
                             <div className="flex items-start justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-[11px] uppercase tracking-wider text-[#404848] font-bold">
+                                <div>
+                                    <span className="text-[11px] uppercase tracking-wider text-[#647472] font-bold">
                                         Upcoming Appointments
                                     </span>
-                                    <span className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
+                                    <p className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
                                         {stats.upcomingAppointments}
-                                    </span>
+                                    </p>
                                 </div>
-                                <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862] group-hover:bg-[#ADEFE7] transition-colors">
-                                    <Icon name="event_upcoming" className="text-[24px]" />
+                                <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862]">
+                                    <Icon name="event_upcoming" className="text-[23px]" />
                                 </div>
                             </div>
-                            <div className="mt-4 pt-1 flex items-center justify-between">
+
+                            <div className="mt-5 pt-3 border-t border-[#E7F0ED]">
                                 <span className="text-[11px] text-[#256862] font-bold">
                                     Upcoming Encounters
                                 </span>
                             </div>
                         </div>
 
-                        {/* KPI 3 */}
-                        <div className={`p-6 ${cardBase} flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all group`}>
+                        <div className={`dashboard-card p-5 lg:p-6 ${cardBase}`}>
                             <div className="flex items-start justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-[11px] uppercase tracking-wider text-[#404848] font-bold">
+                                <div>
+                                    <span className="text-[11px] uppercase tracking-wider text-[#647472] font-bold">
                                         Completed Appointments
                                     </span>
-                                    <span className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
+                                    <p className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
                                         {stats.completedAppointments}
-                                    </span>
+                                    </p>
                                 </div>
-                                <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435] group-hover:bg-[#ADEFE7] transition-colors">
-                                    <Icon name="check_circle" className="text-[24px]" />
+                                <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435]">
+                                    <Icon name="check_circle" className="text-[23px]" />
                                 </div>
                             </div>
-                            <div className="mt-4 pt-1 flex items-center justify-between">
-                                <div className="w-full bg-[#E7F4F1] rounded-full h-2 mr-3 overflow-hidden">
+
+                            <div className="mt-5 pt-3 border-t border-[#E7F0ED] flex items-center gap-3">
+                                <div className="flex-1 bg-[#E7F4F1] rounded-full h-2 overflow-hidden">
                                     <div
-                                        className="bg-[#256862] h-2 rounded-full"
+                                        className="bg-[#256862] h-2 rounded-full transition-all"
                                         style={{ width: `${completionPercent}%` }}
                                     />
                                 </div>
@@ -634,119 +660,123 @@ const DoctorDashboard = () => {
                             </div>
                         </div>
 
-                        {/* KPI 4 */}
-                        <div className={`p-6 ${cardBase} flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all group`}>
+                        <div className={`dashboard-card p-5 lg:p-6 ${cardBase}`}>
                             <div className="flex items-start justify-between">
-                                <div className="flex flex-col">
-                                    <span className="text-[11px] uppercase tracking-wider text-[#404848] font-bold">
+                                <div>
+                                    <span className="text-[11px] uppercase tracking-wider text-[#647472] font-bold">
                                         Total Patients
                                     </span>
-                                    <span className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
+                                    <p className={`${heading} text-[36px] leading-[44px] font-bold text-[#003435] mt-1`}>
                                         {stats.totalPatients}
-                                    </span>
+                                    </p>
                                 </div>
-                                <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435] group-hover:bg-[#ADEFE7] transition-colors">
-                                    <Icon name="folder_shared" className="text-[24px]" />
+                                <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435]">
+                                    <Icon name="folder_shared" className="text-[23px]" />
                                 </div>
                             </div>
-                            <div className="mt-4 pt-1 flex items-center justify-between">
-                                <span className="text-[11px] text-[#003435] font-bold">
-                                    Active Panel
+
+                            <div className="mt-5 pt-3 border-t border-[#E7F0ED]">
+                                <span className="text-[11px] text-[#256862] font-bold">
+                                    Active Patient Panel
                                 </span>
                             </div>
                         </div>
                     </section>
 
-                    {/* ---------- AI Risk Assessment ---------- */}
+                    {/* AI Risk Assessment */}
                     <section className="flex flex-col gap-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-2">
                                     <Icon name="psychology" className="text-[#256862] text-[24px]" />
                                     <h3 className={`${heading} text-[24px] leading-[32px] font-semibold text-[#003435]`}>
                                         AI Risk Assessment
                                     </h3>
                                 </div>
-                                <p className="text-[12px] text-[#404848] mt-0.5">
-                                    Select a health risk assessment to analyze patient data.
+                                <p className="text-[12px] text-[#647472] mt-1">
+                                    Access the available health risk assessment tools.
                                 </p>
                             </div>
+
                             <button
                                 onClick={() => {
                                     window.location.href = "/ai-risk-assessment";
                                 }}
                                 className="inline-flex items-center gap-1.5 text-[#256862] hover:text-[#003435] text-[13px] font-bold transition-colors"
                             >
-                                <span>Explore Entire AI Suite</span>
+                                Explore AI Suite
                                 <Icon name="arrow_forward" className="text-[18px]" />
                             </button>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Diabetes */}
-                            <div className={`relative p-6 ${cardBase} overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow`}>
-                                <div className="h-1.5 absolute top-0 left-0 right-0 bg-gradient-to-r from-[#003435] to-[#ADEFE7]" />
+                            <div className={`dashboard-card relative p-5 lg:p-6 ${cardBase} overflow-hidden flex flex-col justify-between`}>
+                                <div className="h-1 absolute top-0 left-0 right-0 bg-gradient-to-r from-[#003435] to-[#ADEFE7]" />
+
                                 <div>
-                                    <div className="flex items-center gap-4 mb-2 mt-2">
-                                        <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435]">
-                                            <Icon name="vital_signs" className="text-[26px]" />
+                                    <div className="flex items-center gap-3 mb-3 mt-1">
+                                        <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#003435]">
+                                            <Icon name="vital_signs" className="text-[25px]" />
                                         </div>
-                                        <div className="flex flex-col">
-                                            <h4 className={`${heading} text-[18px] leading-[26px] font-semibold text-[#003435]`}>
+                                        <div>
+                                            <h4 className={`${heading} text-[18px] font-semibold text-[#003435]`}>
                                                 Diabetes Risk Assessment
                                             </h4>
-                                            <span className="text-[12px] text-[#404848]">
-                                                Fasting Glucose, HbA1c &amp; BMI Biomarkers
+                                            <span className="text-[11px] text-[#647472]">
+                                                Glucose, HbA1c and BMI biomarkers
                                             </span>
                                         </div>
                                     </div>
-                                    <p className="text-[12px] leading-[18px] text-[#404848] mb-4">
-                                        Analyze patient health parameters and assess diabetes risk
-                                        using the AI prediction model.
+
+                                    <p className="text-[13px] leading-5 text-[#647472] mb-5">
+                                        Assess diabetes-related risk factors using the available AI prediction model.
                                     </p>
                                 </div>
-                                <div className="flex items-center justify-end pt-1">
+
+                                <div className="flex justify-end">
                                     <button
                                         onClick={() => {
                                             window.location.href = "/diabetes-prediction";
                                         }}
-                                        className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm"
+                                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[12px] font-semibold transition-colors"
                                     >
-                                        <span>Check Diabetes Risk</span>
+                                        Check Diabetes Risk
                                         <Icon name="arrow_forward" className="text-[16px]" />
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Kidney */}
-                            <div className={`relative p-6 ${cardBase} overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow`}>
-                                <div className="h-1.5 absolute top-0 left-0 right-0 bg-gradient-to-r from-[#256862] to-[#B9ECEE]" />
+                            <div className={`dashboard-card relative p-5 lg:p-6 ${cardBase} overflow-hidden flex flex-col justify-between`}>
+                                <div className="h-1 absolute top-0 left-0 right-0 bg-gradient-to-r from-[#256862] to-[#B9ECEE]" />
+
                                 <div>
-                                    <div className="flex items-center gap-4 mb-2 mt-2">
-                                        <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862]">
-                                            <Icon name="nephrology" className="text-[26px]" />
+                                    <div className="flex items-center gap-3 mb-3 mt-1">
+                                        <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862]">
+                                            <Icon name="nephrology" className="text-[25px]" />
                                         </div>
-                                        <div className="flex flex-col">
-                                            <h4 className={`${heading} text-[18px] leading-[26px] font-semibold text-[#003435]`}>
+                                        <div>
+                                            <h4 className={`${heading} text-[18px] font-semibold text-[#003435]`}>
                                                 Kidney Disease Risk Assessment
                                             </h4>
-                                            <span className="text-[12px] text-[#404848]">
-                                                eGFR Clearance, Albuminuria &amp; Serum Electrolytes
+                                            <span className="text-[11px] text-[#647472]">
+                                                Kidney health-related parameters
                                             </span>
                                         </div>
                                     </div>
-                                    <p className="text-[12px] leading-[18px] text-[#404848] mb-4">
-                                        AI-powered assessment for kidney disease risk factors.
+
+                                    <p className="text-[13px] leading-5 text-[#647472] mb-5">
+                                        Review kidney disease risk factors using the available AI prediction model.
                                     </p>
                                 </div>
-                                <div className="flex items-center justify-end pt-1">
+
+                                <div className="flex justify-end">
                                     <button
                                         onClick={() => {
                                             window.location.href = "/kidney-disease-risk";
                                         }}
-                                        className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm"
+                                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[12px] font-semibold transition-colors"
                                     >
-                                        <span>Check Kidney Risk</span>
+                                        Check Kidney Risk
                                         <Icon name="arrow_forward" className="text-[16px]" />
                                     </button>
                                 </div>
@@ -754,180 +784,224 @@ const DoctorDashboard = () => {
                         </div>
                     </section>
 
-                    {/* ---------- My Appointments ---------- */}
+                    {/* Appointments */}
                     <section className="flex flex-col gap-4">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
                             <div>
-                                <div className="flex items-center gap-1 flex-wrap">
-                                    <h3 className={`${heading} text-[24px] leading-[32px] font-semibold text-[#003435] mr-1`}>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <h3 className={`${heading} text-[24px] leading-[32px] font-semibold text-[#003435]`}>
                                         My Appointments
                                     </h3>
-                                    <span className="px-2.5 py-0.5 rounded-full bg-[#dcf3ee] text-[11px] text-[#404848] font-bold">
+                                    <span className="px-2.5 py-1 rounded-full bg-[#E7F4F1] text-[11px] text-[#256862] font-bold">
                                         {appointments.length} Scheduled
                                     </span>
                                 </div>
-                                <p className="text-[12px] text-[#404848] mt-0.5">
-                                    Active outpatient roster, consultation notes workspace, and patient inspection.
+
+                                <p className="text-[12px] text-[#647472] mt-1">
+                                    Manage your patient queue, review history and maintain consultation notes.
                                 </p>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                                <div className="relative flex items-center min-w-[280px]">
-                                    <Icon name="search" className="absolute left-3 text-[#404848] text-[18px]" />
+                            <div className="appointment-toolbar flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                <div className="appointment-search relative flex items-center min-w-[260px]">
+                                    <Icon name="search" className="absolute left-3 text-[#647472] text-[18px]" />
                                     <input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        placeholder="Search patient name or email..."
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#CBDAD6] rounded-xl text-[12px] text-[#0a1f1c] placeholder:text-[#404848] focus:outline-none focus:border-[#256862] shadow-sm"
+                                        placeholder="Search patients..."
+                                        className="w-full pl-9 pr-3 py-2.5 bg-white border border-[#CBDAD6] rounded-xl text-[12px] text-[#0a1f1c] placeholder:text-[#899693] focus:outline-none focus:border-[#256862]"
                                     />
                                 </div>
 
-                                <div className="flex items-center gap-1 p-1 bg-[#dcf3ee] rounded-xl overflow-x-auto">
-                                    {filters.map((f) => (
+                                <div className="filter-list flex items-center gap-1 p-1 bg-[#E7F4F1] rounded-xl">
+                                    {filters.map((filter) => (
                                         <button
-                                            key={f.key}
-                                            onClick={() => setStatusFilter(f.key)}
-                                            className={`px-3 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-colors ${statusFilter === f.key
+                                            key={filter.key}
+                                            onClick={() => setStatusFilter(filter.key)}
+                                            className={`px-3 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-colors ${
+                                                statusFilter === filter.key
                                                     ? "bg-white text-[#003435] shadow-sm"
-                                                    : "text-[#404848] hover:text-[#0a1f1c]"
-                                                }`}
+                                                    : "text-[#647472] hover:text-[#003435]"
+                                            }`}
                                         >
-                                            {f.label} ({counts[f.key]})
+                                            {filter.label} ({counts[filter.key]})
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                            {/* Left: appointment list */}
-                            <div className="lg:col-span-7 flex flex-col gap-4">
+                        {/* Appointment list and clinical workspace */}
+                        <div className="appointment-grid grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+                            {/* Left: Appointment List */}
+                            <div className="lg:col-span-7 flex flex-col gap-3">
                                 {loading ? (
-                                    <div className={`${cardBase} p-6`}>
-                                        <p className="text-[#404848]">Loading appointments...</p>
+                                    <div className={`${cardBase} p-8 text-center`}>
+                                        <Icon name="progress_activity" className="text-[28px] text-[#256862] animate-spin" />
+                                        <p className="text-[13px] text-[#647472] mt-2">
+                                            Loading appointments...
+                                        </p>
                                     </div>
                                 ) : appointments.length === 0 ? (
-                                    <div className={`${cardBase} p-6`}>
-                                        <p className="text-[#404848]">No appointments found.</p>
+                                    <div className={`${cardBase} p-8 text-center`}>
+                                        <div className="w-12 h-12 mx-auto rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862]">
+                                            <Icon name="calendar_month" className="text-[25px]" />
+                                        </div>
+                                        <p className="text-[14px] font-semibold text-[#003435] mt-3">
+                                            No appointments yet
+                                        </p>
+                                        <p className="text-[12px] text-[#647472] mt-1">
+                                            Your scheduled appointments will appear here.
+                                        </p>
                                     </div>
                                 ) : filteredAppointments.length === 0 ? (
-                                    <div className={`${cardBase} p-6`}>
-                                        <p className="text-[#404848]">
+                                    <div className={`${cardBase} p-7 text-center`}>
+                                        <Icon name="search_off" className="text-[28px] text-[#647472]" />
+                                        <p className="text-[13px] text-[#647472] mt-2">
                                             No appointments match your search or filter.
                                         </p>
                                     </div>
                                 ) : (
                                     filteredAppointments.map((appointment) => {
                                         const isActive =
-                                            activeAppointment &&
-                                            activeAppointment._id === appointment._id;
+                                            activeAppointment?._id === appointment._id;
+
                                         const dateObj = new Date(appointment.date);
 
                                         return (
                                             <div
                                                 key={appointment._id}
-                                                className={`p-4 lg:p-6 rounded-2xl bg-white shadow-sm hover:shadow-md transition-all relative overflow-hidden ${isActive
-                                                        ? "border-2 border-[#256862]/40"
+                                                className={`dashboard-card relative p-4 lg:p-5 rounded-2xl bg-white overflow-hidden ${
+                                                    isActive
+                                                        ? "border-2 border-[#256862]/50 shadow-[0_4px_18px_rgba(37,104,98,0.08)]"
                                                         : "border border-[#CBDAD6]"
-                                                    } ${appointment.status === "completed" ? "opacity-90" : ""}`}
+                                                }`}
                                             >
                                                 {isActive && (
-                                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#256862]" />
+                                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#256862]" />
                                                 )}
 
                                                 <div className="flex flex-col gap-4 pl-1">
-                                                    <div className="flex items-start justify-between gap-2">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[16px] text-[#003435] font-bold shrink-0">
+                                                    <div className="appointment-card-header flex items-start justify-between gap-3">
+                                                        <div className="flex items-center gap-3 min-w-0">
+                                                            <div className="w-11 h-11 rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[15px] text-[#003435] font-bold shrink-0">
                                                                 <span className={heading}>
                                                                     {getInitials(appointment.patient?.name)}
                                                                 </span>
                                                             </div>
-                                                            <div className="flex flex-col">
-                                                                <h4 className={`${heading} text-[18px] leading-[26px] font-semibold text-[#003435]`}>
-                                                                    {appointment.patient?.name}
+
+                                                            <div className="min-w-0">
+                                                                <h4 className={`${heading} text-[17px] leading-6 font-semibold text-[#003435] truncate`}>
+                                                                    {appointment.patient?.name || "Patient"}
                                                                 </h4>
-                                                                <span className="text-[12px] text-[#404848]">
+                                                                <p className="text-[11px] text-[#647472] truncate">
                                                                     {appointment.patient?.email}
-                                                                </span>
+                                                                </p>
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex flex-col items-end gap-1">
+                                                        <div className="flex flex-col items-end gap-1 shrink-0">
                                                             <span
-                                                                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold capitalize ${statusStyles[appointment.status] ||
-                                                                    "bg-[#dcf3ee] text-[#2c6e68]"
-                                                                    }`}
+                                                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize ${
+                                                                    statusStyles[appointment.status] ||
+                                                                    "bg-[#E7F4F1] text-[#256862]"
+                                                                }`}
                                                             >
                                                                 <span
-                                                                    className={`w-1.5 h-1.5 rounded-full ${statusDot[appointment.status] || "bg-[#256862]"
-                                                                        }`}
+                                                                    className={`w-1.5 h-1.5 rounded-full ${
+                                                                        statusDot[appointment.status] ||
+                                                                        "bg-[#256862]"
+                                                                    }`}
                                                                 />
                                                                 {appointment.status}
                                                             </span>
-                                                            <span className={`${heading} text-[16px] font-semibold text-[#003435]`}>
+
+                                                            <span className={`${heading} text-[15px] font-semibold text-[#003435]`}>
                                                                 {dateObj.toLocaleTimeString([], {
                                                                     hour: "2-digit",
                                                                     minute: "2-digit",
                                                                 })}
                                                             </span>
-                                                            <span className="text-[11px] text-[#404848]">
+
+                                                            <span className="text-[10px] text-[#647472]">
                                                                 {dateObj.toLocaleDateString()}
                                                             </span>
                                                         </div>
                                                     </div>
 
                                                     {appointment.reason && (
-                                                        <div className="p-2 rounded-xl bg-[#e1f8f3] flex flex-col gap-1">
-                                                            <span className="text-[11px] text-[#404848] uppercase font-bold tracking-wider">
+                                                        <div className="px-3 py-2.5 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                            <span className="text-[10px] text-[#647472] uppercase font-bold tracking-wider">
                                                                 Consultation Reason
                                                             </span>
-                                                            <p className="text-[14px] text-[#0a1f1c] font-medium">
+                                                            <p className="text-[13px] text-[#003435] font-medium mt-1">
                                                                 {appointment.reason}
                                                             </p>
                                                         </div>
                                                     )}
 
-                                                    <div className="flex items-center justify-between pt-1 border-t border-[#e1f8f3] flex-wrap gap-2">
-                                                        <div className="flex items-center gap-3">
+                                                    <div className="appointment-card-actions flex items-center justify-between flex-wrap gap-3 pt-3 border-t border-[#EAF1EE]">
+                                                        <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
                                                             <button
                                                                 onClick={() =>
                                                                     setSelectedPatient(appointment.patient)
                                                                 }
-                                                                className="inline-flex items-center gap-1 text-[#256862] hover:text-[#003435] text-[11px] font-bold transition-colors"
+                                                                className="inline-flex items-center gap-1.5 text-[#256862] hover:text-[#003435] text-[11px] font-bold transition-colors"
                                                             >
                                                                 <Icon name="visibility" className="text-[16px]" />
-                                                                <span>View Patient</span>
+                                                                View Patient
                                                             </button>
+
                                                             <button
-                                                                onClick={() => setActiveId(appointment._id)}
-                                                                className="inline-flex items-center gap-1 text-[#256862] hover:text-[#003435] text-[11px] font-bold transition-colors"
+                                                                onClick={() =>
+                                                                    setActiveId(appointment._id)
+                                                                }
+                                                                className="inline-flex items-center gap-1.5 text-[#256862] hover:text-[#003435] text-[11px] font-bold transition-colors"
                                                             >
                                                                 <Icon name="edit_note" className="text-[16px]" />
-                                                                <span>Open Notes</span>
+                                                                Open Notes
                                                             </button>
+
+                                                            {["confirmed", "completed"].includes(appointment.status) && (
+                                                                <button
+                                                                    onClick={() =>
+                                                                        fetchPreConsultationSummary(appointment)
+                                                                    }
+                                                                    className="inline-flex items-center gap-1.5 text-[#256862] hover:text-[#003435] text-[11px] font-bold transition-colors"
+                                                                >
+                                                                    <Icon name="clinical_notes" className="text-[16px]" />
+                                                                    Pre-Consultation
+                                                                </button>
+                                                            )}
                                                         </div>
 
-                                                        <div className="flex flex-wrap items-center gap-1">
+                                                        <div className="flex flex-wrap items-center gap-1.5">
                                                             {(appointment.status === "pending" ||
                                                                 appointment.status === "confirmed") && (
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            updateStatus(appointment._id, "cancelled")
-                                                                        }
-                                                                        className="px-3 py-1.5 rounded-lg bg-[#ffdad6] hover:bg-[#ffc9c3] text-[#93000a] text-[11px] font-bold transition-colors"
-                                                                    >
-                                                                        Cancel
-                                                                    </button>
-                                                                )}
+                                                                <button
+                                                                    onClick={() =>
+                                                                        updateStatus(
+                                                                            appointment._id,
+                                                                            "cancelled"
+                                                                        )
+                                                                    }
+                                                                    className="px-3 py-2 rounded-lg bg-[#FFE8E6] hover:bg-[#ffdad6] text-[#A83232] text-[10px] font-bold transition-colors"
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                            )}
 
                                                             {appointment.status === "pending" && (
                                                                 <button
                                                                     onClick={() =>
-                                                                        updateStatus(appointment._id, "confirmed")
+                                                                        updateStatus(
+                                                                            appointment._id,
+                                                                            "confirmed"
+                                                                        )
                                                                     }
-                                                                    className="px-3 py-1.5 rounded-lg bg-[#256862] hover:bg-[#256862]/90 text-white text-[11px] font-bold transition-colors shadow-sm"
+                                                                    className="px-3 py-2 rounded-lg bg-[#256862] hover:bg-[#164B4D] text-white text-[10px] font-bold transition-colors"
                                                                 >
                                                                     Confirm
                                                                 </button>
@@ -936,9 +1010,12 @@ const DoctorDashboard = () => {
                                                             {appointment.status === "confirmed" && (
                                                                 <button
                                                                     onClick={() =>
-                                                                        updateStatus(appointment._id, "completed")
+                                                                        updateStatus(
+                                                                            appointment._id,
+                                                                            "completed"
+                                                                        )
                                                                     }
-                                                                    className="px-3 py-1.5 rounded-lg bg-[#003435] hover:bg-[#164B4D] text-white text-[11px] font-bold transition-colors shadow-sm"
+                                                                    className="px-3 py-2 rounded-lg bg-[#003435] hover:bg-[#164B4D] text-white text-[10px] font-bold transition-colors"
                                                                 >
                                                                     Complete
                                                                 </button>
@@ -952,38 +1029,448 @@ const DoctorDashboard = () => {
                                 )}
                             </div>
 
-                            {/* Right: consultation notes */}
+                            {/* Right: Pre-Consultation and Clinical Notes */}
                             <div className="lg:col-span-5 flex flex-col gap-4">
-                                <div className={`p-6 ${cardBase} flex flex-col gap-4`}>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-lg bg-[#164B4D] text-white flex items-center justify-center">
-                                                <Icon name="edit_note" className="text-[18px]" />
+
+                                {/* Pre-Consultation Summary */}
+                                <div className={`summary-section ${cardBase} overflow-hidden`}>
+                                    <div className="px-5 py-5 border-b border-[#E5EFEB]">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-10 h-10 rounded-xl bg-[#E7F4F1] text-[#164B4D] flex items-center justify-center shrink-0">
+                                                <Icon name="clinical_notes" className="text-[23px]" />
                                             </div>
-                                            <div>
-                                                <h4 className={`${heading} text-[18px] leading-[26px] font-semibold text-[#003435]`}>
-                                                    Clinical Consultation Notes
+
+                                            <div className="min-w-0 flex-1">
+                                                <h4 className={`${heading} text-[19px] leading-6 font-semibold text-[#003435]`}>
+                                                    Pre-Consultation Summary
                                                 </h4>
-                                                <span className="text-[12px] text-[#404848]">
-                                                    {activeAppointment
-                                                        ? `Active Subject: ${activeAppointment.patient?.name}`
-                                                        : "No appointment selected"}
-                                                </span>
+                                                <p className="text-[11px] leading-5 text-[#647472] mt-1">
+                                                    Patient history and previous clinical records.
+                                                </p>
                                             </div>
+                                        </div>
+
+                                        {activeAppointment &&
+                                            ["confirmed", "completed"].includes(activeAppointment.status) && (
+                                                <button
+                                                    onClick={() =>
+                                                        fetchPreConsultationSummary(activeAppointment)
+                                                    }
+                                                    disabled={preConsultationLoading}
+                                                    className="w-full mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[12px] font-semibold disabled:opacity-50 transition-colors"
+                                                >
+                                                    <Icon
+                                                        name={preConsultationLoading ? "refresh" : "sync"}
+                                                        className={`text-[17px] ${
+                                                            preConsultationLoading
+                                                                ? "animate-spin"
+                                                                : ""
+                                                        }`}
+                                                    />
+                                                    {preConsultationLoading
+                                                        ? "Loading Summary..."
+                                                        : preConsultationAppointmentId === activeAppointment._id &&
+                                                            preConsultation
+                                                            ? "Refresh Summary"
+                                                            : "Load Patient History"}
+                                                </button>
+                                            )}
+                                    </div>
+
+                                    <div className="summary-content p-5 flex flex-col gap-5">
+                                        {!activeAppointment ? (
+                                            <div className="p-5 rounded-xl bg-[#F2F8F6] text-center">
+                                                <Icon name="clinical_notes" className="text-[28px] text-[#8BA7A0]" />
+                                                <p className="text-[12px] text-[#647472] mt-2">
+                                                    Select an appointment to view its pre-consultation summary.
+                                                </p>
+                                            </div>
+                                        ) : !["confirmed", "completed"].includes(activeAppointment.status) ? (
+                                            <div className="p-4 rounded-xl bg-[#F2F8F6] text-[#647472] text-[12px] leading-5">
+                                                Pre-consultation summaries are available only for confirmed or completed appointments.
+                                            </div>
+                                        ) : preConsultationAppointmentId !== activeAppointment._id ? (
+                                            <div className="p-5 rounded-xl bg-[#F2F8F6] text-center">
+                                                <div className="w-11 h-11 mx-auto rounded-xl bg-[#E7F4F1] flex items-center justify-center text-[#256862]">
+                                                    <Icon name="folder_open" className="text-[24px]" />
+                                                </div>
+                                                <p className="text-[12px] text-[#003435] font-semibold mt-3">
+                                                    Patient history is ready
+                                                </p>
+                                                <p className="text-[11px] leading-5 text-[#647472] mt-1">
+                                                    Load the summary to review available reports, AI screening results and previous consultations.
+                                                </p>
+                                            </div>
+                                        ) : preConsultationLoading ? (
+                                            <div className="py-8 text-center">
+                                                <Icon name="progress_activity" className="text-[28px] text-[#256862] animate-spin" />
+                                                <p className="text-[12px] text-[#647472] mt-2">
+                                                    Retrieving patient history...
+                                                </p>
+                                            </div>
+                                        ) : preConsultationError ? (
+                                            <div className="p-4 rounded-xl bg-[#FFE8E6] border border-[#F4C7C2] text-[#A83232] text-[12px] leading-5">
+                                                <div className="flex items-center gap-2 font-bold mb-1">
+                                                    <Icon name="error" className="text-[17px]" />
+                                                    Unable to load summary
+                                                </div>
+                                                {preConsultationError}
+                                            </div>
+                                        ) : preConsultation ? (
+                                            <>
+                                                {/* Patient Overview */}
+                                                <div>
+                                                    <p className="text-[10px] uppercase tracking-wider text-[#647472] font-bold">
+                                                        Patient Overview
+                                                    </p>
+
+                                                    <h5 className={`${heading} text-[21px] font-semibold text-[#003435] mt-1`}>
+                                                        {preConsultation.patient?.name || "Patient"}
+                                                    </h5>
+
+                                                    <p className="text-[11px] text-[#647472] mt-0.5 break-all">
+                                                        {preConsultation.patient?.email || "Patient email unavailable"}
+                                                    </p>
+
+                                                    <span className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize ${
+                                                        statusStyles[preConsultation.appointment?.status] || "bg-[#E7F4F1] text-[#256862]"
+                                                    }`}>
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${
+                                                            statusDot[preConsultation.appointment?.status] || "bg-[#256862]"
+                                                        }`} />
+                                                        {preConsultation.appointment?.status}
+                                                    </span>
+                                                </div>
+
+                                                {/* Summary Information */}
+                                                <div className="summary-grid grid grid-cols-2 gap-2">
+                                                    <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                        <div className="flex items-center gap-1.5 text-[#647472]">
+                                                            <Icon name="calendar_today" className="text-[15px]" />
+                                                            <p className="text-[9px] uppercase font-bold tracking-wide">
+                                                                Appointment
+                                                            </p>
+                                                        </div>
+                                                        <p className="mt-2 text-[12px] font-semibold text-[#003435]">
+                                                            {new Date(
+                                                                preConsultation.appointment.date
+                                                            ).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                        <div className="flex items-center gap-1.5 text-[#647472]">
+                                                            <Icon name="description" className="text-[15px]" />
+                                                            <p className="text-[9px] uppercase font-bold tracking-wide">
+                                                                Reports
+                                                            </p>
+                                                        </div>
+                                                        <p className="mt-2 text-[19px] font-bold text-[#003435]">
+                                                            {preConsultation.reports?.length || 0}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                        <div className="flex items-center gap-1.5 text-[#647472]">
+                                                            <Icon name="monitor_heart" className="text-[15px]" />
+                                                            <p className="text-[9px] uppercase font-bold tracking-wide">
+                                                                AI Screenings
+                                                            </p>
+                                                        </div>
+                                                        <p className="mt-2 text-[19px] font-bold text-[#003435]">
+                                                            {preConsultation.screenings?.length || 0}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                        <div className="flex items-center gap-1.5 text-[#647472]">
+                                                            <Icon name="history" className="text-[15px]" />
+                                                            <p className="text-[9px] uppercase font-bold tracking-wide">
+                                                                Consultations
+                                                            </p>
+                                                        </div>
+                                                        <p className="mt-2 text-[19px] font-bold text-[#003435]">
+                                                            {preConsultation.previousAppointments?.length || 0}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {preConsultation.appointment.reason && (
+                                                    <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                        <p className="text-[9px] uppercase font-bold tracking-wide text-[#647472] mb-1">
+                                                            Consultation Reason
+                                                        </p>
+                                                        <p className="text-[12px] leading-5 text-[#003435] font-medium">
+                                                            {preConsultation.appointment.reason}
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                <div className="h-px bg-[#E5EFEB]" />
+
+                                                {/* Previous Report Analyses */}
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <div className="flex items-center gap-2 min-w-0">
+                                                            <Icon name="description" className="text-[#256862] text-[19px]" />
+                                                            <h5 className={`${heading} text-[15px] font-semibold text-[#003435]`}>
+                                                                Report Analyses
+                                                            </h5>
+                                                        </div>
+                                                        <span className="text-[10px] text-[#647472] shrink-0">
+                                                            {preConsultation.reports?.length || 0}
+                                                        </span>
+                                                    </div>
+
+                                                    {preConsultation.reports?.length ? (
+                                                        <div className="flex flex-col gap-3">
+                                                            {preConsultation.reports.map((report) => (
+                                                                <div
+                                                                    key={report._id}
+                                                                    className="p-3 rounded-xl border border-[#CBDAD6] bg-white flex flex-col gap-3"
+                                                                >
+                                                                    <div className="flex flex-col gap-1">
+                                                                        <p className="font-semibold text-[12px] text-[#003435] break-words">
+                                                                            {report.originalFilename || "Uploaded report"}
+                                                                        </p>
+                                                                        <span className="text-[10px] text-[#647472]">
+                                                                            {new Date(report.createdAt).toLocaleDateString()}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    {report.summary && (
+                                                                        <p className="text-[11px] leading-5 text-[#647472]">
+                                                                            {report.summary}
+                                                                        </p>
+                                                                    )}
+
+                                                                    {[
+                                                                        { label: "Key Findings", values: report.keyFindings },
+                                                                        { label: "Abnormal Values", values: report.abnormalValues },
+                                                                        { label: "Normal Values", values: report.normalValues },
+                                                                        { label: "Questions to Discuss", values: report.questionsToDiscuss },
+                                                                    ].map((group) =>
+                                                                        group.values?.length ? (
+                                                                            <div key={group.label}>
+                                                                                <p className="text-[9px] font-bold uppercase tracking-wide text-[#256862] mb-1">
+                                                                                    {group.label}
+                                                                                </p>
+                                                                                <ul className="list-disc pl-4 text-[11px] leading-5 text-[#647472]">
+                                                                                    {group.values.map((value, index) => (
+                                                                                        <li key={index}>{value}</li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </div>
+                                                                        ) : null
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB] flex items-start gap-2">
+                                                            <Icon name="info" className="text-[#256862] text-[17px] mt-0.5" />
+                                                            <div>
+                                                                <p className="text-[11px] font-semibold text-[#003435]">
+                                                                    No report analyses available
+                                                                </p>
+                                                                <p className="text-[10px] leading-5 text-[#647472] mt-1">
+                                                                    No report analyses were found within the available appointment history.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="h-px bg-[#E5EFEB]" />
+
+                                                {/* Previous AI Screenings */}
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <div className="flex items-center gap-2 min-w-0">
+                                                            <Icon name="monitor_heart" className="text-[#256862] text-[19px]" />
+                                                            <h5 className={`${heading} text-[15px] font-semibold text-[#003435]`}>
+                                                                AI Screening Results
+                                                            </h5>
+                                                        </div>
+                                                        <span className="text-[10px] text-[#647472] shrink-0">
+                                                            {preConsultation.screenings?.length || 0}
+                                                        </span>
+                                                    </div>
+
+                                                    {preConsultation.screenings?.length ? (
+                                                        <div className="flex flex-col gap-3">
+                                                            {preConsultation.screenings.map((screening) => (
+                                                                <div
+                                                                    key={screening._id}
+                                                                    className="p-3 rounded-xl border border-[#CBDAD6] bg-white"
+                                                                >
+                                                                    <div className="flex items-center justify-between gap-2">
+                                                                        <p className="font-semibold text-[12px] text-[#003435] capitalize">
+                                                                            {screening.disease || "Screening type unavailable"}
+                                                                        </p>
+                                                                        <span className="text-[10px] text-[#647472] shrink-0">
+                                                                            {new Date(screening.createdAt).toLocaleDateString()}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <p className="mt-2 text-[11px] text-[#647472]">
+                                                                        Screening result:
+                                                                        {" "}
+                                                                        <strong className="text-[#003435]">
+                                                                            {screening.prediction ?? "Not available"}
+                                                                        </strong>
+                                                                    </p>
+
+                                                                    {screening.probability !== undefined && (
+                                                                        <p className="mt-1 text-[11px] text-[#647472]">
+                                                                            Recorded probability:
+                                                                            {" "}
+                                                                            <strong className="text-[#003435]">
+                                                                                {screening.probability}
+                                                                            </strong>
+                                                                        </p>
+                                                                    )}
+
+                                                                    <p className="mt-2 text-[10px] text-[#256862]">
+                                                                        Screening information only — not a diagnosis.
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB] flex items-start gap-2">
+                                                            <Icon name="info" className="text-[#256862] text-[17px] mt-0.5" />
+                                                            <div>
+                                                                <p className="text-[11px] font-semibold text-[#003435]">
+                                                                    No previous AI screening records
+                                                                </p>
+                                                                <p className="text-[10px] leading-5 text-[#647472] mt-1">
+                                                                    No saved AI screening results were found within the available history.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="h-px bg-[#E5EFEB]" />
+
+                                                {/* Previous Consultations */}
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <div className="flex items-center gap-2 min-w-0">
+                                                            <Icon name="history" className="text-[#256862] text-[19px]" />
+                                                            <h5 className={`${heading} text-[15px] font-semibold text-[#003435]`}>
+                                                                Previous Consultations
+                                                            </h5>
+                                                        </div>
+                                                        <span className="text-[10px] text-[#647472] shrink-0">
+                                                            {preConsultation.previousAppointments?.length || 0}
+                                                        </span>
+                                                    </div>
+
+                                                    {preConsultation.previousAppointments?.length ? (
+                                                        <div className="flex flex-col gap-3">
+                                                            {preConsultation.previousAppointments.map((previous) => (
+                                                                <div
+                                                                    key={previous._id}
+                                                                    className="p-3 rounded-xl border border-[#CBDAD6] bg-white"
+                                                                >
+                                                                    <div className="flex flex-col gap-1">
+                                                                        <p className="font-semibold text-[12px] text-[#003435]">
+                                                                            {previous.reason || "General consultation"}
+                                                                        </p>
+                                                                        <span className="text-[10px] text-[#647472]">
+                                                                            {new Date(previous.date).toLocaleDateString()}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    {previous.notes && (
+                                                                        <p className="mt-2 text-[11px] leading-5 text-[#647472] whitespace-pre-wrap">
+                                                                            {previous.notes}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB] flex items-start gap-2">
+                                                            <Icon name="info" className="text-[#256862] text-[17px] mt-0.5" />
+                                                            <div>
+                                                                <p className="text-[11px] font-semibold text-[#003435]">
+                                                                    No earlier consultations found
+                                                                </p>
+                                                                <p className="text-[10px] leading-5 text-[#647472] mt-1">
+                                                                    No earlier completed consultations with this doctor were found.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="pt-3 border-t border-[#E5EFEB]">
+                                                    <div className="flex items-start gap-2">
+                                                        <Icon name="verified_user" className="text-[#256862] text-[16px] mt-0.5 shrink-0" />
+                                                        <p className="text-[10px] leading-5 text-[#647472]">
+                                                            This summary includes records available up to the appointment date.
+                                                            AI screening results are informational and should be interpreted
+                                                            alongside clinical assessment.
+                                                        </p>
+                                                    </div>
+
+                                                    <p className="text-[10px] text-[#256862] font-bold mt-3">
+                                                        {availableRecordCount} total records available
+                                                    </p>
+                                                </div>
+                                            </>
+                                        ) : null}
+                                    </div>
+                                </div>
+
+                                {/* Clinical Consultation Notes */}
+                                <div className={`dashboard-panel ${cardBase} p-5 flex flex-col gap-4`}>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-[#E7F4F1] text-[#164B4D] flex items-center justify-center shrink-0">
+                                            <Icon name="edit_note" className="text-[23px]" />
+                                        </div>
+
+                                        <div className="min-w-0">
+                                            <h4 className={`${heading} text-[19px] font-semibold text-[#003435]`}>
+                                                Clinical Consultation Notes
+                                            </h4>
+                                            <p className="text-[11px] text-[#647472] mt-0.5">
+                                                {activeAppointment
+                                                    ? `Active patient: ${activeAppointment.patient?.name}`
+                                                    : "No appointment selected"}
+                                            </p>
                                         </div>
                                     </div>
 
                                     {activeAppointment ? (
                                         <>
-                                            <div className="flex flex-col gap-1">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[11px] uppercase tracking-wider text-[#404848] font-bold">
+                                            <div className="p-3 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                                <p className="text-[10px] uppercase tracking-wider text-[#647472] font-bold">
+                                                    Current Appointment
+                                                </p>
+                                                <p className="text-[13px] font-semibold text-[#003435] mt-1">
+                                                    {new Date(activeAppointment.date).toLocaleDateString()}
+                                                </p>
+                                                <span className={`inline-flex mt-2 px-2 py-1 rounded-md text-[10px] font-bold capitalize ${
+                                                    statusStyles[activeAppointment.status] || ""
+                                                }`}>
+                                                    {activeAppointment.status}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <label className="text-[10px] uppercase tracking-wider text-[#647472] font-bold">
                                                         Diagnostic Impressions &amp; Care Plan
                                                     </label>
-                                                    <span className="text-[11px] text-[#404848]">
+                                                    <span className="text-[10px] text-[#647472] shrink-0">
                                                         {activeNotesValue.length} chars
                                                     </span>
                                                 </div>
+
                                                 <textarea
                                                     value={activeNotesValue}
                                                     onChange={(e) =>
@@ -992,13 +1479,13 @@ const DoctorDashboard = () => {
                                                             [activeAppointment._id]: e.target.value,
                                                         }))
                                                     }
-                                                    rows="8"
+                                                    rows="9"
                                                     placeholder="Add consultation notes..."
-                                                    className="w-full p-4 bg-[#e1f8f3] border border-[#CBDAD6] rounded-xl text-[14px] leading-[22px] text-[#0a1f1c] placeholder:text-[#404848] focus:outline-none focus:bg-white focus:border-[#256862] shadow-inner transition-colors resize-none"
+                                                    className="w-full p-4 bg-[#F2F8F6] border border-[#CBDAD6] rounded-xl text-[13px] leading-[22px] text-[#0a1f1c] placeholder:text-[#899693] focus:outline-none focus:bg-white focus:border-[#256862] transition-colors resize-y"
                                                 />
                                             </div>
 
-                                            <div className="flex flex-wrap gap-1.5">
+                                            <div className="flex flex-wrap gap-2">
                                                 {noteTemplates.map((template) => (
                                                     <button
                                                         key={template.label}
@@ -1008,6 +1495,7 @@ const DoctorDashboard = () => {
                                                                     currentNotes[activeAppointment._id] ??
                                                                     activeAppointment.notes ??
                                                                     "";
+
                                                                 return {
                                                                     ...currentNotes,
                                                                     [activeAppointment._id]: current
@@ -1016,18 +1504,19 @@ const DoctorDashboard = () => {
                                                                 };
                                                             })
                                                         }
-                                                        className="px-2.5 py-1 rounded-lg bg-[#dcf3ee] hover:bg-[#d6ede8] text-[#0a1f1c] text-[11px] font-bold transition-colors border border-[#c0c8c8]/30"
+                                                        className="px-2.5 py-1.5 rounded-lg bg-[#E7F4F1] hover:bg-[#DDF1EB] text-[#164B4D] text-[10px] font-bold transition-colors border border-[#CBDAD6]"
                                                     >
                                                         {template.label}
                                                     </button>
                                                 ))}
                                             </div>
 
-                                            <div className="flex items-center justify-between pt-1 border-t border-[#e1f8f3]">
-                                                <div className="flex items-center gap-1.5 text-[#256862] text-[11px] font-bold">
-                                                    <Icon name="lock" className="text-[16px]" />
-                                                    <span>Encrypted EHR Sync</span>
+                                            <div className="flex flex-col gap-3 pt-3 border-t border-[#EAF1EE]">
+                                                <div className="flex items-center gap-1.5 text-[#256862] text-[10px] font-bold">
+                                                    <Icon name="lock" className="text-[15px]" />
+                                                    Secure Consultation Notes
                                                 </div>
+
                                                 <button
                                                     onClick={() =>
                                                         saveNotes(
@@ -1038,24 +1527,30 @@ const DoctorDashboard = () => {
                                                         )
                                                     }
                                                     disabled={savingNotes === activeAppointment._id}
-                                                    className="inline-flex items-center gap-1 px-4 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm disabled:opacity-50"
+                                                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[12px] font-semibold transition-colors disabled:opacity-50"
                                                 >
                                                     <Icon
                                                         name={savingNotes === activeAppointment._id ? "refresh" : "save"}
-                                                        className={`text-[18px] ${savingNotes === activeAppointment._id ? "animate-spin" : ""}`}
+                                                        className={`text-[17px] ${
+                                                            savingNotes === activeAppointment._id
+                                                                ? "animate-spin"
+                                                                : ""
+                                                        }`}
                                                     />
-                                                    <span>
-                                                        {savingNotes === activeAppointment._id
-                                                            ? "Saving..."
-                                                            : "Save Notes"}
-                                                    </span>
+
+                                                    {savingNotes === activeAppointment._id
+                                                        ? "Saving Notes..."
+                                                        : "Save Consultation Notes"}
                                                 </button>
                                             </div>
                                         </>
                                     ) : (
-                                        <p className="text-[14px] text-[#404848]">
-                                            Select an appointment to add consultation notes.
-                                        </p>
+                                        <div className="p-5 rounded-xl bg-[#F2F8F6] text-center">
+                                            <Icon name="edit_note" className="text-[28px] text-[#8BA7A0]" />
+                                            <p className="text-[12px] text-[#647472] mt-2">
+                                                Select an appointment to add consultation notes.
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -1064,52 +1559,60 @@ const DoctorDashboard = () => {
                 </div>
             </main>
 
-            {/* ================= PATIENT MODAL ================= */}
+            {/* Patient Details Modal */}
             {selectedPatient && (
                 <div className="fixed inset-0 z-50 bg-[#003435]/40 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col border border-[#CBDAD6]">
-                        <div className="p-6 bg-[#E7F4F1] flex items-center justify-between border-b border-[#CBDAD6]">
-                            <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-xl bg-[#164B4D] text-white flex items-center justify-center text-[18px] font-bold ring-2 ring-[#ADEFE7]">
+                        <div className="p-5 lg:p-6 bg-[#E7F4F1] flex items-center justify-between border-b border-[#CBDAD6]">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-xl bg-[#164B4D] text-white flex items-center justify-center text-[17px] font-bold ring-2 ring-[#ADEFE7]">
                                     <span className={heading}>
                                         {getInitials(selectedPatient.name)}
                                     </span>
                                 </div>
-                                <h3 className={`${heading} text-[24px] leading-[32px] font-semibold text-[#003435]`}>
-                                    Patient Details
-                                </h3>
+
+                                <div>
+                                    <h3 className={`${heading} text-[21px] font-semibold text-[#003435]`}>
+                                        Patient Details
+                                    </h3>
+                                    <p className="text-[11px] text-[#647472]">
+                                        Patient information
+                                    </p>
+                                </div>
                             </div>
+
                             <button
                                 onClick={() => setSelectedPatient(null)}
-                                className="p-2 rounded-lg text-[#404848] hover:text-[#0a1f1c] hover:bg-[#dcf3ee] transition-colors"
+                                className="p-2 rounded-lg text-[#647472] hover:text-[#003435] hover:bg-[#dcf3ee] transition-colors"
                             >
                                 <Icon name="close" className="text-[20px]" />
                             </button>
                         </div>
 
-                        <div className="p-6 flex flex-col gap-4">
-                            <div className="p-2 rounded-xl bg-[#e1f8f3] flex flex-col px-3 py-2">
-                                <span className="text-[11px] text-[#404848] uppercase font-bold tracking-wider">
+                        <div className="p-6 flex flex-col gap-3">
+                            <div className="p-4 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                <span className="text-[10px] text-[#647472] uppercase font-bold tracking-wider">
                                     Name
                                 </span>
-                                <span className="text-[14px] text-[#003435] font-semibold">
+                                <p className="text-[14px] text-[#003435] font-semibold mt-1">
                                     {selectedPatient.name}
-                                </span>
+                                </p>
                             </div>
-                            <div className="p-2 rounded-xl bg-[#e1f8f3] flex flex-col px-3 py-2">
-                                <span className="text-[11px] text-[#404848] uppercase font-bold tracking-wider">
+
+                            <div className="p-4 rounded-xl bg-[#F2F8F6] border border-[#E4EFEB]">
+                                <span className="text-[10px] text-[#647472] uppercase font-bold tracking-wider">
                                     Email
                                 </span>
-                                <span className="text-[14px] text-[#003435] font-semibold">
+                                <p className="text-[14px] text-[#003435] font-semibold mt-1 break-all">
                                     {selectedPatient.email}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div className="p-4 bg-[#e1f8f3] flex items-center justify-between border-t border-[#CBDAD6]">
+                        <div className="p-4 bg-[#F2F8F6] flex items-center justify-end border-t border-[#CBDAD6]">
                             <button
                                 onClick={() => setSelectedPatient(null)}
-                                className="w-full px-4 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[13px] font-semibold transition-colors shadow-sm"
+                                className="px-5 py-2.5 rounded-xl bg-[#003435] hover:bg-[#164B4D] text-white text-[12px] font-semibold transition-colors"
                             >
                                 Close
                             </button>

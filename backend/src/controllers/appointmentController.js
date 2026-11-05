@@ -244,6 +244,112 @@ const getDoctorAppointments = async (req, res) => {
     });
   }
 };
+
+const getDoctorEligiblePatients = async (req, res) => {
+  try {
+    const doctor = await Doctor.findOne({
+      user: req.user.id,
+    });
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor profile not found",
+      });
+    }
+
+    const appointments = await Appointment.find({
+      doctor: doctor._id,
+      status: { $in: ["confirmed", "completed"] },
+    })
+      .populate("patient", "name email")
+      .select("patient date status reason")
+      .sort({ date: 1 });
+
+    const now = new Date();
+    const patientMap = new Map();
+
+    appointments.forEach((appointment) => {
+      if (!appointment.patient) return;
+
+      const patientId = appointment.patient._id.toString();
+
+      if (!patientMap.has(patientId)) {
+        patientMap.set(patientId, {
+          patient: appointment.patient,
+          appointments: [],
+        });
+      }
+
+      patientMap.get(patientId).appointments.push(appointment);
+    });
+
+    const patients = Array.from(patientMap.values()).map(
+      ({ patient, appointments }) => {
+        const upcomingConfirmed = appointments
+          .filter(
+            (appointment) =>
+              appointment.status === "confirmed" &&
+              new Date(appointment.date) >= now
+          )
+          .sort(
+            (a, b) =>
+              new Date(a.date) - new Date(b.date)
+          );
+
+        const completed = appointments
+          .filter(
+            (appointment) => appointment.status === "completed"
+          )
+          .sort(
+            (a, b) =>
+              new Date(b.date) - new Date(a.date)
+          );
+
+        const confirmed = appointments
+          .filter(
+            (appointment) => appointment.status === "confirmed"
+          )
+          .sort(
+            (a, b) =>
+              new Date(b.date) - new Date(a.date)
+          );
+
+        const selectedAppointment =
+          upcomingConfirmed[0] ||
+          completed[0] ||
+          confirmed[0];
+
+        return {
+          patient: {
+            id: patient._id,
+            name: patient.name,
+            email: patient.email,
+          },
+          appointment: {
+            id: selectedAppointment._id,
+            date: selectedAppointment.date,
+            status: selectedAppointment.status,
+            reason: selectedAppointment.reason || "",
+          },
+        };
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Eligible patients fetched successfully",
+      patients,
+    });
+  } catch (error) {
+    console.error("Eligible patients error:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch eligible patients",
+    });
+  }
+};
+
 const addConsultationNotes = async (req, res) => {
   try {
     const { notes } = req.body;
@@ -318,5 +424,6 @@ module.exports = {
   getAllAppointments,
   updateAppointmentStatus,
   getDoctorAppointments,
+  getDoctorEligiblePatients,
   addConsultationNotes,
 };

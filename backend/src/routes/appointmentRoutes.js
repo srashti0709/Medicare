@@ -9,10 +9,14 @@ const {
     getAllAppointments,
     updateAppointmentStatus,
     getDoctorAppointments,
+    getDoctorEligiblePatients,
     addConsultationNotes,
 } = require("../controllers/appointmentController");
 
 const protect = require("../middleware/authMiddleware");
+const {
+    getDoctorPreConsultationSummary,
+} = require("../controllers/preConsultationController");
 const authorize = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validateMiddleware");
 
@@ -49,7 +53,18 @@ router.get(
     authorize("doctor"),
     getDoctorAppointments
 );
-
+router.get(
+    "/doctor/patients",
+    protect,
+    authorize("doctor"),
+    getDoctorEligiblePatients
+);
+router.get(
+    "/:id/pre-consultation",
+    protect,
+    authorize("doctor"),
+    getDoctorPreConsultationSummary
+);
 router.patch(
     "/:id/status",
     protect,
