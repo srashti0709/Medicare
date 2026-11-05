@@ -1,4 +1,7 @@
+
 import os
+import json
+import re
 import requests
 
 from dotenv import load_dotenv
@@ -26,6 +29,130 @@ class AssistantInput(BaseModel):
     message: str
     history: list = []
 
+
+TRUSTED_SOURCES = [
+    {
+        "id": "medlineplus_lab_tests",
+        "title": "Medical Tests",
+        "organization": "MedlinePlus · U.S. National Library of Medicine",
+        "url": "https://medlineplus.gov/lab-tests/",
+        "keywords": [
+            "blood test",
+            "lab test",
+            "laboratory test",
+            "hemoglobin",
+            "haemoglobin",
+            "rbc",
+            "red blood cell",
+            "blood count",
+            "cbc",
+            "glucose",
+            "cholesterol",
+            "creatinine",
+            "test result",
+            "reference range",
+            "anemia",
+            "anaemia",
+        ],
+    },
+    {
+        "id": "who_fact_sheets",
+        "title": "Health Topics and Fact Sheets",
+        "organization": "World Health Organization",
+        "url": "https://www.who.int/news-room/fact-sheets",
+        "keywords": [
+            "diabetes",
+            "kidney disease",
+            "heart disease",
+            "blood pressure",
+            "hypertension",
+            "anemia",
+            "anaemia",
+            "infection",
+            "nutrition",
+            "obesity",
+            "cardiovascular",
+            "mental health",
+            "malnutrition",
+        ],
+    },
+]
+
+
+def is_care_navigation_request(message):
+    """
+    Avoid attaching general health references to doctor,
+    service, and appointment-related conversations.
+    """
+
+    text = message.lower()
+
+    navigation_terms = [
+        "doctor",
+        "doctors",
+        "specialist",
+        "specialists",
+        "appointment",
+        "appointments",
+        "book",
+        "booking",
+        "schedule",
+        "reschedule",
+        "available slot",
+        "available slots",
+        "my appointment",
+        "find me",
+        "show me",
+        "healthcare service",
+        "healthcare services",
+        "available services",
+    ]
+
+    return any(term in text for term in navigation_terms)
+
+
+def get_relevant_sources(message, answer):
+    """
+    Select references from the predefined trusted-source registry.
+    The AI does not generate or choose URLs.
+    """
+
+    if is_care_navigation_request(message):
+        return []
+
+    text = f"{message} {answer}".lower()
+
+    relevant_sources = []
+
+    for source in TRUSTED_SOURCES:
+        if any(keyword in text for keyword in source["keywords"]):
+            relevant_sources.append({
+                "title": source["title"],
+                "organization": source["organization"],
+                "url": source["url"],
+            })
+
+    return relevant_sources
+
+
+def is_booking_response(answer):
+    """
+    Booking instructions are returned as JSON by the AI.
+    These responses should not receive health references.
+    """
+
+    try:
+        parsed = json.loads(answer)
+
+        return parsed.get("action") in [
+            "book_appointment",
+            "confirm_booking",
+        ]
+
+    except (json.JSONDecodeError, AttributeError, TypeError):
+        return False
+
+
 @router.post("/chat")
 def assistant_chat(data: AssistantInput):
 
@@ -35,8 +162,9 @@ def assistant_chat(data: AssistantInput):
             f"{BACKEND_URL}/api/doctors"
         )
 
-        doctors_data = doctors_response.json()
+        doctors_response.raise_for_status()
 
+        doctors_data = doctors_response.json()
         doctors = doctors_data.get("doctors", [])
 
         doctor_context = []
@@ -55,6 +183,7 @@ def assistant_chat(data: AssistantInput):
                 "consultationFee": doctor.get("consultationFee"),
                 "isAvailable": doctor.get("isAvailable")
             })
+
         today = date.today()
         tomorrow = today + timedelta(days=1)
 
@@ -71,7 +200,8 @@ Do NOT ask the user for:
 
 The user is already using Medicare hospital.
 
-Your job is to help the user find doctors and manage appointment requests.
+Your job is to help the user find doctors, explore healthcare services,
+answer general health education questions, and manage appointment requests.
 
 Available doctors:
 
@@ -128,8 +258,13 @@ If the user confirms a previously requested booking, return ONLY:
 
 For normal doctor searches or general questions, respond normally and concisely.
 
-Do not diagnose diseases.
-Do not prescribe medicines.
+General health education rules:
+- Give clear, factual, easy-to-understand educational information.
+- Do not diagnose diseases.
+- Do not prescribe medicines or recommend changing prescribed treatment.
+- Do not invent medical facts or research references.
+- Encourage users to consult a qualified healthcare professional for personal medical concerns.
+- Keep the answer relevant to the user's question.
 
 User message:
 
@@ -165,11 +300,20 @@ User message:
             temperature=0.2
         )
 
-        answer = response.choices[0].message.content
+        answer = response.choices[0].message.content or ""
+
+        sources = []
+
+        if not is_booking_response(answer):
+            sources = get_relevant_sources(
+                data.message,
+                answer
+            )
 
         return {
             "success": True,
-            "answer": answer
+            "answer": answer,
+            "sources": sources
         }
 
     except Exception as error:

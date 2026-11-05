@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import {
   HeartPulse,
@@ -156,7 +157,7 @@ const AIAssistant = () => {
   }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || isTyping) return;
 
     const userMessage = message.trim();
 
@@ -197,6 +198,9 @@ const AIAssistant = () => {
           {
             role: "ai",
             content: data.answer || data.message,
+            sources: Array.isArray(data.sources)
+              ? data.sources
+              : [],
           },
         ]);
       } else {
@@ -708,6 +712,7 @@ const AIAssistant = () => {
                 <div className="absolute -left-16 -bottom-24 h-48 w-48 rounded-full bg-[#ADEFE7]/5 blur-2xl" />
 
                 {/* Animated heartbeat line */}
+
                 <svg
                   className="pointer-events-none absolute inset-x-0 bottom-0 h-10 w-full opacity-40"
                   viewBox="0 0 400 40"
@@ -816,14 +821,64 @@ const AIAssistant = () => {
                     {/* Message Bubble */}
 
                     <div
-                      className={`max-w-[88%] sm:max-w-[78%] px-5 py-4 rounded-2xl text-base leading-7 shadow-sm whitespace-pre-wrap break-words transition-shadow duration-300 hover:shadow-md ${
+                      className={`max-w-[88%] sm:max-w-[78%] px-5 py-4 rounded-2xl text-base leading-7 shadow-sm break-words transition-shadow duration-300 hover:shadow-md ${
                         msg.role === "user"
-                          ? "bg-[#003435] text-white rounded-br-md"
+                          ? "bg-[#003435] text-white rounded-br-md whitespace-pre-wrap"
                           : "bg-white border border-[#E2ECE7] text-[#344A45] rounded-bl-md"
                       }`}
                     >
 
-                      {msg.content}
+                      <div className="whitespace-pre-wrap">
+                        {msg.content}
+                      </div>
+
+                      {/* Trusted References */}
+
+                      {msg.role === "ai" &&
+                        Array.isArray(msg.sources) &&
+                        msg.sources.length > 0 && (
+                          <div className="mt-5 pt-4 border-t border-[#DCEBE5]">
+
+                            <div className="mb-3 flex items-center gap-2">
+                              <ShieldCheck
+                                size={17}
+                                className="shrink-0 text-[#256862]"
+                              />
+
+                              <p className="text-sm font-extrabold text-[#164B4D]">
+                                Trusted References
+                              </p>
+                            </div>
+
+                            <div className="space-y-3">
+                              {msg.sources.map((source, sourceIndex) => (
+                                <a
+                                  key={`${source.url}-${sourceIndex}`}
+                                  href={source.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="group flex items-start gap-2 text-sm text-[#256862] hover:text-[#003435] transition-colors break-words"
+                                >
+                                  <ArrowUpRight
+                                    size={15}
+                                    className="mt-0.5 shrink-0 text-[#4D9286] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                  />
+
+                                  <span className="min-w-0">
+                                    <span className="block font-bold underline underline-offset-2">
+                                      {source.title}
+                                    </span>
+
+                                    <span className="mt-0.5 block text-xs text-[#82938C]">
+                                      {source.organization}
+                                    </span>
+                                  </span>
+                                </a>
+                              ))}
+                            </div>
+
+                          </div>
+                        )}
 
                     </div>
 
@@ -970,9 +1025,9 @@ const AIAssistant = () => {
 
                   <button
                     onClick={handleSend}
-                    disabled={!message.trim()}
+                    disabled={!message.trim() || isTyping}
                     className={`ai-send ai-shine flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 sm:px-6 py-3.5 text-base font-extrabold transition ${
-                      message.trim()
+                      message.trim() && !isTyping
                         ? "bg-[#003435] text-white shadow-md hover:bg-[#164B4D]"
                         : "bg-[#E8EFEC] text-[#9AA9A4] cursor-not-allowed"
                     }`}

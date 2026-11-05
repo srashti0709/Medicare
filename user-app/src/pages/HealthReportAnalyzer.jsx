@@ -510,17 +510,15 @@ const DoctorFollowUp = ({ questionsToDiscuss }) => {
 
   return (
     <section
-      className={`report-card rounded-3xl border p-6 sm:p-7 ${
-        hasQuestions
-          ? "bg-[#FFF9EC] border-[#F0DDB5]"
-          : "bg-[#F0F7F3] border-[#CDE5D6]"
-      }`}
+      className={`report-card rounded-3xl border p-6 sm:p-7 ${hasQuestions
+        ? "bg-[#FFF9EC] border-[#F0DDB5]"
+        : "bg-[#F0F7F3] border-[#CDE5D6]"
+        }`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-5">
         <div
-          className={`h-14 w-14 rounded-2xl flex items-center justify-center shrink-0 ${
-            hasQuestions ? "bg-[#FBEBC9]" : "bg-[#DCEFE3]"
-          }`}
+          className={`h-14 w-14 rounded-2xl flex items-center justify-center shrink-0 ${hasQuestions ? "bg-[#FBEBC9]" : "bg-[#DCEFE3]"
+            }`}
         >
           {hasQuestions ? (
             <Stethoscope
@@ -537,9 +535,8 @@ const DoctorFollowUp = ({ questionsToDiscuss }) => {
 
         <div className="flex-1">
           <p
-            className={`text-sm font-bold uppercase tracking-wide ${
-              hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
-            }`}
+            className={`text-sm font-bold uppercase tracking-wide ${hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
+              }`}
           >
             Doctor discussion
           </p>
@@ -552,32 +549,28 @@ const DoctorFollowUp = ({ questionsToDiscuss }) => {
 
           <p className="text-base text-[#65736F] mt-2 leading-relaxed">
             {hasQuestions
-              ? `The AI analysis returned ${questionsToDiscuss.length} discussion ${
-                  questionsToDiscuss.length === 1
-                    ? "point"
-                    : "points"
-                }. You can review them and consider discussing them with your healthcare professional.`
+              ? `The AI analysis returned ${questionsToDiscuss.length} discussion ${questionsToDiscuss.length === 1
+                ? "point"
+                : "points"
+              }. You can review them and consider discussing them with your healthcare professional.`
               : "The AI did not return any discussion questions. You can still consult your doctor about any concerns or symptoms."}
           </p>
         </div>
 
         <div
-          className={`rounded-2xl px-5 py-3 text-center shrink-0 ${
-            hasQuestions ? "bg-[#FBEBC9]" : "bg-[#DCEFE3]"
-          }`}
+          className={`rounded-2xl px-5 py-3 text-center shrink-0 ${hasQuestions ? "bg-[#FBEBC9]" : "bg-[#DCEFE3]"
+            }`}
         >
           <p
-            className={`text-2xl font-bold tabular-nums ${
-              hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
-            }`}
+            className={`text-2xl font-bold tabular-nums ${hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
+              }`}
           >
             {questionsToDiscuss.length}
           </p>
 
           <p
-            className={`text-xs font-semibold ${
-              hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
-            }`}
+            className={`text-xs font-semibold ${hasQuestions ? "text-[#A66B16]" : "text-[#27804D]"
+              }`}
           >
             Discussion points
           </p>
@@ -699,10 +692,11 @@ const HealthReportAnalyzer = () => {
     }
   };
 
+
   const handleAskAI = async () => {
     if (
       !question.trim() ||
-      !uploadResult?.data?.report_text ||
+      !uploadResult?.data?.report_id ||
       chatLoading
     ) {
       return;
@@ -722,11 +716,21 @@ const HealthReportAnalyzer = () => {
     setChatLoading(true);
 
     try {
+      const token = localStorage.getItem("userToken");
+
+      if (!token) {
+        throw new Error("Please log in again to continue.");
+      }
+
       const response = await axios.post(
-        "http://localhost:8000/api/report/chat",
+        `http://localhost:5000/api/reports/${uploadResult.data.report_id}/chat`,
         {
-          report_text: uploadResult.data.report_text,
           question: userQuestion,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -736,6 +740,9 @@ const HealthReportAnalyzer = () => {
           {
             role: "ai",
             content: response.data.answer,
+            sources: Array.isArray(response.data.sources)
+              ? response.data.sources
+              : [],
           },
         ]);
       } else {
@@ -744,6 +751,7 @@ const HealthReportAnalyzer = () => {
           {
             role: "ai",
             content: "Sorry, I could not answer that question.",
+            sources: [],
           },
         ]);
       }
@@ -755,13 +763,17 @@ const HealthReportAnalyzer = () => {
         {
           role: "ai",
           content:
+            error.response?.data?.message ||
+            error.message ||
             "Sorry, something went wrong while asking AI.",
+          sources: [],
         },
       ]);
     } finally {
       setChatLoading(false);
     }
   };
+
 
   const aiData = uploadResult?.data;
 
@@ -1033,11 +1045,10 @@ const HealthReportAnalyzer = () => {
                   <button
                     onClick={handleUpload}
                     disabled={!file || uploading}
-                    className={`report-upload-button inline-flex items-center justify-center gap-3 px-9 py-4 rounded-2xl font-bold text-base ${
-                      file && !uploading
-                        ? "bg-[#003435] hover:bg-[#164B4D] text-white shadow-lg shadow-[#003435]/10"
-                        : "bg-[#E3EBE8] text-[#91A39C] cursor-not-allowed"
-                    }`}
+                    className={`report-upload-button inline-flex items-center justify-center gap-3 px-9 py-4 rounded-2xl font-bold text-base ${file && !uploading
+                      ? "bg-[#003435] hover:bg-[#164B4D] text-white shadow-lg shadow-[#003435]/10"
+                      : "bg-[#E3EBE8] text-[#91A39C] cursor-not-allowed"
+                      }`}
                   >
                     {uploading ? (
                       <>
@@ -1075,11 +1086,10 @@ const HealthReportAnalyzer = () => {
           {uploadResult && (
             <Reveal delay={100}>
               <div
-                className={`mt-6 rounded-2xl p-5 sm:p-6 border ${
-                  uploadResult.success
-                    ? "bg-[#E7F4F1] border-[#B8DED5]"
-                    : "bg-red-50 border-red-200"
-                }`}
+                className={`mt-6 rounded-2xl p-5 sm:p-6 border ${uploadResult.success
+                  ? "bg-[#E7F4F1] border-[#B8DED5]"
+                  : "bg-red-50 border-red-200"
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   {uploadResult.success ? (
@@ -1095,11 +1105,10 @@ const HealthReportAnalyzer = () => {
                   )}
 
                   <p
-                    className={`text-base font-semibold ${
-                      uploadResult.success
-                        ? "text-[#164B4D]"
-                        : "text-red-700"
-                    }`}
+                    className={`text-base font-semibold ${uploadResult.success
+                      ? "text-[#164B4D]"
+                      : "text-red-700"
+                      }`}
                   >
                     {uploadResult.success
                       ? "Report analyzed successfully"
@@ -1389,25 +1398,22 @@ const HealthReportAnalyzer = () => {
                       {chatMessages.map((message, index) => (
                         <div
                           key={index}
-                          className={`flex ${
-                            message.role === "user"
-                              ? "justify-end"
-                              : "justify-start"
-                          }`}
+                          className={`flex ${message.role === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                            }`}
                         >
                           <div
-                            className={`flex items-start gap-3 max-w-[90%] sm:max-w-[80%] ${
-                              message.role === "user"
-                                ? "flex-row-reverse"
-                                : "flex-row"
-                            }`}
+                            className={`flex items-start gap-3 max-w-[90%] sm:max-w-[80%] ${message.role === "user"
+                              ? "flex-row-reverse"
+                              : "flex-row"
+                              }`}
                           >
                             <div
-                              className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
-                                message.role === "user"
-                                  ? "bg-[#003435]"
-                                  : "bg-[#E7F4F1]"
-                              }`}
+                              className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${message.role === "user"
+                                ? "bg-[#003435]"
+                                : "bg-[#E7F4F1]"
+                                }`}
                             >
                               {message.role === "user" ? (
                                 <UserRound
@@ -1422,17 +1428,48 @@ const HealthReportAnalyzer = () => {
                               )}
                             </div>
 
+
                             <div
-                              className={`rounded-2xl px-5 py-4 ${
-                                message.role === "user"
+                              className={`rounded-2xl px-5 py-4 ${message.role === "user"
                                   ? "bg-[#003435] text-white rounded-tr-sm"
                                   : "bg-[#F0F6F3] border border-[#DCEBE5] text-[#164B4D] rounded-tl-sm"
-                              }`}
+                                }`}
                             >
                               <p className="text-base leading-relaxed whitespace-pre-line">
                                 {message.content}
                               </p>
+
+                              {message.role === "ai" &&
+                                Array.isArray(message.sources) &&
+                                message.sources.length > 0 && (
+                                  <div className="mt-4 pt-3 border-t border-[#DCEBE5]">
+                                    <p className="text-sm font-bold text-[#164B4D] mb-2">
+                                      Trusted References
+                                    </p>
+
+                                    <div className="space-y-2">
+                                      {message.sources.map((source, sourceIndex) => (
+                                        <a
+                                          key={`${source.url}-${sourceIndex}`}
+                                          href={source.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex flex-col gap-0.5 text-sm text-[#256862] hover:text-[#003435] underline underline-offset-2 break-words"
+                                        >
+                                          <span className="font-semibold">
+                                            {source.title}
+                                          </span>
+
+                                          <span className="text-xs text-[#65736F] no-underline">
+                                            {source.organization}
+                                          </span>
+                                        </a>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
                             </div>
+
                           </div>
                         </div>
                       ))}
@@ -1484,11 +1521,10 @@ const HealthReportAnalyzer = () => {
                     <button
                       onClick={handleAskAI}
                       disabled={!question.trim() || chatLoading}
-                      className={`report-upload-button inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-bold text-base ${
-                        question.trim() && !chatLoading
-                          ? "bg-[#003435] hover:bg-[#164B4D] text-white shadow-lg shadow-[#003435]/10"
-                          : "bg-[#E3EBE8] text-[#91A39C] cursor-not-allowed"
-                      }`}
+                      className={`report-upload-button inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-bold text-base ${question.trim() && !chatLoading
+                        ? "bg-[#003435] hover:bg-[#164B4D] text-white shadow-lg shadow-[#003435]/10"
+                        : "bg-[#E3EBE8] text-[#91A39C] cursor-not-allowed"
+                        }`}
                     >
                       {chatLoading ? (
                         <>

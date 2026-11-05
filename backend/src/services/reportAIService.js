@@ -22,6 +22,28 @@ const analyzeHealthReport = async (reportText) => {
     }
 };
 
+const askAboutHealthReport = async (reportText, question) => {
+    try {
+        const response = await axios.post(
+            `${AI_SERVICE_URL}/api/report/chat`,
+            {
+                report_text: reportText,
+                question,
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error(
+            "AI Report Chat Service Error:",
+            error.response?.data || error.message
+        );
+
+        throw new Error("AI report chat service is unavailable");
+    }
+};
+
 module.exports = {
     analyzeHealthReport,
+    askAboutHealthReport,
 };

@@ -8,6 +8,7 @@ const authorizeRoles = require("../middleware/authorizeRoles");
 const {
     analyzeReport,
     getMyReportHistory,
+    askReportQuestion,
 } = require("../controllers/reportController");
 
 const router = express.Router();
@@ -46,6 +47,12 @@ router.post(
     authorizeRoles("patient"),
     upload.single("report"),
     analyzeReport
+);
+router.post(
+    "/:reportId/chat",
+    protect,
+    authorizeRoles("patient"),
+    askReportQuestion
 );
 
 module.exports = router;

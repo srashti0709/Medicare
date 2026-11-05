@@ -107,6 +107,9 @@ const AIFloatingChat = () => {
               data.answer ||
               data.message ||
               "I'm here to help!",
+            sources: Array.isArray(data.sources)
+              ? data.sources
+              : [],
           },
         ]);
       } else {
@@ -374,13 +377,45 @@ const AIFloatingChat = () => {
                   )}
 
                   <div
-                    className={`max-w-[82%] px-3.5 py-3 rounded-2xl text-base leading-[1.65] whitespace-pre-wrap break-words shadow-sm ${
+                    className={`max-w-[82%] px-3.5 py-3 rounded-2xl text-base leading-[1.65] break-words shadow-sm ${
                       msg.role === "user"
-                        ? "bg-[#003435] text-white rounded-br-sm"
+                        ? "bg-[#003435] text-white rounded-br-sm whitespace-pre-wrap"
                         : "bg-white border border-[#E2ECE7] text-[#344A45] rounded-bl-sm"
                     }`}
                   >
-                    {msg.content}
+                    <div className="whitespace-pre-wrap">
+                      {msg.content}
+                    </div>
+
+                    {msg.role === "ai" &&
+                      Array.isArray(msg.sources) &&
+                      msg.sources.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-[#DCEBE5]">
+                          <p className="mb-2 text-sm font-extrabold text-[#164B4D]">
+                            Trusted References
+                          </p>
+
+                          <div className="space-y-2">
+                            {msg.sources.map((source, sourceIndex) => (
+                              <a
+                                key={`${source.url}-${sourceIndex}`}
+                                href={source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex flex-col gap-0.5 text-sm text-[#256862] hover:text-[#003435] underline underline-offset-2 break-words"
+                              >
+                                <span className="font-bold">
+                                  {source.title}
+                                </span>
+
+                                <span className="text-xs text-[#65736F] no-underline">
+                                  {source.organization}
+                                </span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </div>
 
                   {msg.role === "user" && (

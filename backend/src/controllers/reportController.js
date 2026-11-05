@@ -1,7 +1,10 @@
 
 const fs = require("fs");
 const { PDFParse } = require("pdf-parse");
-const { analyzeHealthReport } = require("../services/reportAIService");
+const {
+    analyzeHealthReport,
+    askAboutHealthReport,
+} = require("../services/reportAIService");
 const ReportAnalysis = require("../models/ReportAnalysis");
 
 const analyzeReport = async (req, res) => {
@@ -108,8 +111,60 @@ const getMyReportHistory = async (req, res) => {
         });
     }
 };
+// Answer a patient's question about their own saved health report.
+const askReportQuestion = async (req, res) => {
+    try {
+        const { question } = req.body;
+        const { reportId } = req.params;
+
+        if (!question || !question.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a question.",
+            });
+        }
+
+        const report = await ReportAnalysis.findOne({
+            _id: reportId,
+            patient: req.user.id,
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: "Report not found.",
+            });
+        }
+
+        const result = await askAboutHealthReport(
+            report.reportText,
+            question.trim()
+        );
+
+        if (!result.success) {
+            return res.status(502).json({
+                success: false,
+                message: result.message || "AI could not answer the question.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            answer: result.answer,
+            sources: result.sources || [],
+        });
+    } catch (error) {
+        console.error("Report Question Error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to answer your report question.",
+        });
+    }
+};
 
 module.exports = {
     analyzeReport,
     getMyReportHistory,
+    askReportQuestion,
 };
