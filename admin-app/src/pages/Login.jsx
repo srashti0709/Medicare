@@ -19,7 +19,16 @@ const Login = () => {
   }
 
   if (token && adminUser.role === "doctor") {
-    return <Navigate to="/doctor-dashboard" replace />;
+    return (
+      <Navigate
+        to={
+          adminUser.mustChangePassword
+            ? "/change-doctor-password"
+            : "/doctor-dashboard"
+        }
+        replace
+      />
+    );
   }
 
   const handleChange = (e) => {
@@ -54,6 +63,8 @@ const Login = () => {
 
       if (user.role === "admin") {
         window.location.href = "/dashboard";
+      } else if (user.mustChangePassword) {
+        window.location.href = "/change-doctor-password";
       } else {
         window.location.href = "/doctor-dashboard";
       }

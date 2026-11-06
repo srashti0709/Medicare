@@ -1,20 +1,27 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ProtectedRoute from "./ProtectedRoute";
+import DoctorProtectedRoute from "./DoctorProtectedRoute";
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DoctorDashboard from "./pages/DoctorDashboard";
-import DoctorProtectedRoute from "./DoctorProtectedRoute";
 import DoctorProfile from "./pages/DoctorProfile";
 import DoctorSchedule from "./pages/DoctorSchedule";
 import AdminProfile from "./pages/AdminProfile";
 import DiabetesPrediction from "./pages/DiabetesPrediction";
 import AIRiskAssessment from "./pages/AIRiskAssessment";
 import KidneyDiseaseRisk from "./pages/KidneyDiseaseRisk";
+import ChangeDoctorPassword from "./pages/ChangeDoctorPassword";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+
+        {/* Admin Routes */}
         <Route
           path="/dashboard"
           element={
@@ -23,6 +30,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin-profile"
           element={
@@ -31,6 +39,18 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Doctor Password Change Route */}
+        <Route
+          path="/change-doctor-password"
+          element={
+            <DoctorProtectedRoute allowPasswordChange>
+              <ChangeDoctorPassword />
+            </DoctorProtectedRoute>
+          }
+        />
+
+        {/* Doctor Routes */}
         <Route
           path="/doctor-dashboard"
           element={
@@ -39,6 +59,7 @@ function App() {
             </DoctorProtectedRoute>
           }
         />
+
         <Route
           path="/doctor-profile"
           element={
@@ -47,6 +68,7 @@ function App() {
             </DoctorProtectedRoute>
           }
         />
+
         <Route
           path="/doctor-schedule"
           element={
@@ -55,6 +77,7 @@ function App() {
             </DoctorProtectedRoute>
           }
         />
+
         <Route
           path="/diabetes-prediction"
           element={
@@ -63,6 +86,7 @@ function App() {
             </DoctorProtectedRoute>
           }
         />
+
         <Route
           path="/ai-risk-assessment"
           element={
@@ -71,6 +95,7 @@ function App() {
             </DoctorProtectedRoute>
           }
         />
+
         <Route
           path="/kidney-disease-risk"
           element={

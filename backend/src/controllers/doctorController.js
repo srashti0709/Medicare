@@ -1,13 +1,14 @@
+
 const User = require("../models/User");
 const Doctor = require("../models/Doctor");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const createDoctor = async (req, res) => {
   try {
     const {
       name,
       email,
-      password,
       specialization,
       department,
       qualification,
@@ -21,7 +22,6 @@ const createDoctor = async (req, res) => {
     if (
       !name ||
       !email ||
-      !password ||
       !specialization ||
       !department ||
       !qualification ||
@@ -41,13 +41,15 @@ const createDoctor = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const temporaryPassword = crypto.randomBytes(9).toString("base64url");
+    const hashedPassword = await bcrypt.hash(temporaryPassword, 10);
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       role: "doctor",
+      mustChangePassword: true,
     });
 
     const doctor = await Doctor.create({
@@ -64,6 +66,7 @@ const createDoctor = async (req, res) => {
 
     res.status(201).json({
       message: "Doctor created successfully",
+      temporaryPassword,
       doctor: {
         id: doctor._id,
         userId: user._id,
@@ -87,6 +90,7 @@ const createDoctor = async (req, res) => {
     });
   }
 };
+
 const getAllDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find()
@@ -104,6 +108,7 @@ const getAllDoctors = async (req, res) => {
     });
   }
 };
+
 const getDoctorById = async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id)
@@ -126,6 +131,7 @@ const getDoctorById = async (req, res) => {
     });
   }
 };
+
 const updateDoctor = async (req, res) => {
   try {
     const {
@@ -149,9 +155,7 @@ const updateDoctor = async (req, res) => {
       });
     }
 
-    const user = await require("../models/User").findById(
-      doctor.user
-    );
+    const user = await User.findById(doctor.user);
 
     if (!user) {
       return res.status(404).json({
@@ -217,6 +221,52 @@ const updateDoctor = async (req, res) => {
     });
   }
 };
+
+const resetDoctorPassword = async (req, res) => {
+  try {
+    const { temporaryPassword } = req.body;
+
+    if (
+      !temporaryPassword ||
+      temporaryPassword.length < 6
+    ) {
+      return res.status(400).json({
+        message: "Temporary password must be at least 6 characters long",
+      });
+    }
+
+    const doctor = await Doctor.findById(req.params.id);
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+      });
+    }
+
+    const user = await User.findById(doctor.user);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Doctor user not found",
+      });
+    }
+
+    user.password = await bcrypt.hash(temporaryPassword, 10);
+    user.mustChangePassword = true;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Doctor password reset successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to reset doctor password",
+      error: error.message,
+    });
+  }
+};
+
 const toggleDoctorAvailability = async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
@@ -248,6 +298,7 @@ const toggleDoctorAvailability = async (req, res) => {
     });
   }
 };
+
 const getMyDoctorProfile = async (req, res) => {
   try {
     const doctor = await Doctor.findOne({
@@ -271,7 +322,6 @@ const getMyDoctorProfile = async (req, res) => {
     });
   }
 };
-
 
 const updateMyDoctorProfile = async (req, res) => {
   try {
@@ -298,9 +348,7 @@ const updateMyDoctorProfile = async (req, res) => {
       });
     }
 
-    const user = await require("../models/User").findById(
-      req.user.id
-    );
+    const user = await User.findById(req.user.id);
 
     if (!user) {
       return res.status(404).json({
@@ -350,6 +398,7 @@ module.exports = {
   getAllDoctors,
   getDoctorById,
   updateDoctor,
+  resetDoctorPassword,
   toggleDoctorAvailability,
   getMyDoctorProfile,
   updateMyDoctorProfile,

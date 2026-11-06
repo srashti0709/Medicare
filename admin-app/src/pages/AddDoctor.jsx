@@ -6,7 +6,6 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
     specialization: "",
     department: "",
     qualification: "",
@@ -20,6 +19,7 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [temporaryPassword, setTemporaryPassword] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -32,12 +32,13 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setTemporaryPassword("");
     setLoading(true);
 
     try {
       const token = localStorage.getItem("adminToken");
 
-      await api.post(
+      const response = await api.post(
         "/doctors",
         {
           ...formData,
@@ -50,13 +51,16 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
           },
         }
       );
+      console.log("DOCTOR CREATION RESPONSE:", response.data);
 
+      setTemporaryPassword(
+        response.data.temporaryPassword
+      );
       setSuccess("Doctor added successfully!");
 
       setFormData({
         name: "",
         email: "",
-        password: "",
         specialization: "",
         department: "",
         qualification: "",
@@ -67,13 +71,11 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
         profileImage: "",
       });
 
-      if (onDoctorAdded) {
-        onDoctorAdded();
-      }
+
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Failed to add doctor. Please try again."
+        "Failed to add doctor. Please try again."
       );
     } finally {
       setLoading(false);
@@ -119,12 +121,52 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
 
               {/* SUCCESS */}
               {success && (
-                <div className="mb-6 flex items-center gap-3 rounded-xl border border-[#BFDCD5] border-l-4 border-l-[#2E9C8F] bg-[#EAF7F3] px-4 py-3 text-base font-medium text-[#256862]">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ADEFE7] font-bold text-[#00504A]">
-                    ✓
-                  </span>
+                <div className="mb-6 space-y-3">
+                  <div className="flex items-center gap-3 rounded-xl border border-[#BFDCD5] border-l-4 border-l-[#2E9C8F] bg-[#EAF7F3] px-4 py-3 text-base font-medium text-[#256862]">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ADEFE7] font-bold text-[#00504A]">
+                      ✓
+                    </span>
 
-                  <span>{success}</span>
+                    <span>{success}</span>
+                  </div>
+
+                  {temporaryPassword && (
+                    <div className="rounded-xl border border-[#C0DCD7] bg-[#DCF3EE] p-4">
+                      <h3 className="font-semibold text-[#164B4D]">
+                        Doctor Login Credentials
+                      </h3>
+
+                      <p className="mt-1 text-base text-[#526563]">
+                        Share these credentials securely with the doctor.
+                        This temporary password will not be shown again.
+                      </p>
+
+                      <div className="mt-3 rounded-lg border border-[#CBDAD6] bg-white p-3">
+                        <p className="text-sm font-semibold text-[#526563]">
+                          Temporary Password
+                        </p>
+
+                        <p className="mt-1 break-all font-mono text-lg font-bold text-[#003435]">
+                          {temporaryPassword}
+                        </p>
+                      </div>
+
+                      <p className="mt-3 text-sm text-[#526563]">
+                        The doctor must change this password after logging in.
+                      </p>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onDoctorAdded) {
+                        onDoctorAdded();
+                      }
+                    }}
+                    className="rounded-xl bg-[#164B4D] px-5 py-2.5 text-base font-semibold text-white hover:bg-[#0F3437]"
+                  >
+                    Back to Doctors List
+                  </button>
                 </div>
               )}
 
@@ -184,24 +226,6 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
                       onChange={handleChange}
                       placeholder="doctor@medicare.com"
                       required
-                      className="w-full rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition placeholder:text-[#8FA6A2] focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
-                    />
-                  </div>
-
-                  {/* PASSWORD */}
-                  <div className="min-w-0">
-                    <label className="mb-1.5 block text-base font-semibold text-[#164B4D]">
-                      Password
-                    </label>
-
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Minimum 6 characters"
-                      required
-                      minLength={6}
                       className="w-full rounded-xl border border-[#CBDAD6] bg-white px-3.5 py-2.5 text-base text-[#0F3437] outline-none transition placeholder:text-[#8FA6A2] focus:border-[#164B4D] focus:ring-2 focus:ring-[#9ADBD3]/60"
                     />
                   </div>
@@ -409,7 +433,7 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
                     </p>
 
                     <p className="mt-0.5 text-base text-[#8FA6A2]">
-                      The doctor will be added to the Medicare registry.
+                      A temporary login password will be generated automatically.
                     </p>
                   </div>
 
@@ -417,11 +441,10 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
 
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
                         setFormData({
                           name: "",
                           email: "",
-                          password: "",
                           specialization: "",
                           department: "",
                           qualification: "",
@@ -430,8 +453,11 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
                           phone: "",
                           about: "",
                           profileImage: "",
-                        })
-                      }
+                        });
+                        setTemporaryPassword("");
+                        setSuccess("");
+                        setError("");
+                      }}
                       className="w-full rounded-xl border border-[#CBDAD6] px-5 py-2.5 text-base font-semibold text-[#526563] transition hover:border-[#9ADBD3] hover:bg-[#F5F8F6] sm:w-auto"
                     >
                       Cancel

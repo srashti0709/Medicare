@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+    mustChangePassword: {
+      type: Boolean,
+      default: false,
+    },
 
     profileImage: {
       type: String,

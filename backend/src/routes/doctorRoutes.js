@@ -1,10 +1,10 @@
 const express = require("express");
-
 const {
   createDoctor,
   getAllDoctors,
   getDoctorById,
   updateDoctor,
+  resetDoctorPassword,
   toggleDoctorAvailability,
   getMyDoctorProfile,
   updateMyDoctorProfile,
@@ -41,6 +41,12 @@ router.patch(
   protect,
   authorize("admin"),
   updateDoctor
+);
+router.patch(
+  "/:id/reset-password",
+  protect,
+  authorize("admin"),
+  resetDoctorPassword
 );
 router.patch(
   "/:id/toggle-availability",
