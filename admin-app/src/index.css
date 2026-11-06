@@ -1,1 +1,20 @@
 @import "tailwindcss";
+@keyframes liquid-shimmer {
+    0% {
+        transform: translateX(-100%) skewX(-15deg);
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateX(200%) skewX(-15deg);
+        opacity: 0.3;
+    }
+}
+
+.animate-liquid-shimmer {
+    animation: liquid-shimmer 2.2s ease-in-out infinite;
+}

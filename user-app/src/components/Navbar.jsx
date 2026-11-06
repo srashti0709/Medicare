@@ -19,6 +19,7 @@ const Navbar = () => {
   });
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
 
   const handleLogout = () => {
@@ -26,19 +27,19 @@ const Navbar = () => {
       "Are you sure you want to logout?"
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     localStorage.removeItem("userToken");
     localStorage.removeItem("user");
 
     setCurrentUser(null);
+    setDashboardOpen(false);
     navigate("/login");
   };
 
   const closeMenu = () => {
     setMenuOpen(false);
+    setDashboardOpen(false);
   };
 
   const navLinkClass =
@@ -75,7 +76,8 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-9">
+          <div className="hidden lg:flex items-center gap-7">
+
             <Link to="/" className={navLinkClass}>
               Home
             </Link>
@@ -88,36 +90,74 @@ const Navbar = () => {
               Services
             </Link>
 
+            {/* More Dropdown */}
             {currentUser && (
-              <Link
-                to="/my-appointments"
-                className={navLinkClass}
-              >
-                My Appointments
-              </Link>
-            )}
+              <div className="relative">
+                <button
+                  onClick={() => setDashboardOpen(!dashboardOpen)}
+                  className={`flex items-center gap-1.5 ${navLinkClass}`}
+                  aria-expanded={dashboardOpen}
+                >
+                  More
 
-            {currentUser && (
-              <Link
-                to="/health-timeline"
-                className={navLinkClass}
-              >
-                Health Timeline
-              </Link>
-            )}
+                  <ChevronDown
+                    size={17}
+                    className={`transition-transform duration-200 ${
+                      dashboardOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-            {currentUser && (
-              <Link
-                to="/report-comparison"
-                className={navLinkClass}
-              >
-                Report Comparison
-              </Link>
+                {dashboardOpen && (
+                  <div className="absolute top-full left-0 mt-3 w-64 bg-white border border-[#D4E4DE] rounded-2xl p-2 shadow-[0_12px_35px_rgba(0,52,53,0.12)] z-50">
+
+                    <Link
+                      to="/my-appointments"
+                      onClick={closeMenu}
+                      className="block px-4 py-3 rounded-xl text-base font-semibold text-[#164B4D] hover:bg-[#E7F4F1] transition-colors"
+                    >
+                      My Appointments
+                    </Link>
+
+                    <Link
+                      to="/health-timeline"
+                      onClick={closeMenu}
+                      className="block px-4 py-3 rounded-xl text-base font-semibold text-[#164B4D] hover:bg-[#E7F4F1] transition-colors"
+                    >
+                      Health Timeline
+                    </Link>
+
+                    <Link
+                      to="/report-comparison"
+                      onClick={closeMenu}
+                      className="block px-4 py-3 rounded-xl text-base font-semibold text-[#164B4D] hover:bg-[#E7F4F1] transition-colors"
+                    >
+                      Report Comparison
+                    </Link>
+
+                    <Link
+                      to="/health-report-analyzer"
+                      onClick={closeMenu}
+                      className="block px-4 py-3 rounded-xl text-base font-semibold text-[#164B4D] hover:bg-[#E7F4F1] transition-colors"
+                    >
+                      Health Report Analyzer
+                    </Link>
+
+                    <Link
+                      to="/ai-assistant"
+                      onClick={closeMenu}
+                      className="block px-4 py-3 rounded-xl text-base font-semibold text-[#164B4D] hover:bg-[#E7F4F1] transition-colors"
+                    >
+                      AI Assistant
+                    </Link>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
           {/* Desktop User Actions */}
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden lg:flex items-center gap-4">
 
             {currentUser ? (
               <>
@@ -129,7 +169,7 @@ const Navbar = () => {
                     <UserRound size={20} />
                   </div>
 
-                  <div className="max-w-[125px]">
+                  <div className="max-w-[110px]">
                     <p className="text-base font-semibold text-[#003435] truncate">
                       {currentUser.name}
                     </p>
@@ -137,16 +177,11 @@ const Navbar = () => {
                       My Profile
                     </p>
                   </div>
-
-                  <ChevronDown
-                    size={16}
-                    className="text-[#65736F]"
-                  />
                 </Link>
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-base font-semibold text-[#C34E43] border border-[#F0D5D0] hover:bg-[#FFF1EF] transition-colors duration-300"
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-base font-semibold text-[#C34E43] border border-[#F0D5D0] hover:bg-[#FFF1EF] transition-colors duration-300"
                 >
                   <LogOut size={17} />
                   Logout
@@ -163,7 +198,7 @@ const Navbar = () => {
 
                 <Link
                   to="/doctors"
-                  className="inline-flex items-center justify-center bg-[#003F40] hover:bg-[#145B57] text-white px-7 py-3.5 rounded-xl text-base font-semibold shadow-[0_5px_15px_rgba(0,52,53,0.12)] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="inline-flex items-center justify-center bg-[#003F40] hover:bg-[#145B57] text-white px-5 py-3 rounded-xl text-base font-semibold shadow-[0_5px_15px_rgba(0,52,53,0.12)] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                 >
                   Find a Doctor
                 </Link>
@@ -211,43 +246,61 @@ const Navbar = () => {
               </Link>
 
               {currentUser && (
-                <Link
-                  to="/my-appointments"
-                  onClick={closeMenu}
-                  className={mobileLinkClass}
-                >
-                  My Appointments
-                </Link>
-              )}
+                <>
+                  <div className="px-4 pt-4 pb-2">
+                    <p className="text-sm font-bold uppercase tracking-wider text-[#82918B]">
+                      More
+                    </p>
+                  </div>
 
-              {currentUser && (
-                <Link
-                  to="/health-timeline"
-                  onClick={closeMenu}
-                  className={mobileLinkClass}
-                >
-                  Health Timeline
-                </Link>
-              )}
+                  <Link
+                    to="/my-appointments"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    My Appointments
+                  </Link>
 
-              {currentUser && (
-                <Link
-                  to="/report-comparison"
-                  onClick={closeMenu}
-                  className={mobileLinkClass}
-                >
-                  Report Comparison
-                </Link>
-              )}
+                  <Link
+                    to="/health-timeline"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    Health Timeline
+                  </Link>
 
-              {currentUser && (
-                <Link
-                  to="/profile"
-                  onClick={closeMenu}
-                  className={mobileLinkClass}
-                >
-                  My Profile
-                </Link>
+                  <Link
+                    to="/report-comparison"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    Report Comparison
+                  </Link>
+
+                  <Link
+                    to="/health-report-analyzer"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    Health Report Analyzer
+                  </Link>
+
+                  <Link
+                    to="/ai-assistant"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    AI Assistant
+                  </Link>
+
+                  <Link
+                    to="/profile"
+                    onClick={closeMenu}
+                    className={mobileLinkClass}
+                  >
+                    My Profile
+                  </Link>
+                </>
               )}
 
               <div className="border-t border-[#E5EEEA] mt-3 pt-4">

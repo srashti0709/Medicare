@@ -1,5 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api";
+import {
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+} from "recharts";
 
 const fontStyles = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
@@ -381,7 +390,7 @@ const Appointments = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to fetch appointments"
+                "Failed to fetch appointments"
             );
         } finally {
             setLoading(false);
@@ -493,7 +502,7 @@ const Appointments = () => {
         } catch (error) {
             setError(
                 error.response?.data?.message ||
-                    "Failed to update appointment status"
+                "Failed to update appointment status"
             );
         }
     };
@@ -539,12 +548,46 @@ const Appointments = () => {
             )
             .slice(0, 8);
     }, [appointments]);
+    const appointmentDensity = useMemo(() => {
+        const hourlyData = Array.from({ length: 13 }, (_, index) => {
+            const hour = index + 8;
+
+            return {
+                hour,
+                time: new Date(2000, 0, 1, hour).toLocaleTimeString([], {
+                    hour: "numeric",
+                    hour12: true,
+                }),
+                appointments: 0,
+                records: [],
+            };
+        });
+
+        appointments
+            .filter(
+                (appointment) =>
+                    isToday(appointment.date) &&
+                    appointment.status !== "cancelled"
+            )
+            .forEach((appointment) => {
+                const hour = new Date(appointment.date).getHours();
+
+                if (hour >= 8 && hour <= 20) {
+                    const slot = hourlyData[hour - 8];
+
+                    slot.appointments += 1;
+                    slot.records.push(appointment);
+                }
+            });
+
+        return hourlyData;
+    }, [appointments]);
 
     const completedRate =
         totalAppointments > 0
             ? Math.round(
-                  (completedAppointments / totalAppointments) * 100
-              )
+                (completedAppointments / totalAppointments) * 100
+            )
             : 0;
 
     return (
@@ -917,16 +960,14 @@ const Appointments = () => {
                                         <div className="col-span-12 xl:col-span-8 flex flex-col gap-5">
 
                                             {/* LIVE SCHEDULE */}
-                                            <div
-                                                className={`${cardClass} p-4 overflow-hidden`}
-                                            >
-                                                <div className="flex items-center justify-between gap-4 mb-3">
+                                            {/* LIVE SCHEDULE — APPOINTMENT DENSITY */}
+                                            <div className={`${cardClass} p-5 overflow-hidden`}>
+                                                <div className="flex items-center justify-between gap-4 mb-5">
                                                     <div className="flex items-center gap-2">
                                                         <span className="w-2.5 h-2.5 rounded-full bg-[#2E9C8F] md-live-dot" />
 
                                                         <span className="text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
-                                                            Live Day Tracker •
-                                                            Appointment Density
+                                                            Live Day Tracker • Appointment Density
                                                         </span>
                                                     </div>
 
@@ -935,75 +976,113 @@ const Appointments = () => {
                                                     </span>
                                                 </div>
 
-                                                {upcomingAppointments.length > 0 ? (
-                                                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-                                                        {upcomingAppointments.map(
-                                                            (appointment) => {
-                                                                const isSelected =
-                                                                    selectedAppointment?._id ===
-                                                                    appointment._id;
+                                                <div className="w-full h-[260px]">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <BarChart
+                                                            data={appointmentDensity}
+                                                            margin={{
+                                                                top: 15,
+                                                                right: 10,
+                                                                left: -20,
+                                                                bottom: 5,
+                                                            }}
+                                                            barCategoryGap="30%"
+                                                            onClick={(data) => {
+                                                                const selectedHour =
+                                                                    data?.activePayload?.[0]?.payload?.hour;
 
-                                                                return (
-                                                                    <button
-                                                                        key={
-                                                                            appointment._id
-                                                                        }
-                                                                        type="button"
-                                                                        onClick={() =>
-                                                                            setSelectedAppointment(
-                                                                                appointment
-                                                                            )
-                                                                        }
-                                                                        className={`text-left p-2.5 rounded-xl border transition-all min-w-0 ${
-                                                                            isSelected
-                                                                                ? "bg-[#ADEFE7] border-[#9ADBD3] shadow-sm"
-                                                                                : "bg-[#F2F8F6] border-transparent hover:bg-[#E7EFED]"
-                                                                        }`}
-                                                                    >
-                                                                        <span
-                                                                            className={`block text-base font-bold ${
-                                                                                isSelected
-                                                                                    ? "text-[#164B4D]"
-                                                                                    : "text-[#718B87]"
-                                                                            }`}
-                                                                        >
-                                                                            {formatTime(
-                                                                                appointment.date
-                                                                            )}
-                                                                        </span>
+                                                                if (selectedHour === undefined) return;
 
-                                                                        <span
-                                                                            className={`block mt-1 text-base font-bold truncate ${
-                                                                                isSelected
-                                                                                    ? "text-[#0A1F1C]"
-                                                                                    : "text-[#164B4D]"
-                                                                            }`}
-                                                                        >
-                                                                            {appointment
-                                                                                .patient
-                                                                                ?.name ||
-                                                                                "Unknown"}
-                                                                        </span>
-
-                                                                        <span className="block mt-0.5 text-base font-semibold text-[#2E8179] truncate">
-                                                                            {formatDoctorName(
-                                                                                appointment
-                                                                                    .doctor
-                                                                                    ?.user
-                                                                                    ?.name
-                                                                            )}
-                                                                        </span>
-                                                                    </button>
+                                                                const appointment = appointments.find(
+                                                                    (item) =>
+                                                                        isToday(item.date) &&
+                                                                        item.status !== "cancelled" &&
+                                                                        new Date(item.date).getHours() === selectedHour
                                                                 );
-                                                            }
-                                                        )}
+
+                                                                if (appointment) {
+                                                                    setSelectedAppointment(appointment);
+                                                                }
+                                                            }}
+                                                        >
+                                                            <CartesianGrid
+                                                                strokeDasharray="3 3"
+                                                                vertical={false}
+                                                                stroke="#E7EFED"
+                                                            />
+
+                                                            <XAxis
+                                                                dataKey="time"
+                                                                tick={{
+                                                                    fill: "#718B87",
+                                                                    fontSize: 12,
+                                                                    fontWeight: 600,
+                                                                }}
+                                                                axisLine={{ stroke: "#DCEAE7" }}
+                                                                tickLine={false}
+                                                                interval={1}
+                                                            />
+
+                                                            <YAxis
+                                                                allowDecimals={false}
+                                                                tick={{
+                                                                    fill: "#718B87",
+                                                                    fontSize: 12,
+                                                                }}
+                                                                axisLine={false}
+                                                                tickLine={false}
+                                                                width={35}
+                                                            />
+
+                                                            <Tooltip
+                                                                cursor={{ fill: "#E1F3F0", opacity: 0.5 }}
+                                                                contentStyle={{
+                                                                    backgroundColor: "#FFFFFF",
+                                                                    border: "1px solid #DCEAE7",
+                                                                    borderRadius: "12px",
+                                                                    boxShadow: "0 8px 25px rgba(22,75,77,0.12)",
+                                                                    padding: "12px 15px",
+                                                                }}
+                                                                labelStyle={{
+                                                                    color: "#164B4D",
+                                                                    fontWeight: 700,
+                                                                    marginBottom: 5,
+                                                                }}
+                                                                formatter={(value) => [
+                                                                    `${value} appointment${value !== 1 ? "s" : ""}`,
+                                                                    "Density",
+                                                                ]}
+                                                            />
+
+                                                            <Bar
+                                                                dataKey="appointments"
+                                                                name="Appointments"
+                                                                fill="#2E9C8F"
+                                                                radius={[7, 7, 0, 0]}
+                                                                maxBarSize={35}
+                                                                activeBar={{
+                                                                    fill: "#164B4D",
+                                                                    stroke: "#9ADBD3",
+                                                                    strokeWidth: 2,
+                                                                }}
+                                                                cursor="pointer"
+                                                            />
+                                                        </BarChart>
+                                                    </ResponsiveContainer>
+                                                </div>
+
+                                                <div className="flex items-center justify-between flex-wrap gap-2 mt-3 pt-3 border-t border-[#E7EFED]">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="w-2.5 h-2.5 rounded-sm bg-[#2E9C8F]" />
+                                                        <span className="text-base font-semibold text-[#667876]">
+                                                            Appointments per hour
+                                                        </span>
                                                     </div>
-                                                ) : (
-                                                    <div className="py-5 text-center text-base text-[#718B87]">
-                                                        No upcoming appointments
-                                                        available.
-                                                    </div>
-                                                )}
+
+                                                    <span className="text-base font-semibold text-[#718B87]">
+                                                        8 AM – 8 PM
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             {/* APPOINTMENT REGISTRY */}
@@ -1088,21 +1167,19 @@ const Appointments = () => {
                                                                                     appointment
                                                                                 )
                                                                             }
-                                                                            className={`border-b border-[#EDF2F1] last:border-b-0 cursor-pointer transition-colors ${
-                                                                                isSelected
+                                                                            className={`border-b border-[#EDF2F1] last:border-b-0 cursor-pointer transition-colors ${isSelected
                                                                                     ? "bg-[#E1F3F0]/60"
                                                                                     : "hover:bg-[#F7FBFA]"
-                                                                            }`}
+                                                                                }`}
                                                                         >
                                                                             {/* PATIENT */}
                                                                             <td className="px-5 py-4">
                                                                                 <div className="flex items-center gap-3">
                                                                                     <div
-                                                                                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-base font-bold shrink-0 ${
-                                                                                            isSelected
+                                                                                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-base font-bold shrink-0 ${isSelected
                                                                                                 ? "bg-[#164B4D] text-white"
                                                                                                 : "bg-[#E1F3F0] text-[#164B4D]"
-                                                                                        }`}
+                                                                                            }`}
                                                                                     >
                                                                                         {getInitials(
                                                                                             appointment
@@ -1202,77 +1279,77 @@ const Appointments = () => {
                                                                                 <div className="flex items-center gap-2">
                                                                                     {appointment.status ===
                                                                                         "pending" && (
-                                                                                        <>
-                                                                                            <button
-                                                                                                onClick={() =>
-                                                                                                    updateStatus(
-                                                                                                        appointment._id,
-                                                                                                        "confirmed"
-                                                                                                    )
-                                                                                                }
-                                                                                                className="px-3 py-1.5 rounded-xl text-base font-bold bg-[#164B4D] text-white hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
-                                                                                            >
-                                                                                                Confirm
-                                                                                            </button>
+                                                                                            <>
+                                                                                                <button
+                                                                                                    onClick={() =>
+                                                                                                        updateStatus(
+                                                                                                            appointment._id,
+                                                                                                            "confirmed"
+                                                                                                        )
+                                                                                                    }
+                                                                                                    className="px-3 py-1.5 rounded-xl text-base font-bold bg-[#164B4D] text-white hover:bg-[#0F3437] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
+                                                                                                >
+                                                                                                    Confirm
+                                                                                                </button>
 
-                                                                                            <button
-                                                                                                onClick={() =>
-                                                                                                    updateStatus(
-                                                                                                        appointment._id,
-                                                                                                        "cancelled"
-                                                                                                    )
-                                                                                                }
-                                                                                                className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
-                                                                                            >
-                                                                                                Cancel
-                                                                                            </button>
-                                                                                        </>
-                                                                                    )}
+                                                                                                <button
+                                                                                                    onClick={() =>
+                                                                                                        updateStatus(
+                                                                                                            appointment._id,
+                                                                                                            "cancelled"
+                                                                                                        )
+                                                                                                    }
+                                                                                                    className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
+                                                                                                >
+                                                                                                    Cancel
+                                                                                                </button>
+                                                                                            </>
+                                                                                        )}
 
                                                                                     {appointment.status ===
                                                                                         "confirmed" && (
-                                                                                        <>
-                                                                                            <button
-                                                                                                onClick={() =>
-                                                                                                    updateStatus(
-                                                                                                        appointment._id,
-                                                                                                        "completed"
-                                                                                                    )
-                                                                                                }
-                                                                                                className="px-3 py-1.5 rounded-xl text-base font-bold border border-[#B9D8D4] bg-white text-[#164B4D] hover:bg-[#164B4D] hover:text-white hover:border-[#164B4D] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
-                                                                                            >
-                                                                                                Complete
-                                                                                            </button>
+                                                                                            <>
+                                                                                                <button
+                                                                                                    onClick={() =>
+                                                                                                        updateStatus(
+                                                                                                            appointment._id,
+                                                                                                            "completed"
+                                                                                                        )
+                                                                                                    }
+                                                                                                    className="px-3 py-1.5 rounded-xl text-base font-bold border border-[#B9D8D4] bg-white text-[#164B4D] hover:bg-[#164B4D] hover:text-white hover:border-[#164B4D] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ADBD3]"
+                                                                                                >
+                                                                                                    Complete
+                                                                                                </button>
 
-                                                                                            <button
-                                                                                                onClick={() =>
-                                                                                                    updateStatus(
-                                                                                                        appointment._id,
-                                                                                                        "cancelled"
-                                                                                                    )
-                                                                                                }
-                                                                                                className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
-                                                                                            >
-                                                                                                Cancel
-                                                                                            </button>
-                                                                                        </>
-                                                                                    )}
+                                                                                                <button
+                                                                                                    onClick={() =>
+                                                                                                        updateStatus(
+                                                                                                            appointment._id,
+                                                                                                            "cancelled"
+                                                                                                        )
+                                                                                                    }
+                                                                                                    className="px-2.5 py-1.5 rounded-xl text-base font-bold text-[#A8441A] hover:bg-[#FDEEE6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F28B5B]/50"
+                                                                                                >
+                                                                                                    Cancel
+                                                                                                </button>
+                                                                                            </>
+                                                                                        )}
 
                                                                                     {appointment.status ===
                                                                                         "completed" && (
-                                                                                        <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#5E7B77]">
-                                                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#2E9C8F]" />
-                                                                                            Completed
-                                                                                        </span>
-                                                                                    )}
+                                                                                            <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#5E7B77]">
+                                                                                                <span className="w-1.5 h-1.5 rounded-full bg-[#2E9C8F]" />
+                                                                                                Completed
+                                                                                            </span>
+                                                                                        )}
 
                                                                                     {appointment.status ===
                                                                                         "cancelled" && (
-                                                                                        <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#8A9D99]">
-                                                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#A9BCB8]" />
-                                                                                            No actions
-                                                                                        </span>
-                                                                                    )}
+                                                                                            <span className="inline-flex items-center gap-1.5 text-base font-semibold text-[#8A9D99]">
+                                                                                                <span className="w-1.5 h-1.5 rounded-full bg-[#A9BCB8]" />
+                                                                                                No actions
+                                                                                            </span>
+                                                                                        )}
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
@@ -1292,7 +1369,7 @@ const Appointments = () => {
                                                         </span>{" "}
                                                         appointment
                                                         {appointments.length !==
-                                                        1
+                                                            1
                                                             ? "s"
                                                             : ""}
                                                     </p>
@@ -1544,15 +1621,15 @@ const Appointments = () => {
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-base font-semibold text-[#37595A]">
                                                                     {selectedAppointment.status ===
-                                                                    "confirmed"
+                                                                        "confirmed"
                                                                         ? "Ready for patient check-in"
                                                                         : selectedAppointment.status ===
-                                                                          "pending"
-                                                                        ? "Awaiting confirmation"
-                                                                        : selectedAppointment.status ===
-                                                                          "completed"
-                                                                        ? "Session completed"
-                                                                        : "Appointment slot cancelled"}
+                                                                            "pending"
+                                                                            ? "Awaiting confirmation"
+                                                                            : selectedAppointment.status ===
+                                                                                "completed"
+                                                                                ? "Session completed"
+                                                                                : "Appointment slot cancelled"}
                                                                 </span>
 
                                                                 <span
@@ -1567,105 +1644,105 @@ const Appointments = () => {
                                                         <div className="flex flex-col gap-2 pt-1">
                                                             {selectedAppointment.status ===
                                                                 "pending" && (
-                                                                <>
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            updateStatus(
-                                                                                selectedAppointment._id,
-                                                                                "confirmed"
-                                                                            )
-                                                                        }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
-                                                                    >
-                                                                        <svg
-                                                                            className="w-4 h-4"
-                                                                            viewBox="0 0 24 24"
-                                                                            fill="none"
-                                                                            stroke="currentColor"
-                                                                            strokeWidth="1.8"
+                                                                    <>
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                updateStatus(
+                                                                                    selectedAppointment._id,
+                                                                                    "confirmed"
+                                                                                )
+                                                                            }
+                                                                            className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
                                                                         >
-                                                                            <path d="m5 12 4 4L19 6" />
-                                                                        </svg>
+                                                                            <svg
+                                                                                className="w-4 h-4"
+                                                                                viewBox="0 0 24 24"
+                                                                                fill="none"
+                                                                                stroke="currentColor"
+                                                                                strokeWidth="1.8"
+                                                                            >
+                                                                                <path d="m5 12 4 4L19 6" />
+                                                                            </svg>
 
-                                                                        Confirm
-                                                                        Appointment
-                                                                    </button>
+                                                                            Confirm
+                                                                            Appointment
+                                                                        </button>
 
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            updateStatus(
-                                                                                selectedAppointment._id,
-                                                                                "cancelled"
-                                                                            )
-                                                                        }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
-                                                                    >
-                                                                        Cancel
-                                                                        Appointment
-                                                                    </button>
-                                                                </>
-                                                            )}
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                updateStatus(
+                                                                                    selectedAppointment._id,
+                                                                                    "cancelled"
+                                                                                )
+                                                                            }
+                                                                            className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
+                                                                        >
+                                                                            Cancel
+                                                                            Appointment
+                                                                        </button>
+                                                                    </>
+                                                                )}
 
                                                             {selectedAppointment.status ===
                                                                 "confirmed" && (
-                                                                <>
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            updateStatus(
-                                                                                selectedAppointment._id,
-                                                                                "completed"
-                                                                            )
-                                                                        }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
-                                                                    >
-                                                                        <svg
-                                                                            className="w-4 h-4"
-                                                                            viewBox="0 0 24 24"
-                                                                            fill="none"
-                                                                            stroke="currentColor"
-                                                                            strokeWidth="1.8"
+                                                                    <>
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                updateStatus(
+                                                                                    selectedAppointment._id,
+                                                                                    "completed"
+                                                                                )
+                                                                            }
+                                                                            className="w-full py-2.5 px-4 rounded-xl bg-[#164B4D] hover:bg-[#0F3437] text-white text-base font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
                                                                         >
-                                                                            <path d="m5 12 4 4L19 6" />
-                                                                        </svg>
+                                                                            <svg
+                                                                                className="w-4 h-4"
+                                                                                viewBox="0 0 24 24"
+                                                                                fill="none"
+                                                                                stroke="currentColor"
+                                                                                strokeWidth="1.8"
+                                                                            >
+                                                                                <path d="m5 12 4 4L19 6" />
+                                                                            </svg>
 
-                                                                        Mark as
-                                                                        Completed
-                                                                    </button>
+                                                                            Mark as
+                                                                            Completed
+                                                                        </button>
 
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            updateStatus(
-                                                                                selectedAppointment._id,
-                                                                                "cancelled"
-                                                                            )
-                                                                        }
-                                                                        className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
-                                                                    >
-                                                                        Cancel
-                                                                        Appointment
-                                                                    </button>
-                                                                </>
-                                                            )}
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                updateStatus(
+                                                                                    selectedAppointment._id,
+                                                                                    "cancelled"
+                                                                                )
+                                                                            }
+                                                                            className="w-full py-2.5 px-4 rounded-xl bg-[#FDEEE6] hover:bg-[#F9E1D4] text-[#A8441A] text-base font-bold flex items-center justify-center gap-2 transition-all"
+                                                                        >
+                                                                            Cancel
+                                                                            Appointment
+                                                                        </button>
+                                                                    </>
+                                                                )}
 
                                                             {selectedAppointment.status ===
                                                                 "completed" && (
-                                                                <div className="w-full py-2.5 rounded-xl bg-[#E1F3F0] text-[#164B4D] text-base font-bold flex items-center justify-center gap-2">
-                                                                    <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
+                                                                    <div className="w-full py-2.5 rounded-xl bg-[#E1F3F0] text-[#164B4D] text-base font-bold flex items-center justify-center gap-2">
+                                                                        <span className="w-2 h-2 rounded-full bg-[#2E9C8F]" />
 
-                                                                    Appointment
-                                                                    Completed
-                                                                </div>
-                                                            )}
+                                                                        Appointment
+                                                                        Completed
+                                                                    </div>
+                                                                )}
 
                                                             {selectedAppointment.status ===
                                                                 "cancelled" && (
-                                                                <div className="w-full py-2.5 rounded-xl bg-[#F1F4F3] text-[#718B87] text-base font-bold flex items-center justify-center gap-2">
-                                                                    <span className="w-2 h-2 rounded-full bg-[#A9BCB8]" />
+                                                                    <div className="w-full py-2.5 rounded-xl bg-[#F1F4F3] text-[#718B87] text-base font-bold flex items-center justify-center gap-2">
+                                                                        <span className="w-2 h-2 rounded-full bg-[#A9BCB8]" />
 
-                                                                    Appointment
-                                                                    Cancelled
-                                                                </div>
-                                                            )}
+                                                                        Appointment
+                                                                        Cancelled
+                                                                    </div>
+                                                                )}
                                                         </div>
                                                     </div>
                                                 ) : (

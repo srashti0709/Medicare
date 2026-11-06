@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import LiquidSkeleton from "../components/LiquidSkeleton";
 import Doctors from "./Doctors";
 import AddDoctor from "./AddDoctor";
 import Patients from "./Patients";
@@ -204,8 +204,8 @@ const Dashboard = () => {
                 {/* ================= SIDEBAR ================= */}
                 <aside
                     className={`fixed left-0 top-0 bottom-0 z-50 flex w-[270px] flex-col bg-[#164b4d] text-white shadow-[4px_0_20px_rgba(0,52,53,0.08)] transition-transform duration-300 ease-in-out ${isSidebarOpen
-                            ? "translate-x-0"
-                            : "-translate-x-full"
+                        ? "translate-x-0"
+                        : "-translate-x-full"
                         } md:translate-x-0`}
                 >
 
@@ -248,8 +248,8 @@ const Dashboard = () => {
                                     setIsSidebarOpen(false);
                                 }}
                                 className={`font-manrope flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base transition-all ${activePage === "Dashboard"
-                                        ? "bg-[#adefe7] font-bold text-[#00201d] shadow-sm"
-                                        : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
+                                    ? "bg-[#adefe7] font-bold text-[#00201d] shadow-sm"
+                                    : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
                                     }`}
                             >
                                 <span className="material-symbols-outlined text-[20px]">
@@ -284,8 +284,8 @@ const Dashboard = () => {
                                                 setIsSidebarOpen(false);
                                             }}
                                             className={`font-manrope flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base transition-all ${activePage === item.name
-                                                    ? "bg-[#adefe7] font-bold text-[#00201d]"
-                                                    : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
+                                                ? "bg-[#adefe7] font-bold text-[#00201d]"
+                                                : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
                                                 }`}
                                         >
                                             <span className="material-symbols-outlined text-[20px]">
@@ -311,8 +311,8 @@ const Dashboard = () => {
                                     setIsSidebarOpen(false);
                                 }}
                                 className={`font-manrope flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base transition-all ${activePage === "Settings"
-                                        ? "bg-[#adefe7] font-bold text-[#00201d]"
-                                        : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
+                                    ? "bg-[#adefe7] font-bold text-[#00201d]"
+                                    : "text-[#b9ecee] hover:bg-[#256862] hover:text-white"
                                     }`}
                             >
                                 <span className="material-symbols-outlined text-[20px]">
@@ -411,15 +411,7 @@ const Dashboard = () => {
                             {/* Notification + Profile */}
                             <div className="flex shrink-0 items-center gap-2 sm:gap-4">
 
-                                {/* Notification */}
-                                <button className="relative rounded-full p-2 text-[#526563] transition hover:bg-[#e1f0ed]">
-                                    <span className="material-symbols-outlined text-[22px]">
-                                        notifications
-                                    </span>
-
-                                    <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ff9665] ring-2 ring-[#f8fffd]" />
-                                </button>
-
+                                
                                 {/* Profile */}
                                 <button
                                     onClick={() => navigate("/admin-profile")}
@@ -523,52 +515,68 @@ const Dashboard = () => {
                                 </div>
 
                                 {/* Stats */}
+                                {/* Stats */}
                                 <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
 
-                                    {stats.map((stat, index) => (
+                                    {stats.map((stat) => (
                                         <div
                                             key={stat.title}
                                             className="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,52,53,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,52,53,0.08)]"
                                         >
-                                            <div className="flex items-start justify-between">
+                                            {statsLoading ? (
+                                                <div className="space-y-5">
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1 space-y-3">
+                                                            <LiquidSkeleton className="h-3 w-3/4 rounded-md" />
+                                                            <LiquidSkeleton className="h-10 w-20 rounded-lg" />
+                                                        </div>
 
-                                                <div>
-                                                    <p className="font-manrope text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
-                                                        {stat.title}
-                                                    </p>
+                                                        <LiquidSkeleton className="h-11 w-11 rounded-xl" />
+                                                    </div>
 
-                                                    <div className="mt-2 flex items-baseline gap-2">
-                                                        <span className="font-bricolage text-[35px] font-bold tracking-tight text-[#164b4d]">
-                                                            {statsLoading ? "..." : stat.value}
-                                                        </span>
-
-                                                        <span className="font-manrope rounded-md bg-[#dff5ef] px-2 py-0.5 text-base font-bold text-[#256862]">
-                                                            Active
-                                                        </span>
+                                                    <div className="flex items-center justify-between border-t border-[#edf2f1] pt-4">
+                                                        <LiquidSkeleton className="h-3 w-28 rounded-md" />
+                                                        <LiquidSkeleton className="h-3 w-16 rounded-md" />
                                                     </div>
                                                 </div>
+                                            ) : (
+                                                <>
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            <p className="font-manrope text-base font-bold uppercase tracking-[0.12em] text-[#667876]">
+                                                                {stat.title}
+                                                            </p>
 
-                                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e1f0ed] text-[#164b4d] transition group-hover:scale-105">
-                                                    <span className="material-symbols-outlined text-[23px]">
-                                                        {stat.icon}
-                                                    </span>
-                                                </div>
+                                                            <div className="mt-2 flex items-baseline gap-2">
+                                                                <span className="font-bricolage text-[35px] font-bold tracking-tight text-[#164b4d]">
+                                                                    {stat.value}
+                                                                </span>
 
-                                            </div>
+                                                                <span className="font-manrope rounded-md bg-[#dff5ef] px-2 py-0.5 text-base font-bold text-[#256862]">
+                                                                    Active
+                                                                </span>
+                                                            </div>
+                                                        </div>
 
-                                            <div className="mt-4 flex items-center justify-between border-t border-[#edf2f1] pt-3">
+                                                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e1f0ed] text-[#164b4d] transition group-hover:scale-105">
+                                                            <span className="material-symbols-outlined text-[23px]">
+                                                                {stat.icon}
+                                                            </span>
+                                                        </div>
+                                                    </div>
 
-                                                <span className="font-manrope flex items-center gap-1.5 text-base font-medium text-[#526563]">
-                                                    <span className="h-1.5 w-1.5 rounded-full bg-[#256862]" />
-                                                    {stat.extra}
-                                                </span>
+                                                    <div className="mt-4 flex items-center justify-between border-t border-[#edf2f1] pt-3">
+                                                        <span className="font-manrope flex items-center gap-1.5 text-base font-medium text-[#526563]">
+                                                            <span className="h-1.5 w-1.5 rounded-full bg-[#256862]" />
+                                                            {stat.extra}
+                                                        </span>
 
-                                                <span className="font-manrope text-base font-bold uppercase tracking-wider text-[#8a9a98]">
-                                                    Medicare
-                                                </span>
-
-                                            </div>
-
+                                                        <span className="font-manrope text-base font-bold uppercase tracking-wider text-[#8a9a98]">
+                                                            Medicare
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     ))}
 

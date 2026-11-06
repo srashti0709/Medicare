@@ -1,5 +1,6 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 import DoctorProtectedRoute from "./DoctorProtectedRoute";
@@ -15,9 +16,41 @@ import AIRiskAssessment from "./pages/AIRiskAssessment";
 import KidneyDiseaseRisk from "./pages/KidneyDiseaseRisk";
 import ChangeDoctorPassword from "./pages/ChangeDoctorPassword";
 
+const PageTitle = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    let user = {};
+
+    try {
+      user = JSON.parse(localStorage.getItem("adminUser") || "{}");
+    } catch (error) {
+      user = {};
+    }
+
+    const path = location.pathname;
+
+    if (path === "/") {
+      document.title = "Medicare | Login";
+    } else if (path === "/change-doctor-password") {
+      document.title = "Medicare | Change Password";
+    } else if (user.role === "admin") {
+      document.title = "Medicare | Admin Panel";
+    } else if (user.role === "doctor") {
+      document.title = "Medicare | Doctor Portal";
+    } else {
+      document.title = "Medicare | Login";
+    }
+  }, [location.pathname]);
+
+  return null;
+};
+
 function App() {
   return (
     <BrowserRouter>
+      <PageTitle />
+
       <Routes>
         <Route path="/" element={<Login />} />
 

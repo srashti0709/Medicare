@@ -1,5 +1,7 @@
+
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../api";
 
 const Login = () => {
@@ -7,8 +9,11 @@ const Login = () => {
     email: "",
     password: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const token = localStorage.getItem("adminToken");
   const adminUser = JSON.parse(
     localStorage.getItem("adminUser") || "{}"
@@ -49,11 +54,14 @@ const Login = () => {
         "/auth/login",
         formData
       );
+
       const { token, user } = response.data;
 
-      // Only admin can access this app
+      // Only admin and doctor can access this app
       if (user.role !== "admin" && user.role !== "doctor") {
-        setError("Access denied. Admin or doctor account required.");
+        setError(
+          "Access denied. Admin or doctor account required."
+        );
         setLoading(false);
         return;
       }
@@ -70,7 +78,8 @@ const Login = () => {
       }
     } catch (error) {
       setError(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message ||
+          "Login failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -79,12 +88,14 @@ const Login = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F5F8F6] px-4 py-10 sm:px-6">
+
       {/* Soft background accents */}
       <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#B9ECEE]/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -right-24 h-[28rem] w-[28rem] rounded-full bg-[#ADEFE7]/35 blur-3xl" />
 
       <div className="relative z-10 w-full max-w-[1040px]">
         <div className="grid overflow-hidden rounded-[28px] border border-[#CBDAD6] bg-white shadow-[0_24px_70px_rgba(0,52,53,0.10)] lg:grid-cols-[1.02fr_0.98fr]">
+
           {/* Brand panel */}
           <div className="relative hidden flex-col justify-between overflow-hidden bg-[#003435] p-10 text-white lg:flex xl:p-12">
             <div className="pointer-events-none absolute -right-24 -top-20 h-80 w-80 rounded-full border-[1px] border-white/10" />
@@ -96,6 +107,7 @@ const Login = () => {
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ADEFE7] font-['Bricolage_Grotesque'] text-2xl font-bold text-[#003435] shadow-lg shadow-black/10">
                   M
                 </div>
+
                 <div>
                   <p className="font-['Bricolage_Grotesque'] text-2xl font-bold tracking-tight">
                     Medicare
@@ -111,10 +123,14 @@ const Login = () => {
                   <span className="h-1.5 w-1.5 rounded-full bg-[#ADEFE7]" />
                   Care, connected
                 </span>
+
                 <h1 className="font-['Bricolage_Grotesque'] text-[42px] font-bold leading-[1.12] tracking-tight xl:text-[48px]">
                   Better care starts with{" "}
-                  <span className="text-[#ADEFE7]">better coordination.</span>
+                  <span className="text-[#ADEFE7]">
+                    better coordination.
+                  </span>
                 </h1>
+
                 <p className="mt-5 text-base leading-7 text-[#C2D8D2]">
                   A connected workspace for healthcare teams to manage
                   hospital operations and deliver organized patient care.
@@ -136,13 +152,16 @@ const Login = () => {
 
           {/* Login panel */}
           <div className="flex flex-col justify-center px-6 py-9 sm:px-10 sm:py-12 lg:px-12 xl:px-14">
+
             <div className="mb-9 text-center lg:hidden">
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#003435] font-['Bricolage_Grotesque'] text-2xl font-bold text-[#ADEFE7] shadow-lg shadow-[#003435]/15">
                 M
               </div>
+
               <h1 className="font-['Bricolage_Grotesque'] text-3xl font-bold tracking-tight text-[#003435]">
                 Medicare
               </h1>
+
               <p className="mt-1 text-base font-semibold uppercase tracking-[0.16em] text-[#71817C]">
                 Hospital Management System
               </p>
@@ -165,12 +184,15 @@ const Login = () => {
                     <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.08-.02a1.7 1.7 0 0 0-1.78.54l-.05.07h-3.4l-.02-.08a1.7 1.7 0 0 0-1.32-1.32l-.08-.02-1.7-2.94.06-.06A1.7 1.7 0 0 0 10.06 14l-.08-.02v-3.4l.08-.02a1.7 1.7 0 0 0 1.32-1.32l.02-.08h3.4l.05.07a1.7 1.7 0 0 0 1.78.54l.08-.02 1.7 2.94-.06.06A1.7 1.7 0 0 0 19.4 15Z" />
                   </svg>
                 </div>
+
                 <p className="mb-2 text-base font-bold uppercase tracking-[0.18em] text-[#56847A]">
                   Welcome back
                 </p>
+
                 <h2 className="font-['Bricolage_Grotesque'] text-[30px] font-bold tracking-tight text-[#003435] sm:text-[34px]">
                   Sign in to Medicare
                 </h2>
+
                 <p className="mt-2 text-base leading-6 text-[#71817C]">
                   Enter your account details to access your workspace.
                 </p>
@@ -189,6 +211,8 @@ const Login = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
+
+                {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
@@ -196,6 +220,7 @@ const Login = () => {
                   >
                     Email address
                   </label>
+
                   <div className="relative">
                     <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#82968F]">
                       <svg
@@ -212,6 +237,7 @@ const Login = () => {
                         <path d="m3 7 9 6 9-6" />
                       </svg>
                     </span>
+
                     <input
                       id="email"
                       type="email"
@@ -226,6 +252,7 @@ const Login = () => {
                   </div>
                 </div>
 
+                {/* Password */}
                 <div>
                   <label
                     htmlFor="password"
@@ -233,6 +260,7 @@ const Login = () => {
                   >
                     Password
                   </label>
+
                   <div className="relative">
                     <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#82968F]">
                       <svg
@@ -249,17 +277,32 @@ const Login = () => {
                         <path d="M8 10V7a4 4 0 1 1 8 0v3" />
                       </svg>
                     </span>
+
                     <input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Enter your password"
                       required
                       autoComplete="current-password"
-                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-4 text-base text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
+                      className="w-full rounded-xl border border-[#CBDAD6] bg-[#FCFEFD] py-3.5 pl-11 pr-12 text-base text-[#0a1f1c] outline-none transition placeholder:text-[#A0ADA8] hover:border-[#9DBAB1] focus:border-[#256862] focus:ring-4 focus:ring-[#ADEFE7]/40"
                     />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#82968F] hover:text-[#256862] transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={19} />
+                      ) : (
+                        <Eye size={19} />
+                      )}
+                    </button>
                   </div>
                 </div>
 

@@ -222,19 +222,9 @@ const updateDoctor = async (req, res) => {
   }
 };
 
+
 const resetDoctorPassword = async (req, res) => {
   try {
-    const { temporaryPassword } = req.body;
-
-    if (
-      !temporaryPassword ||
-      temporaryPassword.length < 6
-    ) {
-      return res.status(400).json({
-        message: "Temporary password must be at least 6 characters long",
-      });
-    }
-
     const doctor = await Doctor.findById(req.params.id);
 
     if (!doctor) {
@@ -251,6 +241,9 @@ const resetDoctorPassword = async (req, res) => {
       });
     }
 
+    // Generate a secure temporary password
+    const temporaryPassword = crypto.randomBytes(9).toString("base64url");
+
     user.password = await bcrypt.hash(temporaryPassword, 10);
     user.mustChangePassword = true;
 
@@ -258,6 +251,7 @@ const resetDoctorPassword = async (req, res) => {
 
     res.status(200).json({
       message: "Doctor password reset successfully",
+      temporaryPassword,
     });
   } catch (error) {
     res.status(500).json({
@@ -266,6 +260,7 @@ const resetDoctorPassword = async (req, res) => {
     });
   }
 };
+
 
 const toggleDoctorAvailability = async (req, res) => {
   try {

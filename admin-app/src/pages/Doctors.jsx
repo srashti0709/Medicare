@@ -284,6 +284,8 @@ const Doctors = ({ onAddDoctor }) => {
     const [error, setError] = useState("");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [resettingDoctorId, setResettingDoctorId] = useState(null);
+    const [resetPasswordResult, setResetPasswordResult] = useState(null);
 
     const [search, setSearch] = useState("");
     const [departmentFilter, setDepartmentFilter] =
@@ -489,6 +491,43 @@ const Doctors = ({ onAddDoctor }) => {
         setDepartmentFilter("All Departments");
         setSpecializationFilter("All Specializations");
         setAvailabilityFilter("All Availability");
+    };
+    const resetDoctorPassword = async (doctor) => {
+        const confirmed = window.confirm(
+            `Generate a new temporary password for Dr. ${doctor.user?.name || "this doctor"
+            }? Their current password will stop working.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            setResettingDoctorId(doctor._id);
+            setResetPasswordResult(null);
+
+            const token = localStorage.getItem("adminToken");
+
+            const response = await api.patch(
+                `/doctors/${doctor._id}/reset-password`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setResetPasswordResult({
+                doctorName: doctor.user?.name || "Doctor",
+                temporaryPassword: response.data.temporaryPassword,
+            });
+        } catch (error) {
+            alert(
+                error.response?.data?.message ||
+                "Failed to reset doctor password"
+            );
+        } finally {
+            setResettingDoctorId(null);
+        }
     };
 
     return (
@@ -1153,6 +1192,15 @@ const Doctors = ({ onAddDoctor }) => {
                                                             </svg>
                                                             Edit
                                                         </button>
+                                                        <button
+                                                            onClick={() => resetDoctorPassword(doctor)}
+                                                            disabled={resettingDoctorId === doctor._id}
+                                                            className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                        >
+                                                            {resettingDoctorId === doctor._id
+                                                                ? "Resetting..."
+                                                                : "Reset Password"}
+                                                        </button>
 
                                                         <button
                                                             type="button"
@@ -1612,6 +1660,79 @@ const Doctors = ({ onAddDoctor }) => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+            {/* RESET PASSWORD SUCCESS MODAL */}
+            {resetPasswordResult && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+                    <div className="md-modal w-full max-w-md rounded-2xl border border-[#CBDAD6] bg-white p-6 shadow-2xl">
+
+                        <div className="mb-5 flex items-center gap-3">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E7F4F1] text-[#164B4D]">
+                                <svg
+                                    className="h-7 w-7"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z" />
+                                    <path d="m9 12 2 2 4-4" />
+                                </svg>
+                            </div>
+
+                            <div>
+                                <h2 className="text-xl font-bold text-[#003435]">
+                                    Password Reset Successful
+                                </h2>
+                                <p className="text-sm text-[#64716E]">
+                                    {resetPasswordResult.doctorName}
+                                </p>
+                            </div>
+                        </div>
+
+                        <p className="mb-2 text-sm font-semibold text-[#404848]">
+                            New Temporary Password
+                        </p>
+
+                        <div className="flex items-center gap-2 rounded-xl border border-[#CBDAD6] bg-[#F5F8F6] p-3">
+                            <code className="min-w-0 flex-1 break-all text-base font-bold text-[#003435]">
+                                {resetPasswordResult.temporaryPassword}
+                            </code>
+
+                            <button
+                                type="button"
+                                onClick={async () => {
+                                    try {
+                                        await navigator.clipboard.writeText(
+                                            resetPasswordResult.temporaryPassword
+                                        );
+                                        alert("Temporary password copied!");
+                                    } catch {
+                                        alert("Unable to copy password. Please copy it manually.");
+                                    }
+                                }}
+                                className="shrink-0 rounded-lg bg-[#164B4D] px-3 py-2 text-sm font-semibold text-white hover:bg-[#003435]"
+                            >
+                                Copy
+                            </button>
+                        </div>
+
+                        <div className="mt-4 rounded-xl bg-[#E7F4F1] p-3 text-sm text-[#164B4D]">
+                            Share this password securely with the doctor.
+                            They must change it when they log in next time.
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setResetPasswordResult(null)}
+                            className="mt-5 w-full rounded-xl bg-[#003435] px-4 py-3 font-semibold text-white transition hover:bg-[#164B4D]"
+                        >
+                            Close
+                        </button>
                     </div>
                 </div>
             )}
