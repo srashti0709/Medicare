@@ -3,6 +3,7 @@ import axios from "axios";
 import DoctorNavbar from "../components/DoctorNavbar";
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
+import api from "../api";
 
 const Icon = ({ name, className = "", style }) => (
     <span className={`material-symbols-outlined ${className}`} style={style}>
@@ -474,8 +475,8 @@ const DiabetesPrediction = () => {
             try {
                 const token = localStorage.getItem("adminToken");
 
-                const response = await axios.get(
-                    "http://localhost:5000/api/users",
+                const response = await api.get(
+                    "/users",
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -504,8 +505,8 @@ const DiabetesPrediction = () => {
         try {
             setHistoryLoading(true);
 
-            const response = await axios.get(
-                `http://localhost:5000/api/diabetes/predictions/${patientId}`
+            const response = await api.get(
+                `/diabetes/predictions/${patientId}`
             );
 
             setPredictionHistory(response.data.data);
@@ -539,8 +540,8 @@ const DiabetesPrediction = () => {
             setLoading(true);
             setResult(null);
 
-            const response = await axios.post(
-                "http://localhost:5000/api/diabetes/predict",
+            const response = await api.post(
+                "/diabetes/predict",
                 {
                     patient: formData.patient,
                     Pregnancies: Number(formData.Pregnancies),
@@ -589,7 +590,7 @@ const DiabetesPrediction = () => {
         <div className={`min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
             {/* ================= TOP NAVBAR ================= */}
             <DoctorNavbar />
-            
+
 
             {/* ================= MAIN ================= */}
             <main className="w-full max-w-7xl mx-auto px-5 pt-20 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">

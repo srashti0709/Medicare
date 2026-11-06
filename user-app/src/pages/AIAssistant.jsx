@@ -175,22 +175,20 @@ const AIAssistant = () => {
     try {
       const token = localStorage.getItem("userToken");
 
-      const response = await fetch(
-        "http://localhost:5000/api/assistant/chat",
+      const response = await api.post(
+        "/assistant/chat",
         {
-          method: "POST",
+          message: userMessage,
+          history: messages,
+        },
+        {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            message: userMessage,
-            history: messages,
-          }),
         }
       );
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
         setMessages((prev) => [
@@ -794,11 +792,10 @@ const AIAssistant = () => {
 
                   <div
                     key={index}
-                    className={`ai-message flex gap-3 ${
-                      msg.role === "user"
+                    className={`ai-message flex gap-3 ${msg.role === "user"
                         ? "justify-end"
                         : "justify-start"
-                    }`}
+                      }`}
                     style={{
                       animationDelay: `${Math.min(index * 100, 500)}ms`,
                     }}
@@ -821,11 +818,10 @@ const AIAssistant = () => {
                     {/* Message Bubble */}
 
                     <div
-                      className={`max-w-[88%] sm:max-w-[78%] px-5 py-4 rounded-2xl text-base leading-7 shadow-sm break-words transition-shadow duration-300 hover:shadow-md ${
-                        msg.role === "user"
+                      className={`max-w-[88%] sm:max-w-[78%] px-5 py-4 rounded-2xl text-base leading-7 shadow-sm break-words transition-shadow duration-300 hover:shadow-md ${msg.role === "user"
                           ? "bg-[#003435] text-white rounded-br-md whitespace-pre-wrap"
                           : "bg-white border border-[#E2ECE7] text-[#344A45] rounded-bl-md"
-                      }`}
+                        }`}
                     >
 
                       <div className="whitespace-pre-wrap">
@@ -1026,11 +1022,10 @@ const AIAssistant = () => {
                   <button
                     onClick={handleSend}
                     disabled={!message.trim() || isTyping}
-                    className={`ai-send ai-shine flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 sm:px-6 py-3.5 text-base font-extrabold transition ${
-                      message.trim() && !isTyping
+                    className={`ai-send ai-shine flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 sm:px-6 py-3.5 text-base font-extrabold transition ${message.trim() && !isTyping
                         ? "bg-[#003435] text-white shadow-md hover:bg-[#164B4D]"
                         : "bg-[#E8EFEC] text-[#9AA9A4] cursor-not-allowed"
-                    }`}
+                      }`}
                   >
 
                     <span className="hidden sm:inline">Send</span>

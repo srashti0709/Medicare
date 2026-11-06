@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
+import api from "../api";
 
 import {
   FileText,
@@ -664,8 +665,8 @@ const HealthReportAnalyzer = () => {
       const formData = new FormData();
       formData.append("report", file);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/reports/upload",
+      const response = await api.post(
+        "/reports/upload",
         formData,
         {
           headers: {
@@ -722,8 +723,8 @@ const HealthReportAnalyzer = () => {
         throw new Error("Please log in again to continue.");
       }
 
-      const response = await axios.post(
-        `http://localhost:5000/api/reports/${uploadResult.data.report_id}/chat`,
+      const response = await api.post(
+        `/reports/${uploadResult.data.report_id}/chat`,
         {
           question: userQuestion,
         },
@@ -1431,8 +1432,8 @@ const HealthReportAnalyzer = () => {
 
                             <div
                               className={`rounded-2xl px-5 py-4 ${message.role === "user"
-                                  ? "bg-[#003435] text-white rounded-tr-sm"
-                                  : "bg-[#F0F6F3] border border-[#DCEBE5] text-[#164B4D] rounded-tl-sm"
+                                ? "bg-[#003435] text-white rounded-tr-sm"
+                                : "bg-[#F0F6F3] border border-[#DCEBE5] text-[#164B4D] rounded-tl-sm"
                                 }`}
                             >
                               <p className="text-base leading-relaxed whitespace-pre-line">

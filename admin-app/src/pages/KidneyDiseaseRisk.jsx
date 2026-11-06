@@ -3,6 +3,7 @@ import axios from "axios";
 import DoctorNavbar from "../components/DoctorNavbar";
 const heading = "font-['Bricolage_Grotesque',sans-serif]";
 const body = "font-['Manrope',sans-serif]";
+import api from "../api";
 
 const Icon = ({ name, className = "", style }) => (
     <span className={`material-symbols-outlined ${className}`} style={style}>
@@ -91,8 +92,8 @@ function KidneyDiseaseRisk() {
         try {
             const token = localStorage.getItem("adminToken");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/users",
+            const response = await api.get(
+                "/users",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -123,8 +124,8 @@ function KidneyDiseaseRisk() {
         setHistoryLoading(true);
 
         try {
-            const response = await axios.get(
-                `http://localhost:5000/api/kidney/predictions/${patientId}`
+            const response = await api.get(
+                `/kidney/predictions/${patientId}`
             );
 
             setPredictionHistory(response.data.data || []);
@@ -194,9 +195,8 @@ function KidneyDiseaseRisk() {
                 data[field] = Number(data[field]);
             });
 
-            const response = await axios.post(
-                "http://localhost:5000/api/kidney/predict",
-                data
+            const response = await api.get(
+                `/kidney/predictions/${patientId}`
             );
 
             setResult(response.data.data);
@@ -481,11 +481,11 @@ function KidneyDiseaseRisk() {
     }
 `}</style>
             {/* ================= TOP NAVBAR ================= */}
-<DoctorNavbar />
+            <DoctorNavbar />
 
             {/* ================= MAIN ================= */}
-<main className="kidney-risk-main w-full max-w-7xl mx-auto px-5 pt-24 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">
-                    <div className="flex flex-col w-full pb-16">
+            <main className="kidney-risk-main w-full max-w-7xl mx-auto px-5 pt-24 bg-[#F5F8F6] min-h-[calc(100vh-80px)]">
+                <div className="flex flex-col w-full pb-16">
                     {/* ---------- Header ---------- */}
                     <div className="w-full flex flex-col gap-2 pt-4 pb-6">
                         <nav className="flex items-center gap-1 text-[12px] text-[#404848]">
@@ -946,8 +946,8 @@ function KidneyDiseaseRisk() {
                                 <div className="flex items-center gap-4">
                                     <div
                                         className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${isHigher
-                                                ? "bg-[#ffdad6] text-[#93000a]"
-                                                : "bg-[#adefe7] text-[#2c6e68]"
+                                            ? "bg-[#ffdad6] text-[#93000a]"
+                                            : "bg-[#adefe7] text-[#2c6e68]"
                                             }`}
                                     >
                                         <Icon
@@ -1004,8 +1004,8 @@ function KidneyDiseaseRisk() {
                                     <div className="w-full bg-white h-3.5 rounded-full overflow-hidden relative shadow-inner p-0.5">
                                         <div
                                             className={`h-full rounded-full ${isHigher
-                                                    ? "bg-gradient-to-r from-[#256862] to-[#762d02]"
-                                                    : "bg-[#256862]"
+                                                ? "bg-gradient-to-r from-[#256862] to-[#762d02]"
+                                                : "bg-[#256862]"
                                                 }`}
                                             style={{
                                                 width: `${Math.min(100, Math.max(0, resultPercent))}%`
@@ -1101,8 +1101,8 @@ function KidneyDiseaseRisk() {
                                                         <div className="flex items-center gap-2">
                                                             <span
                                                                 className={`w-2.5 h-2.5 rounded-full shrink-0 ${item.prediction === 1
-                                                                        ? "bg-[#ff9665]"
-                                                                        : "bg-[#256862]"
+                                                                    ? "bg-[#ff9665]"
+                                                                    : "bg-[#256862]"
                                                                     }`}
                                                             />
                                                             <span
@@ -1122,8 +1122,8 @@ function KidneyDiseaseRisk() {
                                                     <td className="py-3.5 px-4">
                                                         <span
                                                             className={`${heading} text-[18px] leading-[26px] font-bold ${item.prediction === 1
-                                                                    ? "text-[#762d02]"
-                                                                    : "text-[#256862]"
+                                                                ? "text-[#762d02]"
+                                                                : "text-[#256862]"
                                                                 }`}
                                                         >
                                                             {(
@@ -1201,8 +1201,8 @@ function Input({
                 max={max}
                 required={required}
                 className={`w-full text-[14px] text-[#0a1f1c] px-3.5 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#256862] shadow-sm transition-all ${panel
-                        ? "bg-white"
-                        : "bg-[#e1f8f3] focus:bg-white"
+                    ? "bg-white"
+                    : "bg-[#e1f8f3] focus:bg-white"
                     }`}
             />
 

@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import api from "../api";
 import {
   Bot,
   X,
@@ -81,22 +82,20 @@ const AIFloatingChat = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/assistant/chat",
+      const response = await api.post(
+        "/assistant/chat",
         {
-          method: "POST",
+          message: userMessage,
+          history: currentHistory,
+        },
+        {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
-          body: JSON.stringify({
-            message: userMessage,
-            history: currentHistory,
-          }),
         }
       );
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
         setMessages((prev) => [
@@ -363,11 +362,10 @@ const AIFloatingChat = () => {
 
                 <div
                   key={index}
-                  className={`flex items-end gap-2 ${
-                    msg.role === "user"
+                  className={`flex items-end gap-2 ${msg.role === "user"
                       ? "justify-end"
                       : "justify-start"
-                  }`}
+                    }`}
                 >
 
                   {msg.role !== "user" && (
@@ -377,11 +375,10 @@ const AIFloatingChat = () => {
                   )}
 
                   <div
-                    className={`max-w-[82%] px-3.5 py-3 rounded-2xl text-base leading-[1.65] break-words shadow-sm ${
-                      msg.role === "user"
+                    className={`max-w-[82%] px-3.5 py-3 rounded-2xl text-base leading-[1.65] break-words shadow-sm ${msg.role === "user"
                         ? "bg-[#003435] text-white rounded-br-sm whitespace-pre-wrap"
                         : "bg-white border border-[#E2ECE7] text-[#344A45] rounded-bl-sm"
-                    }`}
+                      }`}
                   >
                     <div className="whitespace-pre-wrap">
                       {msg.content}
@@ -520,11 +517,10 @@ const AIFloatingChat = () => {
                   type="submit"
                   disabled={!message.trim() || loading}
                   aria-label="Send message"
-                  className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition ${
-                    message.trim() && !loading
+                  className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition ${message.trim() && !loading
                       ? "bg-[#003435] text-white hover:bg-[#164B4D]"
                       : "bg-[#E8EFEC] text-[#9AA9A4] cursor-not-allowed"
-                  }`}
+                    }`}
                 >
                   <Send size={18} />
                 </button>
@@ -547,11 +543,10 @@ const AIFloatingChat = () => {
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label={isOpen ? "Close Medicare AI Assistant" : "Open Medicare AI Assistant"}
           aria-expanded={isOpen}
-          className={`relative w-[60px] h-[60px] rounded-full flex items-center justify-center shadow-[0_8px_25px_rgba(0,52,53,.25)] transition-all duration-300 hover:scale-105 ${
-            isOpen
+          className={`relative w-[60px] h-[60px] rounded-full flex items-center justify-center shadow-[0_8px_25px_rgba(0,52,53,.25)] transition-all duration-300 hover:scale-105 ${isOpen
               ? "bg-[#164B4D] text-white"
               : "bg-[#003435] text-[#ADEFE7] medicare-chat-pulse"
-          }`}
+            }`}
         >
           {!isOpen && (
             <>
