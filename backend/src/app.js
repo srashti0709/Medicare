@@ -24,12 +24,16 @@ const {
 
 const app = express();
 
+const allowedOrigins = (
+    process.env.FRONTEND_URLS ||
+    "http://localhost:5173,http://localhost:5174"
+)
+    .split(",")
+    .map((url) => url.trim().replace(/\/+$/, ""));
+
 app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "http://localhost:5174",
-        ],
+        origin: allowedOrigins,
     })
 );
 app.use(express.json());
