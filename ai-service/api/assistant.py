@@ -22,8 +22,7 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1"
 )
 
-BACKEND_URL = "http://localhost:5000"
-
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000").rstrip("/")
 
 class AssistantInput(BaseModel):
     message: str
