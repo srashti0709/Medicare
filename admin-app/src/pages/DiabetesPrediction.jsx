@@ -475,6 +475,7 @@ const DiabetesPrediction = () => {
             try {
                 const token = localStorage.getItem("adminToken");
 
+
                 const response = await api.get(
                     "/users",
                     {
@@ -505,8 +506,15 @@ const DiabetesPrediction = () => {
         try {
             setHistoryLoading(true);
 
+            const token = localStorage.getItem("adminToken");
+
             const response = await api.get(
-                `/diabetes/predictions/${patientId}`
+                `/diabetes/predictions/${patientId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
 
             setPredictionHistory(response.data.data);
@@ -540,6 +548,8 @@ const DiabetesPrediction = () => {
             setLoading(true);
             setResult(null);
 
+            const token = localStorage.getItem("adminToken");
+
             const response = await api.post(
                 "/diabetes/predict",
                 {
@@ -554,6 +564,11 @@ const DiabetesPrediction = () => {
                         formData.DiabetesPedigreeFunction
                     ),
                     Age: Number(formData.Age)
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 
