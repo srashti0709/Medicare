@@ -124,8 +124,15 @@ function KidneyDiseaseRisk() {
         setHistoryLoading(true);
 
         try {
+            const token = localStorage.getItem("adminToken");
+
             const response = await api.get(
-                `/kidney/predictions/${patientId}`
+                `/kidney/predictions/${patientId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
 
             setPredictionHistory(response.data.data || []);
@@ -170,6 +177,8 @@ function KidneyDiseaseRisk() {
         setResult(null);
 
         try {
+            const token = localStorage.getItem("adminToken");
+
             const numericFields = [
                 "age",
                 "bp",
@@ -195,15 +204,23 @@ function KidneyDiseaseRisk() {
                 data[field] = Number(data[field]);
             });
 
-            const response = await api.get(
-                `/kidney/predictions/${patientId}`
+            const response = await api.post(
+                "/kidney/predict",
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
 
-            setResult(response.data.data);
+            setResult(response.data.data || response.data);
 
             await fetchPredictionHistory(formData.patient);
+
         } catch (error) {
             console.error("Kidney prediction error:", error);
+            console.log("403 RESPONSE:", error.response?.data);
 
             setResult({
                 error:

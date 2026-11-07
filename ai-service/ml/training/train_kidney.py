@@ -1,3 +1,4 @@
+
 import joblib
 import pandas as pd
 
@@ -16,11 +17,38 @@ MODEL_FILE = "ml/models/kidney_model.pkl"
 
 df = pd.read_csv(INPUT_FILE)
 
-X = df.drop(columns=["class"])
+# Remove rows with missing target labels
+df = df.dropna(subset=["class"]).copy()
+
+# Normalize target labels
+df["class"] = df["class"].astype(str).str.strip().str.lower()
+
+# Map target labels
 y = df["class"].map({
     "notckd": 0,
     "ckd": 1
 })
+
+# Check for unexpected target labels
+if y.isna().any():
+    raise ValueError(
+        f"Unexpected class labels: {df.loc[y.isna(), 'class'].unique()}"
+    )
+
+X = df.drop(columns=["class"])
+
+# Dataset diagnostics
+print("\n--- Kidney Dataset Diagnostics ---")
+print("Total records:", len(df))
+
+print("\nClass distribution:")
+print(y.value_counts().rename(index={
+    0: "Not CKD",
+    1: "CKD"
+}))
+
+print("\nDuplicate records:", df.duplicated().sum())
+print("Duplicate feature records:", X.duplicated().sum())
 
 
 categorical_columns = X.select_dtypes(include="object").columns.tolist()
@@ -66,10 +94,11 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 
 
-print("Kidney Disease Model")
+print("\nKidney Disease Model")
 print("--------------------")
 print("Accuracy:", round(accuracy_score(y_test, predictions), 4))
 print()
+
 print(classification_report(
     y_test,
     predictions,

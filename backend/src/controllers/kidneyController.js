@@ -10,18 +10,32 @@ const authorizePatientAccess = async (req, patientId) => {
     }
 
     if (req.user.role === "doctor") {
-        const doctor = await Doctor.findOne({ user: req.user.id });
+    const doctor = await Doctor.findOne({ user: req.user.id });
 
-        if (!doctor) return false;
+    console.log("Doctor profile found:", !!doctor);
 
-        const appointment = await Appointment.findOne({
-            patient: patientId,
-            doctor: doctor._id,
-            status: { $in: ["confirmed", "completed"] }
-        });
+    if (!doctor) return false;
 
-        return !!appointment;
-    }
+    // TEMPORARY DIAGNOSTIC
+    const patientAppointments = await Appointment.find({
+        patient: patientId
+    }).select("patient doctor status date");
+
+    console.log("Appointments for selected patient:", patientAppointments);
+
+    const appointments = await Appointment.find({
+        patient: patientId,
+        doctor: doctor._id
+    }).select("patient doctor status");
+
+    console.log("Selected patient ID:", patientId);
+    console.log("Logged-in doctor ID:", doctor._id);
+    console.log("Matching appointments:", appointments);
+
+    return appointments.some(
+        appointment => ["confirmed", "completed"].includes(appointment.status)
+    );
+}
 
     return false;
 };

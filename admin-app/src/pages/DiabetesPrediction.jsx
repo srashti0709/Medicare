@@ -597,9 +597,9 @@ const DiabetesPrediction = () => {
             : null;
     const isHigher = result && result.prediction === 1;
 
-    const inputClass =
-        "w-full bg-[#e1f8f3] text-[#0a1f1c] text-[18px] leading-[26px] font-bold rounded-xl px-4 py-3 pr-20 placeholder:text-[#707979] placeholder:font-medium placeholder:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#003435] shadow-inner " +
-        heading;
+   const inputClass =
+    "w-full bg-[#e1f8f3] text-[#0a1f1c] text-[18px] leading-[26px] font-bold rounded-xl px-4 py-3 pr-20 placeholder:text-[#707979] placeholder:font-medium placeholder:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#003435] shadow-inner " +
+    heading;
 
     return (
         <div className={`min-h-screen bg-[#F5F8F6] text-[#0a1f1c] antialiased ${body}`}>
