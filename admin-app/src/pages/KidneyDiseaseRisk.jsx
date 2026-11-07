@@ -88,12 +88,13 @@ function KidneyDiseaseRisk() {
         fetchPatients();
     }, []);
 
+
     const fetchPatients = async () => {
         try {
             const token = localStorage.getItem("adminToken");
 
             const response = await api.get(
-                "/users",
+                "/appointments/doctor/patients",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -102,18 +103,22 @@ function KidneyDiseaseRisk() {
             );
 
             const patientList = Array.isArray(response.data.patients)
-                ? response.data.patients
+                ? response.data.patients.map(({ patient }) => ({
+                    _id: patient.id,
+                    name: patient.name,
+                    email: patient.email
+                }))
                 : [];
 
             setPatients(patientList);
-
-            setPatients(patientList);
         } catch (error) {
-            console.error("Failed to fetch patients:", error);
+            console.error("Failed to fetch eligible patients:", error);
+            setPatients([]);
         } finally {
             setPatientsLoading(false);
         }
     };
+
 
     const fetchPredictionHistory = async (patientId) => {
         if (!patientId) {

@@ -4,41 +4,31 @@ const Appointment = require("../models/Appointment");
 const Doctor = require("../models/Doctor");
 const { predictKidneyDisease } = require("../services/aiService");
 
+
 const authorizePatientAccess = async (req, patientId) => {
     if (req.user.role === "patient") {
         return req.user.id === patientId;
     }
 
     if (req.user.role === "doctor") {
-    const doctor = await Doctor.findOne({ user: req.user.id });
+        const doctor = await Doctor.findOne({
+            user: req.user.id
+        });
 
-    console.log("Doctor profile found:", !!doctor);
+        if (!doctor) return false;
 
-    if (!doctor) return false;
+        const appointment = await Appointment.exists({
+            patient: patientId,
+            doctor: doctor._id,
+            status: { $in: ["confirmed", "completed"] }
+        });
 
-    // TEMPORARY DIAGNOSTIC
-    const patientAppointments = await Appointment.find({
-        patient: patientId
-    }).select("patient doctor status date");
-
-    console.log("Appointments for selected patient:", patientAppointments);
-
-    const appointments = await Appointment.find({
-        patient: patientId,
-        doctor: doctor._id
-    }).select("patient doctor status");
-
-    console.log("Selected patient ID:", patientId);
-    console.log("Logged-in doctor ID:", doctor._id);
-    console.log("Matching appointments:", appointments);
-
-    return appointments.some(
-        appointment => ["confirmed", "completed"].includes(appointment.status)
-    );
-}
+        return !!appointment;
+    }
 
     return false;
 };
+
 
 const kidneyPrediction = async (req, res) => {
     try {
