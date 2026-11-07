@@ -485,7 +485,6 @@ const DiabetesPrediction = () => {
                     }
                 );
 
-                console.log("PATIENT RESPONSE:", response.data);
                 setPatients(response.data.patients);
             } catch (error) {
                 console.error("Failed to fetch patients", error);

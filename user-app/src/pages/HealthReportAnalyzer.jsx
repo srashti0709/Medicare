@@ -675,7 +675,6 @@ const HealthReportAnalyzer = () => {
         }
       );
 
-      console.log("REPORT RESPONSE:", response.data);
 
       setUploadResult(response.data);
     } catch (error) {

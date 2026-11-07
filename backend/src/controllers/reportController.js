@@ -77,7 +77,7 @@ const analyzeReport = async (req, res) => {
         if (req.file?.path) {
             try {
                 await fs.promises.unlink(req.file.path);
-                console.log("Temporary report file deleted.");
+               
             } catch (cleanupError) {
                 console.error("Report cleanup failed:", cleanupError.message);
             }

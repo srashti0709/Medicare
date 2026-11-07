@@ -225,7 +225,6 @@ function KidneyDiseaseRisk() {
 
         } catch (error) {
             console.error("Kidney prediction error:", error);
-            console.log("403 RESPONSE:", error.response?.data);
 
             setResult({
                 error:

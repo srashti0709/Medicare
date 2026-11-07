@@ -51,7 +51,6 @@ const AddDoctor = ({ onDoctorAdded, onBack }) => {
           },
         }
       );
-      console.log("DOCTOR CREATION RESPONSE:", response.data);
 
       setTemporaryPassword(
         response.data.temporaryPassword
